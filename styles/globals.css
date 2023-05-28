@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#__next {
+  heigth: 100vh;
+}
+
+body {
+  overflow-y: hidden;
+}

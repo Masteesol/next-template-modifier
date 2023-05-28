@@ -1,0 +1,149 @@
+{
+    "greeting": "Velkommen",
+    "languageSwitch": "Bytt språk",
+    "navigation": {
+        "home": "Hjem",
+        "campaigns": "Kampanjer",
+        "settings": "Innstillinger",
+        "clients": "Kunder"
+      },
+      "paths": {
+        "home": "Hjem",
+        "settings": "Innstillinger",
+        "companies": "Kunder",
+        "register-new-company": "Registrere Ny Kunde",
+        "sign-in": "Innlogging",
+        "billing": "Fakturering",
+        "archived": "Arkiverte",
+        "campaigns": "Kampanjer",
+        "new": "Ny Kampanje",
+        "published": "Publiserte",
+        "unpublished": "Ikke Publiserte",
+        "invite-user": "Invitere Ny Bruker",
+        "approvals": "Til Godkjenning"
+      },
+      "pages": {
+        "settings": {
+            "heading": "Innstillinger"
+        },
+        "companies": {
+            "heading": "Kunder",
+            "registerNew": "Registrér ny kunde"
+        },
+        "companyOverview": {
+            "heading": "Firmaoversikt"
+        },
+        "registerNew": {
+            "heading": "Registrere ny kunde",
+            "form": {
+                "labels": {
+                    "select-host": "Velg System",
+                    "company-name": "Kundenavn",
+                    "installationID": "Installasjons-ID (påkrevd)",
+                    "facebookID": "Facebook-ID (Ikke påkrevd)",
+                    "instagramID": "Instagram-ID (Ikke påkrevd)",
+                    "submit": "Lagre og gå videre kundesiden"
+                }
+            }
+        },
+        "campaigns": {
+            "heading": "Kampanjer",
+            "links": {
+                "newCampaign": "Ny Kampanje",
+                "published": "Publiserte",
+                "notPublished": "Ikke Publiserte",
+                "archived": "Arkiverte",
+                "billing": "Fakturering",
+                "approvals": "Til Godkjenning"
+            }
+        },
+        "notPublished": {
+            "heading": "Ikke Publiserte"
+        },
+        "campaignEditor": {
+            "heading": "Opprett Kampanje",
+            "tabs": {
+                "images": {
+                    "heading": "Bilder"
+                },
+                "campaignDetails": {
+                    "heading": "Kampanjedetaljer",
+                    "basicInfoForm": {
+                        "heading": "Generell Informasjon"
+                    },
+                    "campaignInfoForm": {
+                        "heading": "Kampanjeinformasjon"
+                    }
+                },
+                "text": {
+                    "heading": "Tekst"
+                },
+                "banners": {
+                    "heading": "Bannere"
+                },
+                "viewJPG": {
+                    "heading": "Forhåndsvisning"
+                }
+            }
+        },
+        "published": {
+            "heading": "Publiserte"
+        },
+        "archived": {
+            "heading": "Arkiverte"
+        },
+        "signIn": {
+            "heading": "Logg Inn",
+            "form": {
+                "labels": {
+                    "username": "Din e-post",
+                    "password": "Passord"
+                }, 
+                "submit": "Logg inn"
+            }
+        },
+        "newCampaign": {
+            "heading": "Opprett Ny Kampanje",
+            "form": {
+                "labels": {
+                    "address": "Addresse",
+                    "price": "Pris",
+                    "rooms": "Antall Soverom",
+                    "sizePrimary": "Areal P-Rom (kvm)",
+                    "sizeUsable": "Bruksareal (kvm)",
+                    "area": "Område",
+                    "submit": "Lagre og gå videre til kampanjeskaperen"
+                }
+            }
+        },
+        "billing": {
+            "heading": "Fakturaer"
+        },
+        "inviteUser": {
+            "heading": "Invitere Ny Bruker",
+            "form": {
+                "labels": {
+                    "select-company": "Velg kunde",
+                    "company-name": "Kundenavn",
+                    "full-name": "Fullt navn på bruker",
+                    "email": "E-post",
+                    "submit": "Send invitasjon på e-post"
+                },
+                "submit": "Send"
+            }
+        },
+        "admin": {
+            "heading": "Administrasjonspanel",
+            "links": {
+                "invite-user": "Invitere ny bruker"
+            }
+        },
+        "approvals": {
+            "heading": "Til Godkjenning"
+        }
+      },
+      "buttons": {
+        "submit": "Lagre"
+      }
+  }
+  

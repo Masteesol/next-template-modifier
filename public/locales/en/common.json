@@ -1,0 +1,18 @@
+{
+    "greeting": "Welcome",
+    "languageSwitch": "Switch Language",
+    "navigation": {
+        "home": "Home",
+        "campaigns": "Campaigns",
+        "settings": "Settings",
+        "clients": "Companies"
+      },
+      "paths": {
+        "home": "Home",
+        "register-new-company": "Register New Company",
+        "sign-in": "Sign In",
+        "new": "New Campaign",
+        "unpublished": "Not Published",
+        "invite-user": "Invite User"
+      }
+  }

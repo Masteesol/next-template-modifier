@@ -11,8 +11,8 @@ import IdComponent from "./PageLayoutComponents/idComponent";
 import useDarkMode from "@/hooks/useDarkMode";
 import { SelectedCompanyProvider } from '@/context/SelectedCompanyContext';
 //import { Error400PageContent } from "@/components/ErrorPageComponent";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
-import { useAuth } from "@/hooks/useAuth";
+//import { useRequireAuth } from "@/hooks/useRequireAuth";
+//import { useAuth } from "@/hooks/useAuth";
 
 
 interface PageLayoutProps {
@@ -71,9 +71,9 @@ const PageLayout = ({ children }: PageLayoutProps) => {
   const handleDarkModeToggle = () => {
     toggleDarkMode();
   };
-  useRequireAuth();
-  const { isAuthenticated } = useAuth();
-
+  //useRequireAuth();
+  //const { isAuthenticated } = useAuth();
+  const isAuthenticated = true
   if (!isAuthenticated) {
     return <SelectedCompanyProvider>
       <div className={`${darkMode ? "dark" : ""}`}>

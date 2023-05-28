@@ -1,13 +1,16 @@
 import { useEffect, useCallback, useState } from "react";
+import { useRouter } from "next/router"
 import {
-  FaHome,
-  FaTable,
-  FaUsers,
-  FaCog,
-  FaChevronRight,
-  FaChevronLeft,
-  FaBriefcase,
-} from "react-icons/fa";
+  BsHouseDoor,
+  BsHouseDoorFill,
+  BsFileEarmarkText,
+  BsFileEarmarkTextFill,
+  BsPerson,
+  BsPersonFill,
+  BsChevronRight,
+  BsChevronLeft
+
+} from "react-icons/bs";
 import tw from "tailwind-styled-components";
 import { FlexColCenteredX, FlexColCentered } from "@/components/styled-global-components";
 import Link from "next/link";
@@ -21,7 +24,7 @@ const Sidebar = tw.aside`
   bg-white
   text-xs
   p-2
-  bg-slate-900
+  bg-green-100
   text-white
   absolute
   md:relative
@@ -30,7 +33,8 @@ const Sidebar = tw.aside`
 
 const SideBarItemContainer = tw(FlexColCentered)`
   my-1
-  hover:bg-slate-800
+  text-slate-900
+  hover:bg-green-200
   rounded
   group
 `;
@@ -40,7 +44,7 @@ const SidebarText = tw.p`
   text-xs
   absolute
   left-10
-  bg-slate-800
+  bg-slate-100
   p-1
   rounded
   opacity-0
@@ -69,6 +73,10 @@ const ToggleButton = tw.button`
 
 const SidebarElement = () => {
   const { t } = useTranslation("common");
+  const router = useRouter();
+
+  const { id } = router.query;
+  console.log("id", id)
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const toggleSidebar = () => {
@@ -99,31 +107,28 @@ const SidebarElement = () => {
         <FlexColCenteredX className="w-full">
           <SideBarItemContainer>
             <Link href="/" className="flex flex-col items-center relative p-2">
-              <FaHome size={28} />
+              {router.pathname === "/"
+                ? <BsHouseDoorFill size={28} />
+                : <BsHouseDoor size={28} />
+              }
               <SidebarText>{translateOrDefault(t, "navigation.home", "Home")}</SidebarText>
             </Link>
           </SideBarItemContainer>
           <SideBarItemContainer>
-            <Link href="/campaigns" className="flex flex-col items-center relative p-2">
-              <FaTable size={28} />
-              <SidebarText>{translateOrDefault(t, "navigation.campaigns", "Campaigns")}</SidebarText>
-            </Link>
-          </SideBarItemContainer>
-          <SideBarItemContainer>
-            <Link href="/companies" className="flex flex-col items-center relative p-2">
-              <FaBriefcase size={28} />
-              <SidebarText>{translateOrDefault(t, "navigation.clients", "Companies")}</SidebarText>
-            </Link>
-          </SideBarItemContainer>
-          <SideBarItemContainer>
-            <Link href="/admin" className="flex flex-col items-center relative p-2">
-              <FaUsers size={28} />
-              <SidebarText>Admin</SidebarText>
+            <Link href="/templates" className="flex flex-col items-center relative p-2">
+              {router.pathname.startsWith("/templates")
+                ? <BsFileEarmarkTextFill size={28} />
+                : <BsFileEarmarkText size={28} />
+              }
+              <SidebarText>{translateOrDefault(t, "navigation.templates", "Templates")}</SidebarText>
             </Link>
           </SideBarItemContainer>
           <SideBarItemContainer>
             <Link href="/settings" className="flex flex-col items-center relative p-2">
-              <FaCog size={25} />
+              {router.pathname.startsWith("/settings")
+                ? <BsPersonFill size={25} />
+                : <BsPerson size={25} />
+              }
               <SidebarText>{translateOrDefault(t, "navigation.settings", "Settings")}</SidebarText>
             </Link>
           </SideBarItemContainer>
@@ -136,7 +141,7 @@ const SidebarElement = () => {
         />
       )}
       <ToggleButton onClick={toggleSidebar}>
-        {!isOpen ? <FaChevronRight size={25} /> : <FaChevronLeft size={25} />}
+        {!isOpen ? <BsChevronRight size={25} /> : <BsChevronLeft size={25} />}
       </ToggleButton>
     </div>
   );

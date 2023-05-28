@@ -19,6 +19,7 @@ export default function Page() {
   const [textTemplates, setTextTemplates] = useState(mockData.templateText)
   const [selectedTemplates, setSelectedTemplates] = useState(textTemplates[0].templates); // Init with the first category's templates
   const [templateRefs, setTemplateRefs] = useState<React.RefObject<HTMLDivElement>[]>([]);
+
   const handleSelectCategory = (index: number) => {
     setSelectedCategory(index);
     setSelectedTemplates(textTemplates[index].templates);
@@ -36,6 +37,14 @@ export default function Page() {
     newTextTemplates[index].category = e.target.value;
     setTextTemplates(newTextTemplates);
   };
+
+  const handleTextTemplateChange = (index: number, newTemplate: any) => {
+    setTextTemplates(prevTemplates => {
+      const newTemplates = [...prevTemplates];
+      newTemplates[index] = newTemplate;
+      return newTemplates;
+    });
+  }
 
   const addCategory = () => {
     const newCategory = {
@@ -164,7 +173,17 @@ export default function Page() {
               <FlexColContainer className="max-h-[77vh] overflow-y-auto">
                 <FlexColContainer className="gap-4 pe-[4rem]">
                   {selectedTemplates.length > 0
-                    ? selectedTemplates.map((template, index) => <ForwardedRefTemplateCard key={index} index={index} template={template} removeTemplate={removeTemplate} ref={templateRefs[index]} />)
+                    ? selectedTemplates.map((template, index) =>
+                      <ForwardedRefTemplateCard
+                        key={index}
+                        index={index}
+                        template={template}
+                        removeTemplate={removeTemplate}
+                        ref={templateRefs[index]}
+                        handleTextTemplateChange={handleTextTemplateChange}
+                        textTemplates={textTemplates}
+                      />
+                    )
                     : <FlexColCentered className="h-full"><i>Click the add button to create new template</i></FlexColCentered>
                   }
                 </FlexColContainer>
@@ -276,48 +295,48 @@ const IconContainer = tw(FlexColCentered)`
 `
 
 
-interface TemplateType {
-  template: {
-    title: string,
-    text: string
-  }
-  index: number;
-}
 
-const TemplateCard = ({ template, index, removeTemplate }: TemplateType & { removeTemplate: (index: number) => void }, ref: any) => {
-  // ...existing code...
+
+const TemplateCard = (props: any, ref: any) => {
+  const { template, index, handleTextTemplateChange, removeTemplate } = props
+  const templateIndex = index
   const [textTemplate, setTextTemplate] = useState(template);
   const [isEditActive, setIsEditActive] = useState<boolean>(false);
   const [inputValues, setInputValues] = useState<Record<string, string | undefined>>({});
   const [hasBeenCopied, setHasBeenCopied] = useState<boolean>(false);
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
-  const templateIndex = index
 
   useEffect(() => {
     setTextTemplate(template);
+    setInputValues({});
   }, [template]);
 
 
   const handleEditActive = () => {
-    setIsEditActive(!isEditActive);
+    setIsEditActive(prevIsEditActive => !prevIsEditActive);
     setInputValues({});
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextTemplate({ text: e.target.value, title: textTemplate.title });
+    const newTemplate = { text: e.target.value, title: textTemplate.title };
+    setTextTemplate(newTemplate);
+    handleTextTemplateChange(index, newTemplate);
   };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTextTemplate({ title: e.target.value, text: textTemplate.text });
+    const newTemplate = { title: e.target.value, text: textTemplate.text };
+    setTextTemplate(newTemplate);
+    handleTextTemplateChange(index, newTemplate);
   };
 
 
   const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValues({
-      ...inputValues,
+    setInputValues(prevInputValues => ({
+      ...prevInputValues,
       [index]: event.target.value,
-    });
+    }));
   };
+
 
   const handleCopy = () => {
     let finalText = textTemplate.text;
@@ -335,7 +354,7 @@ const TemplateCard = ({ template, index, removeTemplate }: TemplateType & { remo
   const handleRemoveTemplate = () => removeTemplate(index);
   let placeholderCount = 0; // this variable will track the number of placeholders encountered
   const regex = /#|\b\w+\b/g;
-  const placeholders = textTemplate.text.match(regex)?.map((word, index) => {
+  const placeholders = textTemplate.text.match(regex)?.map((word: any, index: any) => {
     if (word === '#') {
       const count = placeholderCount; // save the current placeholder count to use in the handler function
       placeholderCount += 1;
@@ -356,7 +375,7 @@ const TemplateCard = ({ template, index, removeTemplate }: TemplateType & { remo
     }
   });
 
-  const displayText = textTemplate.text.split("#").map((segment, index) => {
+  const displayText = textTemplate.text.split("#").map((segment: any, index: number) => {
     if (index < textTemplate.text.split("#").length - 1) {
       return (
         <span key={index}>

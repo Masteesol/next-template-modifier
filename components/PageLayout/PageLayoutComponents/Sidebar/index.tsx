@@ -74,9 +74,6 @@ const ToggleButton = tw.button`
 const SidebarElement = () => {
   const { t } = useTranslation("common");
   const router = useRouter();
-
-  const { id } = router.query;
-  console.log("id", id)
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const toggleSidebar = () => {

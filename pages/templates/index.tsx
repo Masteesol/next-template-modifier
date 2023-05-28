@@ -1,19 +1,80 @@
 import Head from "next/head";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PageLayout from "@/components/PageLayout";
-import { FlexColCentered, FlexColContainer, FlexColRowContainer, FlexRowCenteredY, H1 } from "@/components/styled-global-components";
-import { useTranslation } from "next-i18next";
+import { CardBaseLightHover, DividerPipe, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, FlexRowContainer } from "@/components/styled-global-components";
+//import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
-import { translateOrDefault } from "@/utils/i18nUtils";
-import { BsX } from "react-icons/bs";
+//import { translateOrDefault } from "@/utils/i18nUtils";
+import { BsXLg } from "react-icons/bs";
 import tw from "tailwind-styled-components";
-import { FaCheck, FaCopy, FaEdit } from "react-icons/fa";
+import { FaArrowAltCircleRight, FaCheck, FaCopy, FaEdit, FaPlus } from "react-icons/fa";
 import { CardBaseLight } from "@/components/styled-global-components";
 
+import mockData from "@/mockData/templateText.json"
 
 export default function Page() {
-  const { t } = useTranslation("common");
+  //const { t } = useTranslation("common");
+  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [textTemplates, setTextTemplates] = useState(mockData.templateText)
+  const [selectedTemplates, setSelectedTemplates] = useState(textTemplates[0].templates); // Init with the first category's templates
+
+  const handleSelectCategory = (index: number) => {
+    setSelectedCategory(index);
+    setSelectedTemplates(textTemplates[index].templates);
+  }
+
+  const handleInputCatTitleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const newTextTemplates = [...textTemplates];
+    newTextTemplates[index].category = e.target.value;
+    setTextTemplates(newTextTemplates);
+  };
+
+  const addCategory = () => {
+    const newCategory = {
+      category: "New Category",
+      templates: [],
+    };
+    const updatedTextTemplates = [newCategory, ...textTemplates];
+    setTextTemplates(updatedTextTemplates);
+    setSelectedCategory(0);
+    setSelectedTemplates(updatedTextTemplates[0].templates);
+    console.log(textTemplates)
+  };
+  const addTemplate = () => {
+    const newTemplate = {
+      title: "New Template",
+      text: "Click the edit button to create a new template.\n\nUse the hash symbol to create placeholders for your template text.\n\nWhen you save your template, you will see placeholders and input fields for each hash symbol in the template.\n\n An empty placeholder look like this: # \n\n"
+    };
+    const updatedTemplates = [newTemplate, ...selectedTemplates];
+    const updatedTextTemplates = textTemplates.map((item, index) => {
+      if (index === selectedCategory) {
+        return {
+          ...item,
+          templates: updatedTemplates,
+        };
+      }
+      return item;
+    });
+    setTextTemplates(updatedTextTemplates);
+    setSelectedTemplates(updatedTemplates);
+  };
+
+  const removeTemplate = (index: number) => {
+    const updatedTemplates = selectedTemplates.filter((_, i) => i !== index);
+    const updatedTextTemplates = textTemplates.map((item, index) => {
+      if (index === selectedCategory) {
+        return {
+          ...item,
+          templates: updatedTemplates,
+        };
+      }
+      return item;
+    });
+    setTextTemplates(updatedTextTemplates);
+    setSelectedTemplates(updatedTemplates);
+  };
+
   return (
     <>
       <Head>
@@ -23,16 +84,96 @@ export default function Page() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout>
-        <FlexColContainer className="min-h-full gap-8">
-          <H1>{translateOrDefault(t, "pages.templates.heading", "Templates")}</H1>
-          <FlexColRowContainer className="flex-wrap gap-4">
-            <TemplateCard />
-          </FlexColRowContainer>
-        </FlexColContainer>
+        <FlexRowContainer className="gap-4">
+          <FlexColCenteredX className="flex-1 max-w-xs gap-4">
+            <AddCategoryButton onClick={addCategory} />
+            {textTemplates.map((item, index) => {
+              return <CategoryCard
+                key={"cat-card-" + index}
+                index={index}
+                category={item.category}
+                selectedCategory={selectedCategory}
+                handleSelectCategory={() => handleSelectCategory(index)}
+                handleInputCatTitleChange={handleInputCatTitleChange}
+              />
+            })}
+          </FlexColCenteredX>
+          <DividerPipe />
+          <FlexColContainer className="gap-4 max-w-[700px]">
+            <AddTemplateButton onClick={addTemplate} />
+            {selectedTemplates.length > 0
+              ? selectedTemplates.map((template, index) => <TemplateCard key={index} index={index} template={template} removeTemplate={removeTemplate} />)
+              : <FlexColCentered className="h-full"><i>Click the add button to create new template</i></FlexColCentered>
+            }
+          </FlexColContainer>
+        </FlexRowContainer>
       </PageLayout>
     </>
   );
 }
+
+const AddButton = tw.button`
+  w-full
+  bg-transparent
+  border-[1px]
+  border-green-500
+  dark:border-green-500
+  text-green-500
+  rounded
+  p-4
+  hover:border-gray-300
+  hover:text-gray-300
+  hover:dark:border-gray-300
+  hover:dark:text-gray-300
+`
+
+const AddCategoryButton = ({ onClick }: any) => {
+  return <AddButton onClick={onClick}>
+    <FlexColCentered>
+      <FaPlus />
+    </FlexColCentered>
+  </AddButton>
+}
+
+const AddTemplateButton = ({ onClick }: any) => {
+  return <AddButton className="lg:w-[35rem]" onClick={onClick}>
+    <FlexColCentered>
+      <FaPlus />
+    </FlexColCentered>
+  </AddButton>
+}
+
+interface CatType {
+  category: string
+  index: number;
+  handleSelectCategory: any;
+  selectedCategory: any;
+  handleInputCatTitleChange: any
+}
+
+
+const CategoryCard = ({ category, index, handleSelectCategory, selectedCategory, handleInputCatTitleChange }: CatType) => {
+  return (
+    <CardBaseLightHover
+      className={`${selectedCategory === index && "bg-green-300 dark:bg-green-900"} w-full p-4`}
+      id={index.toString()}
+    >
+      <FlexRowCenteredY className="gap-4">
+        <InputBase
+          type="text"
+          value={category}
+          className="font-bold"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputCatTitleChange(e, index)}
+        />
+        <FaArrowAltCircleRight
+          className="text-2xl cursor-pointer hover:text-green-800 dark:hover:text-green-100"
+          onClick={handleSelectCategory}
+        />
+      </FlexRowCenteredY>
+    </CardBaseLightHover>
+  );
+};
+
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
@@ -42,23 +183,24 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   };
 };
 
-const CardInput = tw.input`
-  border-0 
+
+const InputBase = tw.input`
+  border-1 
+  border-transparent
   rounded 
+  bg-transparent 
+  focus:border-1 
+  focus:border-green-200 
+  focus:ring-green-200
+`
+
+const CardInput = tw(InputBase)`
   bg-slate-50
   col-span-full 
   sm:col-span-1
   dark:bg-gray-800
 `
-/*
-const CardTextArea = tw.textarea`
-  border-0 
-  rounded 
-  bg-slate-50
-  dark:bg-gray-800
-  min-h-[15rem]
-`
-*/
+
 const IconContainer = tw(FlexColCentered)`
   p-1 
   rounded 
@@ -68,14 +210,28 @@ const IconContainer = tw(FlexColCentered)`
   dark:hover:bg-slate-500
 `
 
-const testString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin congue vitae ex vel cursus. Sed nec sem dictum, luctus dui vel, maximus lorem. Phasellus at bibendum purus. Vestibulum tempor in diam pulvinar dictum. In gravida tincidunt imperdiet. Morbi varius, nulla at bibendum ultricies, massa ipsum sagittis neque, vitae congue urna. "
 
-const TemplateCard = () => {
-  const [textTemplate, setTextTemplate] = useState<string>(testString);
+interface TemplateType {
+  template: {
+    title: string,
+    text: string
+  }
+  index: number;
+}
+
+const TemplateCard = ({ template, index, removeTemplate }: TemplateType & { removeTemplate: (index: number) => void }) => {
+  // ...existing code...
+  const [textTemplate, setTextTemplate] = useState(template);
   const [isEditActive, setIsEditActive] = useState<boolean>(false);
   const [inputValues, setInputValues] = useState<Record<string, string | undefined>>({});
   const [hasBeenCopied, setHasBeenCopied] = useState<boolean>(false);
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
+  const templateIndex = index
+
+  useEffect(() => {
+    setTextTemplate(template);
+  }, [template]);
+
 
   const handleEditActive = () => {
     setIsEditActive(!isEditActive);
@@ -83,7 +239,11 @@ const TemplateCard = () => {
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextTemplate(e.target.value);
+    setTextTemplate({ text: e.target.value, title: textTemplate.title });
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTextTemplate({ title: e.target.value, text: textTemplate.text });
   };
 
 
@@ -95,7 +255,7 @@ const TemplateCard = () => {
   };
 
   const handleCopy = () => {
-    let finalText = textTemplate;
+    let finalText = textTemplate.text;
     Object.keys(inputValues).forEach(key => {
       finalText = finalText.replace('#', inputValues[key] || '');
     });
@@ -107,10 +267,10 @@ const TemplateCard = () => {
       })
       .catch(err => console.log('Something went wrong', err));
   };
-
+  const handleRemoveTemplate = () => removeTemplate(index);
   let placeholderCount = 0; // this variable will track the number of placeholders encountered
   const regex = /#|\b\w+\b/g;
-  const placeholders = textTemplate.match(regex)?.map((word, index) => {
+  const placeholders = textTemplate.text.match(regex)?.map((word, index) => {
     if (word === '#') {
       const count = placeholderCount; // save the current placeholder count to use in the handler function
       placeholderCount += 1;
@@ -118,9 +278,9 @@ const TemplateCard = () => {
         <CardInput
           key={index}
           type="text"
-          placeholder={"Placeholder " + index}
+          placeholder={"Word " + (index + 1)}
           value={inputValues[count] || ''}
-          id={"input-" + count}
+          id={`input-${count}-${templateIndex}`}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(count, event)}
           onFocus={() => setFocusedInput(count)}
           onBlur={() => setFocusedInput(null)}
@@ -131,17 +291,16 @@ const TemplateCard = () => {
     }
   });
 
-
-  const displayText = textTemplate.split("#").map((segment, index) => {
-    if (index < textTemplate.split("#").length - 1) {
+  const displayText = textTemplate.text.split("#").map((segment, index) => {
+    if (index < textTemplate.text.split("#").length - 1) {
       return (
         <span key={index}>
           {segment}
           <label
-            htmlFor={"input-" + index}
-            className={`bg-green-100 cursor-pointer ${index === focusedInput && 'bg-green-300'} dark:bg-green-600 dark:hover:bg-green-900`}
+            htmlFor={`input-${index}-${templateIndex}`}
+            className={`bg-green-100 cursor-pointer rounded px-1 pb-1 leading-8 ${index === focusedInput && 'bg-green-300 text-green-900 dark:text-white'} dark:bg-green-600 dark:hover:bg-green-900 text-green-800 dark:text-white`}
           >
-            {inputValues[index] || '{...}'}
+            {inputValues[index] || "{  }"}
           </label>
         </span>
       );
@@ -151,12 +310,16 @@ const TemplateCard = () => {
   });
   return (
     <>
-      <CardBaseLight>
-        <FlexColContainer className="min-h-[15rem] max w-full lg:w-[35rem] p-4 gap-4">
+      <CardBaseLight className="lg:w-[35rem]">
+        <FlexColContainer className="min-h-[15rem] w-full p-4 gap-4">
           <FlexRowCenteredY className="justify-between gap-4">
-            <input type="text" defaultValue="New card" className="border-0 rounded text-2xl bg-transparent" />
+            <InputBase
+              type="text"
+              value={textTemplate.title}
+              className="text-2xl"
+              onChange={handleTitleChange} />
             <IconContainer>
-              <BsX className="stroke-4" />
+              <BsXLg onClick={handleRemoveTemplate} />
             </IconContainer>
           </FlexRowCenteredY>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -164,11 +327,11 @@ const TemplateCard = () => {
           </div>
           {isEditActive
             ?
-            <textarea className=" border-0 rounded bg-slate-50 dark:bg-gray-800 min-h-[15rem]" defaultValue={textTemplate} onChange={handleTextChange} />
-            : <pre className="font-sans" style={{
+            <textarea className=" border-0 rounded bg-slate-50 dark:bg-gray-800 min-h-[15rem]" value={textTemplate.text} onChange={handleTextChange} />
+            : <div className="min-h-[10rem]"><pre className="font-sans" style={{
               whiteSpace: "pre-wrap",
               wordWrap: "break-word"
-            }}>{displayText}</pre>
+            }}>{displayText}</pre></div>
           }
           <FlexRowCenteredY className="justify-end gap-4">
             <IconContainer onClick={handleEditActive}>

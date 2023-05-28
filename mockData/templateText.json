@@ -1,0 +1,49 @@
+{
+    "templateText": [
+        {
+            "category": "Deliveries",
+            "templates": [
+                {
+                    "title": "Delayed Post",
+                    "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny forventet leveringsdato er satt til # kl #.\n\nMvh,\nKundesenter"
+                },
+                {
+                    "title": "Delayed Truck",
+                    "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny dato er satt til # kl #.\n\nMvh,\nKundesenter"
+                },
+                {
+                    "title": "Delayed - Must cancel",
+                    "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny dato er satt til # kl #.\n\nMvh,\nKundesenter"
+                },
+                {
+                    "title": "Delayed - Awaiting stock",
+                    "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny dato er satt til # kl #.\n\nMvh,\nKundesenter"
+                }
+            ]
+        },
+        {
+            "category": "Installations",
+            "templates": [
+                {
+                    "title": "Capacity issues",
+                    "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny dato er satt til # kl #.\n\nMvh,\nKundesenter"
+                },
+                {
+                    "title": "Stock issues",
+                    "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny dato er satt til # kl #.\n\nMvh,\nKundesenter"
+                },
+                {
+                    "title": "Delivery",
+                    "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny dato er satt til # kl #.\n\nMvh,\nKundesenter"
+                }          
+
+            ]
+        },
+        {
+            "category": "Claims",
+            "templates": [        
+
+            ]
+        }
+    ]
+}

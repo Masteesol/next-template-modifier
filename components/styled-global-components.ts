@@ -86,6 +86,16 @@ export const CardBaseDark = tw.div`
     dark:hover:bg-slate-800
 `;
 
+export const CardBaseLightHover = tw.div`
+    shadow
+    rounded
+    bg-white
+    dark:bg-slate-700
+    dark:hover:bg-slate-600
+    hover:bg-slate-100
+`;
+
+
 //_sizing
 export const CardGrid = tw(CardBaseLight)`
   w-full
@@ -168,6 +178,7 @@ export const IconBackground = tw.label`
 export const DividerPipe = tw.div`
     border-[1.4px]
     border-gray-200
+    dark:border-gray-600
     h-full 
 `
 

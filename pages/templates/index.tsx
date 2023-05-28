@@ -1,14 +1,14 @@
 import Head from "next/head";
 import React, { useState, useEffect } from "react";
 import PageLayout from "@/components/PageLayout";
-import { CardBaseLightHover, DividerPipe, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, FlexRowContainer } from "@/components/styled-global-components";
+import { CardBaseLightHover, DividerPipe, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, FlexRowContainer, HollowButton } from "@/components/styled-global-components";
 //import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
 import { BsXLg } from "react-icons/bs";
 import tw from "tailwind-styled-components";
-import { FaArrowAltCircleRight, FaCheck, FaCopy, FaEdit, FaPlus } from "react-icons/fa";
+import { FaArrowAltCircleRight, FaArrowRight, FaCheck, FaCopy, FaEdit, FaPlus } from "react-icons/fa";
 import { CardBaseLight } from "@/components/styled-global-components";
 
 import mockData from "@/mockData/templateText.json"
@@ -18,11 +18,18 @@ export default function Page() {
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [textTemplates, setTextTemplates] = useState(mockData.templateText)
   const [selectedTemplates, setSelectedTemplates] = useState(textTemplates[0].templates); // Init with the first category's templates
-
+  const [templateRefs, setTemplateRefs] = useState<React.RefObject<HTMLDivElement>[]>([]);
   const handleSelectCategory = (index: number) => {
     setSelectedCategory(index);
     setSelectedTemplates(textTemplates[index].templates);
   }
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    const newRefs = selectedTemplates.map((_, i) => templateRefs[i] || React.createRef());
+    setTemplateRefs(newRefs);
+  }, [selectedTemplates]);
+  /* eslint-disable react-hooks/exhaustive-deps */
 
   const handleInputCatTitleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const newTextTemplates = [...textTemplates];
@@ -39,7 +46,7 @@ export default function Page() {
     setTextTemplates(updatedTextTemplates);
     setSelectedCategory(0);
     setSelectedTemplates(updatedTextTemplates[0].templates);
-    console.log(textTemplates)
+    //console.log(textTemplates)
   };
   const addTemplate = () => {
     const newTemplate = {
@@ -84,8 +91,11 @@ export default function Page() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout>
-        <FlexRowContainer className="gap-4">
+        <FlexRowContainer className="gap-8 h-full">
           <FlexColCenteredX className="flex-1 max-w-xs gap-4">
+            <FlexColCentered className="bg-green-200 w-full p-4 rounded">
+              <h2>Categories</h2>
+            </FlexColCentered>
             <AddCategoryButton onClick={addCategory} />
             {textTemplates.map((item, index) => {
               return <CategoryCard
@@ -98,13 +108,68 @@ export default function Page() {
               />
             })}
           </FlexColCenteredX>
+          {selectedTemplates.length > 0 && <DividerPipe />}
+          {selectedTemplates.length > 0 &&
+            <FlexColCenteredX className="w-full gap-4 max-w-sm">
+              <FlexColCentered className="bg-green-200 w-full p-4 rounded">
+                <h2>Navigation</h2>
+              </FlexColCentered>
+              {selectedTemplates.map((template, index) => (
+                <HollowButton
+                  className="w-full text-left flex justify-between"
+                  key={index}
+                  onClick={() => {
+                    if (templateRefs[index] && templateRefs[index].current) {
+                      const animateScroll = (element: HTMLElement, from: number, to: number, duration: number) => {
+                        const start = performance.now();
+                        requestAnimationFrame(function step(timestamp: number) {
+                          const elapsed = timestamp - start;
+                          element.scrollTop = from + ((to - from) * elapsed) / duration;
+                          if (elapsed < duration) {
+                            requestAnimationFrame(step);
+                          } else {
+                            element.scrollTop = to;
+                          }
+                        });
+                      }
+                      const scrollToTemplate = (index: number) => {
+                        const container = document.querySelector('.overflow-y-auto') as HTMLElement; // get the container
+                        const targetElement = templateRefs[index].current as HTMLDivElement; // get the target element
+
+                        if (container && targetElement) {
+                          const targetPosition = targetElement.offsetTop - container.offsetTop; // calculate target position
+                          animateScroll(container, container.scrollTop, targetPosition, 200); // animate over 500ms
+                        }
+                      };
+
+                      scrollToTemplate(index)
+                    }
+                  }}
+                >
+                  {template.title}
+                  <FaArrowRight
+                    className="text-2xl cursor-pointer hover:text-green-800 dark:hover:text-green-100"
+                  />
+                </HollowButton>
+              ))}
+            </FlexColCenteredX>
+          }
           <DividerPipe />
-          <FlexColContainer className="gap-4 max-w-[700px]">
-            <AddTemplateButton onClick={addTemplate} />
-            {selectedTemplates.length > 0
-              ? selectedTemplates.map((template, index) => <TemplateCard key={index} index={index} template={template} removeTemplate={removeTemplate} />)
-              : <FlexColCentered className="h-full"><i>Click the add button to create new template</i></FlexColCentered>
-            }
+          <FlexColContainer className="gap-4 w-full">
+            <FlexColContainer className="w-full lg:w-[40rem] gap-4">
+              <FlexColCentered className="bg-green-200 w-full p-4 rounded lg:w-[35rem]">
+                <h2>Templates</h2>
+              </FlexColCentered>
+              <AddTemplateButton onClick={addTemplate} />
+              <FlexColContainer className="max-h-[77vh] overflow-y-auto">
+                <FlexColContainer className="gap-4 pe-[4rem]">
+                  {selectedTemplates.length > 0
+                    ? selectedTemplates.map((template, index) => <ForwardedRefTemplateCard key={index} index={index} template={template} removeTemplate={removeTemplate} ref={templateRefs[index]} />)
+                    : <FlexColCentered className="h-full"><i>Click the add button to create new template</i></FlexColCentered>
+                  }
+                </FlexColContainer>
+              </FlexColContainer>
+            </FlexColContainer>
           </FlexColContainer>
         </FlexRowContainer>
       </PageLayout>
@@ -112,18 +177,18 @@ export default function Page() {
   );
 }
 
+
+
 const AddButton = tw.button`
   w-full
-  bg-transparent
-  border-[1px]
-  border-green-500
-  dark:border-green-500
-  text-green-500
+  bg-gray-200
+  text-gray-800
+  dark:text-gray-200
+  dark:bg-gray-700
   rounded
   p-4
-  hover:border-gray-300
-  hover:text-gray-300
-  hover:dark:border-gray-300
+  hover:text-gray-400
+  hover:bg-gray-300
   hover:dark:text-gray-300
 `
 
@@ -219,7 +284,7 @@ interface TemplateType {
   index: number;
 }
 
-const TemplateCard = ({ template, index, removeTemplate }: TemplateType & { removeTemplate: (index: number) => void }) => {
+const TemplateCard = ({ template, index, removeTemplate }: TemplateType & { removeTemplate: (index: number) => void }, ref: any) => {
   // ...existing code...
   const [textTemplate, setTextTemplate] = useState(template);
   const [isEditActive, setIsEditActive] = useState<boolean>(false);
@@ -310,7 +375,7 @@ const TemplateCard = ({ template, index, removeTemplate }: TemplateType & { remo
   });
   return (
     <>
-      <CardBaseLight className="lg:w-[35rem]">
+      <CardBaseLight className="lg:w-[35rem]" ref={ref}>
         <FlexColContainer className="min-h-[15rem] w-full p-4 gap-4">
           <FlexRowCenteredY className="justify-between gap-4">
             <InputBase
@@ -348,3 +413,4 @@ const TemplateCard = ({ template, index, removeTemplate }: TemplateType & { remo
   );
 };
 
+const ForwardedRefTemplateCard = React.forwardRef(TemplateCard);

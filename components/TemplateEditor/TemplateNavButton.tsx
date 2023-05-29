@@ -35,7 +35,7 @@ const NavHollowButton = ({ index, templateRefs, template }: any) => {
     >
         {template.title}
         <FaArrowRight
-            className="text-2xl cursor-pointer hover:text-green-800 dark:hover:text-green-100"
+            className="text-2xl cursor-pointer hover:text-green-800 dark:hover:text-green-100 ms-auto"
         />
     </HollowButton>
 }

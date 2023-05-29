@@ -142,7 +142,10 @@ const TemplateCard = (props: any, ref: any) => {
                             type="text"
                             value={textTemplate.title}
                             className="text-2xl"
-                            onChange={handleTitleChange} />
+                            onChange={handleTitleChange}
+                            placeholder="Template Title..."
+                        />
+
                         <IconContainer>
                             <BsXLg onClick={handleRemoveTemplate} />
                         </IconContainer>

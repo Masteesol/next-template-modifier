@@ -49,10 +49,7 @@ const AuthenticatedPageLayout = ({ children }: PageLayoutProps) => {
             id="main"
             className="w-full overflow-auto bg-slate-50 dark:bg-gray-800 box-border"
           >
-            <FlexColContainer className="max-w-[1980px] w-full mx-auto px-2 pt-4 xl:px-10 h-full">
-              {children}
-              <div className="spacer h-[7rem]"></div>
-            </FlexColContainer>
+            {children}
           </FlexColContainer>
         </FlexColContainer>
       </FlexRowContainer>
@@ -87,7 +84,6 @@ const PageLayout = ({ children }: PageLayoutProps) => {
             className="w-full overflow-auto bg-slate-50 dark:bg-gray-800 box-border"
           >
             <FlexColContainer className="max-w-[1980px] w-full mx-auto px-2 pt-4 xl:px-10">
-
               <FlexColCentered className="h-[100vh] w-full">
                 <H1 className="pb-9">
                   Loading...

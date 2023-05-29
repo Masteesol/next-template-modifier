@@ -1,6 +1,7 @@
 import tw from "tailwind-styled-components";
 import { CardBaseLightHover, FlexRowCenteredY } from "@/components/styled-global-components";
-import { FaArrowAltCircleLeft, FaArrowRight, FaCheck, FaTrash } from "react-icons/fa";
+import { FaArrowRight, FaCheck, FaTrash } from "react-icons/fa";
+import { BsXLg } from "react-icons/bs";
 import { useState } from "react"
 const InputBase = tw.input`
   border-1 
@@ -51,7 +52,7 @@ const CategoryCard = ({ category, index, handleSelectCategory, selectedCategory,
                 />
                 {isDeleteActive && selectedCategory === index
                     && <FlexRowCenteredY className="gap-4 ms-auto">
-                        <FaArrowAltCircleLeft className="text-xl cursor-pointer hover:text-green-800 dark:hover:text-green-100" onClick={handleDeleteFirstStep} />
+                        <BsXLg className="text-xl cursor-pointer hover:text-green-800 dark:hover:text-green-100" onClick={handleDeleteFirstStep} />
                         <FaCheck
                             className="text-2xl cursor-pointer hover:text-green-800 dark:hover:text-green-100"
                             onClick={handleRemoveArrayEntry}

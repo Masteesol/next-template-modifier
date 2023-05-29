@@ -1,21 +1,25 @@
 {
     "templateText": [
-        {
+        {   
             "category": "Deliveries",
             "templates": [
                 {
+                    "id": "1werwerw234234234",
                     "title": "Delayed Post",
                     "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny forventet leveringsdato er satt til # kl #.\n\nMvh,\nKundesenter"
                 },
                 {
+                    "id": "2234234fd3f4f",
                     "title": "Delayed Truck",
                     "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny dato er satt til # kl #.\n\nMvh,\nKundesenter"
                 },
                 {
+                    "id": "334t634tgsdgsg",
                     "title": "Delayed - Must cancel",
                     "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny dato er satt til # kl #.\n\nMvh,\nKundesenter"
                 },
                 {
+                    "id": "4rg3e45g354tg345",
                     "title": "Delayed - Awaiting stock",
                     "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny dato er satt til # kl #.\n\nMvh,\nKundesenter"
                 }
@@ -25,14 +29,17 @@
             "category": "Installations",
             "templates": [
                 {
+                    "id": "5rg354gdgfdgfg",
                     "title": "Capacity issues",
                     "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny dato er satt til # kl #.\n\nMvh,\nKundesenter"
                 },
                 {
+                    "id": "65gher5th456h54h4h",
                     "title": "Stock issues",
                     "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny dato er satt til # kl #.\n\nMvh,\nKundesenter"
                 },
                 {
+                    "id": "6thrthrthrth",
                     "title": "Delivery",
                     "text": "Hei #!\n\nDin ordre # er dessverre forsinket og ny dato er satt til # kl #.\n\nMvh,\nKundesenter"
                 }          

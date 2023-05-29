@@ -135,7 +135,7 @@ const TemplateCard = (props: any, ref: any) => {
     });
     return (
         <>
-            <CardBaseLight className="lg:w-[35rem]" ref={ref}>
+            <CardBaseLight className="w-full max-w-[800px]" ref={ref}>
                 <FlexColContainer className="min-h-[15rem] w-full p-4 gap-4">
                     <FlexRowCenteredY className="justify-between gap-4">
                         <InputBase
@@ -150,7 +150,7 @@ const TemplateCard = (props: any, ref: any) => {
                             <BsXLg onClick={handleRemoveTemplate} />
                         </IconContainer>
                     </FlexRowCenteredY>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">
                         {placeholders}
                     </div>
                     {isEditActive

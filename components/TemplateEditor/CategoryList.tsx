@@ -17,13 +17,12 @@ export const CategoryHeaderButton = ({ viewCategories, handleViewCategorySelect 
 const AddButton = tw.button`
   w-full
   bg-gray-400
-  text-gray-900
-  dark:text-gray-
-  dark:bg-gray-700
   rounded
   p-4
-  hover:text-gray-400
-  hover:bg-gray-300
+  text-gray-900
+  dark:text-gray-500
+  dark:bg-gray-700
+  hover:bg-gray-500
   hover:dark:text-gray-300
 `
 

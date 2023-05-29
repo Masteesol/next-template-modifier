@@ -6,6 +6,7 @@ const NavHollowButton = ({ index, templateRefs, template }: any) => {
         className="w-full text-left flex justify-between"
         key={index}
         onClick={() => {
+            console.log(templateRefs[index])
             if (templateRefs[index] && templateRefs[index].current) {
                 const animateScroll = (element: HTMLElement, from: number, to: number, duration: number) => {
                     const start = performance.now();
@@ -20,7 +21,8 @@ const NavHollowButton = ({ index, templateRefs, template }: any) => {
                     });
                 }
                 const scrollToTemplate = (index: number) => {
-                    const container = document.querySelector('.overflow-y-auto') as HTMLElement; // get the container
+                    const container = document.querySelector('#templates-container') as HTMLElement; // get the container
+                    console.log(container)
                     const targetElement = templateRefs[index].current as HTMLDivElement; // get the target element
 
                     if (container && targetElement) {

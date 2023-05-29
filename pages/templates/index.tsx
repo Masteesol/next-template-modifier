@@ -1,7 +1,7 @@
 import Head from "next/head";
 import React, { useState, useEffect } from "react";
 import PageLayout from "@/components/PageLayout";
-import { DividerPipe, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, FlexRowContainer } from "@/components/styled-global-components";
+import { FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, FlexRowContainer } from "@/components/styled-global-components";
 //import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
@@ -13,7 +13,6 @@ import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import mockData from "@/mockData/templateText.json"
 //import mockData from "@/mockData/templateTextEmpty.json"
 import ForwardedRefTemplateCard from "@/components/TemplateEditor/TemplateCard";
-import CategoryCard from "@/components/TemplateEditor/CategoryCard";
 import TemplateNavButton from "@/components/TemplateEditor/TemplateNavButton";
 import CategoryList, { CategoryHeaderButton } from "@/components/TemplateEditor/CategoryList";
 import GuidingDescriptionText from "@/components/TemplateEditor/GuidingDescription";
@@ -147,92 +146,86 @@ export default function Page() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout>
-        <FlexColContainer className="h-full">
-          <FlexColContainer className={`gap-4 max-w-[90vw] overflow-y-auto h-full`}>
-            <FlexRowContainer className="h-full gap-2">
-              <FlexRowContainer className="gap-4 absolute bottom-[5rem] lg:bottom-[2rem] w-[90%]">
-                {!viewCategories &&
-                  <FlexRowContainer className="min-w-[50%] lg:min-w-[20rem] lg:max-w-[17rem]">
-                    <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
-                  </FlexRowContainer>
-                }
-                {textTemplates.length > 0 &&
-                  textTemplates[selectedCategory].templates.length > 0 && !viewNavigation &&
-                  <FlexRowContainer className="min-w-[50%] lg:min-w-[20rem] lg:max-w-[20rem]">
-                    <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
-                  </FlexRowContainer>
-                }
+        <FlexRowContainer className="h-full gap-2 overflow-x-auto">
+          <FlexRowContainer className="gap-4 absolute bottom-[5rem] lg:bottom-[2rem] w-[90%] justify-end">
+            {!viewCategories &&
+              <FlexRowContainer className="min-w-[50%] lg:min-w-[20rem] lg:max-w-[17rem]">
+                <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
               </FlexRowContainer>
-              <FlexRowContainer className="bg-gray-200 gap-2 h-full">
-                <FlexRowContainer className="h-full bg-gray-300">
-                  {viewCategories &&
-                    <CategoryList
-                      viewCategories={viewCategories}
-                      handleViewCategorySelect={handleViewCategorySelect}
-                      textTemplates={textTemplates}
-                      addCategory={addCategory}
-                      selectedCategory={selectedCategory}
-                      handleSelectCategory={handleSelectCategory}
-                      removeCategory={removeCategory}
-                      handleInputCatTitleChange={handleInputCatTitleChange}
-                    />
-                  }
-                </FlexRowContainer>
-                {
-                  textTemplates.length > 0 &&
-                  textTemplates[selectedCategory].templates.length > 0 &&
-                  viewNavigation &&
-                  <FlexColCenteredX className="w-full gap-4 min-w-[18rem] max-w-[18rem] pe-2">
-                    <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
-                    {textTemplates[selectedCategory].templates.map((template, templateIndex) => (
-                      <TemplateNavButton
-                        template={template}
-                        index={templateIndex}
-                        categoryIndex={selectedCategory}
-                        templateRefs={templateRefs}
-                        key={`template-nav-button-${selectedCategory}-${templateIndex}`}
-                      />
-                    ))}
-                  </FlexColCenteredX>
-                }
+            }
+            {textTemplates.length > 0 &&
+              textTemplates[selectedCategory].templates.length > 0 && !viewNavigation &&
+              <FlexRowContainer className="min-w-[50%] lg:min-w-[20rem] lg:max-w-[20rem]">
+                <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
               </FlexRowContainer>
-              {viewNavigation && <DividerPipe />}
-              <FlexColContainer className="gap-4 w-full">
-                <FlexColContainer className="w-full max-w-[900px] gap-4">
-                  <FlexColCentered className="bg-green-200 w-full p-4 rounded max-w-[800px]">
-                    <h2>Templates</h2>
-                  </FlexColCentered>
-                  {textTemplates.length > 0 && textTemplates[0].category !== undefined ?
-                    <FlexColContainer className="gap-4">
-                      <AddTemplateButton onClick={addTemplate} />
-                      <FlexColContainer className="max-h-[77vh] overflow-y-auto">
-                        <FlexColContainer className="gap-4 pe-4">
-                          {
-                            textTemplates[selectedCategory].templates.length > 0
-                              ? textTemplates[selectedCategory].templates.map((template, templateIndex) =>
-                                <ForwardedRefTemplateCard
-                                  key={template.id}
-                                  categoryIndex={selectedCategory}
-                                  index={templateIndex}
-                                  template={template}
-                                  removeTemplate={removeTemplate}
-                                  handleTextTemplateChange={handleTextTemplateChange}
-                                  ref={templateRefs[templateIndex]}
-                                />
-                              )
-                              : <GuidingDescriptionText>Click the add button to create new template</GuidingDescriptionText>
-                          }
-                        </FlexColContainer>
-                      </FlexColContainer>
-                    </FlexColContainer>
-                    : <FlexColContainer className="w-full max-w-[800px]"><GuidingDescriptionText>Your templates will show up here, but first add a template category.</GuidingDescriptionText></FlexColContainer>
-                  }
-
-                </FlexColContainer>
-              </FlexColContainer>
+            }
+          </FlexRowContainer>
+          <FlexRowContainer className="bg-gray-200 gap-2 h-full">
+            <FlexRowContainer className="h-full bg-gray-300">
+              {viewCategories &&
+                <CategoryList
+                  viewCategories={viewCategories}
+                  handleViewCategorySelect={handleViewCategorySelect}
+                  textTemplates={textTemplates}
+                  addCategory={addCategory}
+                  selectedCategory={selectedCategory}
+                  handleSelectCategory={handleSelectCategory}
+                  removeCategory={removeCategory}
+                  handleInputCatTitleChange={handleInputCatTitleChange}
+                />
+              }
             </FlexRowContainer>
-          </FlexColContainer>
-        </FlexColContainer>
+            {
+              textTemplates.length > 0 &&
+              textTemplates[selectedCategory].templates.length > 0 &&
+              viewNavigation &&
+              <FlexColCenteredX className="w-full gap-4 min-w-[18rem] max-w-[18rem] pe-2">
+                <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
+                {textTemplates[selectedCategory].templates.map((template, templateIndex) => (
+                  <TemplateNavButton
+                    template={template}
+                    index={templateIndex}
+                    categoryIndex={selectedCategory}
+                    templateRefs={templateRefs}
+                    key={`template-nav-button-${selectedCategory}-${templateIndex}`}
+                  />
+                ))}
+              </FlexColCenteredX>
+            }
+          </FlexRowContainer>
+          <FlexRowContainer className="gap-4 w-full justify-center overflow-y-auto" id="templates-container">
+            <FlexColContainer className="w-full max-w-[900px] gap-4">
+              <FlexColCentered className="bg-green-200 w-full p-4 rounded max-w-[800px]">
+                <h2>Templates</h2>
+              </FlexColCentered>
+              {textTemplates.length > 0 && textTemplates[0].category !== undefined ?
+                <FlexColContainer className="gap-4">
+                  <AddTemplateButton onClick={addTemplate} />
+                  <FlexColContainer className="max-h-[77vh] " >
+                    <FlexColContainer className="gap-4 pe-4">
+                      {
+                        textTemplates[selectedCategory].templates.length > 0
+                          ? textTemplates[selectedCategory].templates.map((template, templateIndex) =>
+                            <ForwardedRefTemplateCard
+                              key={template.id}
+                              categoryIndex={selectedCategory}
+                              index={templateIndex}
+                              template={template}
+                              removeTemplate={removeTemplate}
+                              handleTextTemplateChange={handleTextTemplateChange}
+                              ref={templateRefs[templateIndex]}
+                            />
+                          )
+                          : <GuidingDescriptionText>Click the add button to create new template</GuidingDescriptionText>
+                      }
+                    </FlexColContainer>
+                  </FlexColContainer>
+                </FlexColContainer>
+                : <FlexColContainer className="w-full max-w-[800px]"><GuidingDescriptionText>Your templates will show up here, but first add a template category.</GuidingDescriptionText></FlexColContainer>
+              }
+            </FlexColContainer>
+          </FlexRowContainer>
+        </FlexRowContainer>
       </PageLayout>
     </>
   );
@@ -262,14 +255,6 @@ const AddButton = tw.button`
   hover:bg-gray-300
   hover:dark:text-gray-300
 `
-
-const AddCategoryButton = ({ onClick }: any) => {
-  return <AddButton onClick={onClick}>
-    <FlexColCentered>
-      <FaPlus />
-    </FlexColCentered>
-  </AddButton>
-}
 
 const AddTemplateButton = ({ onClick }: any) => {
   return <AddButton className="w-full max-w-[800px]" onClick={onClick}>

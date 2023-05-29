@@ -24,7 +24,7 @@ const Sidebar = tw.aside`
   bg-white
   text-xs
   p-2
-  bg-green-100
+  bg-green-300
   text-white
   absolute
   md:relative

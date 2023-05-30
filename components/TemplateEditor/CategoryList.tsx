@@ -1,4 +1,4 @@
-import { FlexColCentered, FlexColCenteredX, FlexRowCenteredY } from "@/components/styled-global-components";
+import { FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY } from "@/components/styled-global-components";
 import CategoryCard from "@/components/TemplateEditor/CategoryCard";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import tw from "tailwind-styled-components";
@@ -48,27 +48,33 @@ interface CateGoryListTypes {
 
 
 const CategoryList = ({ viewCategories, handleViewCategorySelect, textTemplates, addCategory, selectedCategory, handleSelectCategory, removeCategory, handleInputCatTitleChange }: CateGoryListTypes) => {
-    return <FlexColCenteredX className="gap-4 w-[18rem] lg:w-[19rem] relative h-full px-2">
-        <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
-        {
-            textTemplates.length > 0 &&
-            textTemplates.map((item: any, index: number) => {
-                return <CategoryCard
-                    key={"cat-card-" + index}
-                    index={index}
-                    category={item.category}
-                    selectedCategory={selectedCategory}
-                    handleSelectCategory={() => handleSelectCategory(index)}
-                    handleInputCatTitleChange={handleInputCatTitleChange}
-                    removeCategory={removeCategory} // New prop
-                />
-            })
-        }
+    return <FlexColContainer className="px-2">
+        <FlexColCenteredX>
+            <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
+        </FlexColCenteredX>
+        <FlexColCenteredX className="gap-4 w-[18rem] lg:w-[19rem] relative h-full max-h-[90%] overflow-y-auto">
+
+            {
+                textTemplates.length > 0 &&
+                textTemplates.map((item: any, index: number) => {
+                    return <CategoryCard
+                        key={"cat-card-" + index}
+                        index={index}
+                        category={item.category}
+                        selectedCategory={selectedCategory}
+                        handleSelectCategory={() => handleSelectCategory(index)}
+                        handleInputCatTitleChange={handleInputCatTitleChange}
+                        removeCategory={removeCategory} // New prop
+                    />
+                })
+            }
+
+        </FlexColCenteredX>
         <FlexColCentered className="mt-auto w-full mb-4 gap-4">
             {textTemplates.length === 0 && <GuidingDescriptionText>Add a new category to begin</GuidingDescriptionText>}
             <AddCategoryButton onClick={addCategory} />
         </FlexColCentered>
-    </FlexColCenteredX>
+    </FlexColContainer>
 }
 
 export default CategoryList

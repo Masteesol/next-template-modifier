@@ -51,21 +51,21 @@ const CategoryList = ({ viewCategories, handleViewCategorySelect, textTemplates,
     return <FlexColCenteredX className="gap-4 w-[18rem] lg:w-[19rem] relative h-full px-2">
         <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
         {
-            textTemplates.length > 0 ?
-                textTemplates.map((item: any, index: number) => {
-                    return <CategoryCard
-                        key={"cat-card-" + index}
-                        index={index}
-                        category={item.category}
-                        selectedCategory={selectedCategory}
-                        handleSelectCategory={() => handleSelectCategory(index)}
-                        handleInputCatTitleChange={handleInputCatTitleChange}
-                        removeCategory={removeCategory} // New prop
-                    />
-                })
-                : <GuidingDescriptionText>Add a new category to begin</GuidingDescriptionText>
+            textTemplates.length > 0 &&
+            textTemplates.map((item: any, index: number) => {
+                return <CategoryCard
+                    key={"cat-card-" + index}
+                    index={index}
+                    category={item.category}
+                    selectedCategory={selectedCategory}
+                    handleSelectCategory={() => handleSelectCategory(index)}
+                    handleInputCatTitleChange={handleInputCatTitleChange}
+                    removeCategory={removeCategory} // New prop
+                />
+            })
         }
-        <FlexColCentered className="mt-auto w-full mb-4">
+        <FlexColCentered className="mt-auto w-full mb-4 gap-4">
+            {textTemplates.length === 0 && <GuidingDescriptionText>Add a new category to begin</GuidingDescriptionText>}
             <AddCategoryButton onClick={addCategory} />
         </FlexColCentered>
     </FlexColCenteredX>

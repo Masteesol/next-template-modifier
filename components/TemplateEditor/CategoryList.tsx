@@ -5,12 +5,12 @@ import tw from "tailwind-styled-components";
 import GuidingDescriptionText from "./GuidingDescription";
 
 export const CategoryHeaderButton = ({ viewCategories, handleViewCategorySelect }: any) => {
-    return <FlexColCentered className={`${viewCategories ? "bg-transparent" : "bg-green-600 text-white"}  w-full p-4 rounded relative`}>
+    return <FlexRowCenteredY className={`p-4 gap-4 rounded relative`}>
         <h2>Categories</h2>
-        <FlexRowCenteredY className="absolute right-4 text-lg cursor-pointer" onClick={handleViewCategorySelect}>
+        <FlexRowCenteredY className="text-lg cursor-pointer" onClick={handleViewCategorySelect}>
             {!viewCategories ? <FaEye /> : <FaEyeSlash />}
         </FlexRowCenteredY>
-    </FlexColCentered>
+    </FlexRowCenteredY>
 }
 
 
@@ -48,9 +48,8 @@ interface CateGoryListTypes {
 
 
 const CategoryList = ({ viewCategories, handleViewCategorySelect, textTemplates, addCategory, selectedCategory, handleSelectCategory, removeCategory, handleInputCatTitleChange }: CateGoryListTypes) => {
-    return <FlexColCenteredX className="w-full gap-4 lg:w-[18rem] relative h-full px-2">
+    return <FlexColCenteredX className="gap-4 w-[18rem] lg:w-[19rem] relative h-full px-2">
         <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
-
         {
             textTemplates.length > 0 ?
                 textTemplates.map((item: any, index: number) => {

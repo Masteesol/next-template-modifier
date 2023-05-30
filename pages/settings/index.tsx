@@ -93,7 +93,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout>
-        <FlexColContainer className="min-h-full gap-8">
+        <FlexColContainer className="min-h-full gap-8 w-full px-4">
           <H1>{translateOrDefault(t, "pages.settings.heading", "Settings")}</H1>
           <FlexColContainer className="gap-4">
             <h2 className="text-xl">User Information</h2>

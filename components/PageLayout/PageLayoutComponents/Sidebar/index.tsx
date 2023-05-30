@@ -18,13 +18,14 @@ import { useTranslation } from "next-i18next";
 import { translateOrDefault } from "@/utils/i18nUtils";
 
 const Sidebar = tw.aside`
-  w-[4rem]
+  w-[3.5rem]
   min-h-[100vh]
   flex
   bg-white
   text-xs
   p-2
   bg-green-300
+  dark:bg-green-600
   text-white
   absolute
   md:relative
@@ -34,6 +35,8 @@ const Sidebar = tw.aside`
 const SideBarItemContainer = tw(FlexColCentered)`
   my-1
   text-slate-900
+  dark:text-white
+  dark:hover:bg-green-800
   hover:bg-green-200
   rounded
   group
@@ -56,8 +59,7 @@ const SidebarText = tw.p`
 const ToggleButton = tw.button`
     border-none 
     shadow 
-    p-3
-    md:p-4 
+    p-2
     bg-white
     rounded-md
     hover:bg-slate-400

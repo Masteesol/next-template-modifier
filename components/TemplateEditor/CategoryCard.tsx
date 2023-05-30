@@ -39,7 +39,7 @@ const CategoryCard = ({ category, index, handleSelectCategory, selectedCategory,
 
     return (
         <CardBaseLightHover
-            className={`${selectedCategory === index && "bg-green-300 dark:bg-green-900"} w-full p-4`}
+            className={`${selectedCategory === index && "bg-green-300 dark:bg-green-800"} w-full p-4`}
             id={index.toString()}
         >
             <FlexRowCenteredY className="gap-4">

@@ -185,9 +185,9 @@ export const DividerPipe = tw.div`
 export const DividerHorizontal = tw.hr`
     border-b
     border-[1px]
-    border-gray-200
+    border-gray-50
     dark:text-gray-400 
-    dark:border-gray-700
+    dark:border-gray-800
 `
 
 const StyledSelect = tw.select`

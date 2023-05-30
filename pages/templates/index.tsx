@@ -1,7 +1,7 @@
 import Head from "next/head";
 import React, { useState, useEffect } from "react";
 import PageLayout from "@/components/PageLayout";
-import { FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, FlexRowContainer } from "@/components/styled-global-components";
+import { FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCentered, FlexRowCenteredY, FlexRowContainer } from "@/components/styled-global-components";
 //import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
@@ -147,21 +147,17 @@ export default function Page() {
       </Head>
       <PageLayout>
         <FlexRowContainer className="h-full gap-2 overflow-x-auto">
-          <FlexRowContainer className="gap-4 absolute bottom-[5rem] lg:bottom-[2rem] w-[90%] justify-end">
+          <FlexRowContainer className="gap-4 absolute top-[-5px] w-[90%] justify-end">
             {!viewCategories &&
-              <FlexRowContainer className="min-w-[50%] lg:min-w-[20rem] lg:max-w-[17rem]">
-                <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
-              </FlexRowContainer>
+              <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
             }
             {textTemplates.length > 0 &&
               textTemplates[selectedCategory].templates.length > 0 && !viewNavigation &&
-              <FlexRowContainer className="min-w-[50%] lg:min-w-[20rem] lg:max-w-[20rem]">
-                <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
-              </FlexRowContainer>
+              <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
             }
           </FlexRowContainer>
-          <FlexRowContainer className="bg-gray-200 gap-2 h-full">
-            <FlexRowContainer className="h-full bg-gray-300">
+          <FlexRowContainer className="bg-gray-200 dark:bg-gray-700 gap-2 h-full">
+            <FlexRowContainer className="h-full bg-gray-300 dark:bg-gray-600">
               {viewCategories &&
                 <CategoryList
                   viewCategories={viewCategories}
@@ -195,7 +191,7 @@ export default function Page() {
           </FlexRowContainer>
           <FlexRowContainer className="gap-4 w-full justify-center overflow-y-auto" id="templates-container">
             <FlexColContainer className="w-full max-w-[900px] gap-4">
-              <FlexColCentered className="bg-green-200 w-full p-4 rounded max-w-[800px]">
+              <FlexColCentered className="bg-green-200 dark:bg-green-800 w-full p-4 rounded max-w-[800px]">
                 <h2>Templates</h2>
               </FlexColCentered>
               {textTemplates.length > 0 && textTemplates[0].category !== undefined ?
@@ -233,12 +229,12 @@ export default function Page() {
 
 
 const NavigationHeaderButton = ({ viewNavigation, handleViewNavigationSelect }: any) => {
-  return <FlexColCentered className={`${viewNavigation ? "bg-transparent" : "bg-green-600 text-white"}  w-full p-4 rounded relative`}>
+  return <FlexRowCentered className={`p-4 gap-4 rounded`}>
     <h2>Navigation</h2>
-    <FlexRowCenteredY className="absolute right-4 text-lg cursor-pointer" onClick={handleViewNavigationSelect}>
+    <FlexRowCenteredY className="text-lg cursor-pointer" onClick={handleViewNavigationSelect}>
       {!viewNavigation ? <FaEye /> : <FaEyeSlash />}
     </FlexRowCenteredY>
-  </FlexColCentered>
+  </FlexRowCentered>
 }
 
 

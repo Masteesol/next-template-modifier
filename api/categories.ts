@@ -43,3 +43,32 @@ export const removeCategory = async (categoryId: string, user_id: string) => {
 
     return data;
 }
+
+export const updateCategory = async (category_id: string, user_id: string, title: string) => {
+    const baseUrl = checkEnv()
+    const res = await fetch(baseUrl + `/api/templates/updateCategory`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ category_id, userId: user_id, title: title })
+    });
+
+    if (!res.ok) {
+        console.error('Response not ok, status:', res.status, 'status text:', res.statusText);
+        throw new Error(res.statusText);
+    }
+
+    const responseBody = await res.json();
+    if (!responseBody) {
+        console.error('Response body is null or undefined');
+        throw new Error('No response body');
+    }
+
+    if (responseBody.error) {
+        throw new Error(responseBody.error);
+    }
+    return responseBody;
+}
+
+

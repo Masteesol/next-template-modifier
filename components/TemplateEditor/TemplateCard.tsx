@@ -60,7 +60,7 @@ const TemplateCard = (props: any, ref: any) => {
 
 
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newTemplate = { text: e.target.value, title: stagedTemplate.title };
+        const newTemplate = { text: e.target.value, title: stagedTemplate.title, template_id: template.template_id };
         setStagedTemplate(newTemplate);  // update staging state
     };
 

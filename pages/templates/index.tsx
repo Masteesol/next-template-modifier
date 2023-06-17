@@ -11,17 +11,16 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { v4 as uuidv4 } from 'uuid';
 import tw from "tailwind-styled-components";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
-
 //import mockData from "@/mockData/templateText.json"
 //import mockData from "@/mockData/templateTextEmpty.json"
+import { debounce } from 'lodash';
 import ForwardedRefTemplateCard from "@/components/TemplateEditor/TemplateCard";
 import TemplateNavButton from "@/components/TemplateEditor/TemplateNavButton";
 import CategoryList, { CategoryHeaderButton } from "@/components/TemplateEditor/CategoryList";
 import GuidingDescriptionText from "@/components/TemplateEditor/GuidingDescription";
-//import debounce from 'lodash.debounce';
 import cookie from 'cookie'
-import { createCategory, removeCategory } from '@/api/categories';
-import { createTemplate, removeTemplate } from '@/api/templates';
+import { createCategory, removeCategory, updateCategory } from '@/api/categories';
+import { createTemplate, removeTemplate, updateTemplate } from '@/api/templates';
 
 interface Templates {
   title: string;
@@ -40,6 +39,15 @@ type PageProps = {
   userID: string | null,
 }
 
+const delayedUpdateCategory = debounce((category_id, userID, newCatTitle) => {
+  updateCategory(category_id, userID, newCatTitle)
+  console.log("updated category")
+}, 2000);
+
+const delayedUpdateTemplateText = debounce((template_id, userID, newText, newTitle) => {
+  updateTemplate(template_id, userID, newText, newTitle)
+  console.log("updated template")
+}, 2000);
 
 const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
   //const { t } = useTranslation("common");
@@ -48,9 +56,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
   const [templateRefs, setTemplateRefs] = useState<React.RefObject<HTMLDivElement>[]>([]);
   const [viewCategories, setViewCategories] = useState(true)
   const [viewNavigation, setViewNavigation] = useState(true)
-  //const [categoryRequestInProgress, setCategoryRequestInProgress] = useState(false);
 
-  //console.log()
   useEffect(() => {
     const fetchTemplatesForUser = async (userId: string | undefined | null) => {
       if (!userId) {
@@ -62,8 +68,6 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
 
       return data;
     };
-
-
     // Call the async function and handle the response
     fetchTemplatesForUser(userID).then((data) => {
       if (data) {
@@ -74,7 +78,6 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
       }
     });
   }, [userID]); // Ensure the effect runs when the userID changes
-
 
   const handleSelectCategory = (index: number) => {
     setSelectedCategory(index);
@@ -95,13 +98,26 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
   }, [textTemplates, selectedCategory]);
   /* eslint-disable react-hooks/exhaustive-deps */
 
-  const handleInputCatTitleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleInputCatTitleChange = async (e: React.ChangeEvent<HTMLInputElement>, index: number, category_id: string) => {
+    const newCatTitle = e.target.value;
+    if (!userID) {
+      console.error("User ID is null.");
+      return;
+    }
+    delayedUpdateCategory(category_id, userID, newCatTitle)
+    //updateCategory(category_id, userID, newCatTitle)
     const newTextTemplates = [...textTemplates];
-    newTextTemplates[index].category_name = e.target.value;
+    newTextTemplates[index].category_name = newCatTitle;
     setTextTemplates(newTextTemplates);
   };
 
   const handleTextTemplateChange = (categoryIndex: number, templateIndex: number, newTemplate: any) => {
+    if (!userID) {
+      console.error("User ID is null.");
+      return;
+    }
+    const { template_id, text, title } = newTemplate
+    delayedUpdateTemplateText(template_id, userID, text, title)
     setTextTemplates(prevTemplates => {
       const newTemplates = [...prevTemplates];
       // Copy the templates array of the category
@@ -166,8 +182,6 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
     }
   }
 
-
-
   const handleRemoveTemplate = (index: number, template_id: string) => {
     if (!userID) {
       console.error("User ID is null.");
@@ -187,8 +201,6 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
     });
     setTextTemplates(updatedTextTemplates);
   };
-
-
 
   const handleRemoveCategory = (index: number, category_id: string) => {
     //console.log(categoryId)

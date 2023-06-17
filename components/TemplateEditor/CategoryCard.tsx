@@ -19,7 +19,7 @@ interface CatType {
     index: number;
     selectedCategory: number;
     handleSelectCategory: () => void;
-    handleInputCatTitleChange: (e: React.ChangeEvent<HTMLInputElement>, index: number) => void;
+    handleInputCatTitleChange: (e: React.ChangeEvent<HTMLInputElement>, index: number, category_id: string) => void;
     handleRemoveCategory: (index: number, category_id: string) => void;  // New prop
 }
 
@@ -47,7 +47,7 @@ const CategoryCard = ({ category, index, handleSelectCategory, selectedCategory,
                     type="text"
                     value={category.category_name || ''}
                     className="font-bold max-w-[70%]"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputCatTitleChange(e, index)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputCatTitleChange(e, index, category.category_id)}
                     placeholder={"Input Category Name"}
                 />
                 {isDeleteActive && selectedCategory === index

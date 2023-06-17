@@ -1,10 +1,11 @@
 // src/api/templates.ts
 
-const createTemplate = async (template_id: string, title: string, text: string, category_id: string) => {
-    const devUrl = process.env.NEXT_PUBLIC_DEV_BASE_URL as string;
-    const prodUrl = process.env.NEXT_PUBLIC_BASE_URL as string;
-    const baseUrl = process.env.NEXT_PUBLIC_API_ENV === 'development' ? devUrl : prodUrl
-    const response = await fetch(baseUrl + "/api/templates/createTemplate", {
+import checkEnv from "@/utils/checkEnv";
+
+export const createTemplate = async (template_id: string, title: string, text: string, category_id: string, user_id: string) => {
+
+    const baseUrl = checkEnv()
+    const response = await fetch(baseUrl + `/api/templates/createTemplate`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -13,7 +14,8 @@ const createTemplate = async (template_id: string, title: string, text: string, 
             template_id,
             title,
             text,
-            category_id
+            category_id,
+            user_id
         })
     });
 
@@ -26,4 +28,25 @@ const createTemplate = async (template_id: string, title: string, text: string, 
     }
 }
 
-export default createTemplate
+export const removeTemplate = async (template_id: string, user_id: string) => {
+    console.log("removeTemplate", template_id)
+    const baseUrl = checkEnv()
+    const res = await fetch(baseUrl + `/api/templates/removeTemplate`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ template_id, user_id })
+    });
+
+    if (!res.ok) {
+        throw new Error(res.statusText);
+    }
+
+    const { data, error } = await res.json();
+    if (error) {
+        throw new Error(error);
+    }
+
+    return data;
+}

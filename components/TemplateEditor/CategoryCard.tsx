@@ -15,25 +15,25 @@ const InputBase = tw.input`
 
 
 interface CatType {
-    category: string;
+    category: any;
     index: number;
     selectedCategory: number;
     handleSelectCategory: () => void;
     handleInputCatTitleChange: (e: React.ChangeEvent<HTMLInputElement>, index: number) => void;
-    removeCategory: (index: number) => void;  // New prop
+    handleRemoveCategory: (index: number, category_id: string) => void;  // New prop
 }
 
 
 
-const CategoryCard = ({ category, index, handleSelectCategory, selectedCategory, handleInputCatTitleChange, removeCategory }: CatType) => {
+const CategoryCard = ({ category, index, handleSelectCategory, selectedCategory, handleInputCatTitleChange, handleRemoveCategory }: CatType) => {
     const [isDeleteActive, setIsDeleteActive] = useState(false)
-
+    //console.log("Category card", category)
     const handleDeleteFirstStep = () => {
         setIsDeleteActive(!isDeleteActive)
     }
 
     const handleRemoveArrayEntry = () => {
-        removeCategory(index)
+        handleRemoveCategory(index, category.category_id)
         setIsDeleteActive(false)
     }
 
@@ -45,7 +45,7 @@ const CategoryCard = ({ category, index, handleSelectCategory, selectedCategory,
             <FlexRowCenteredY className="gap-4">
                 <InputBase
                     type="text"
-                    value={category || ''}
+                    value={category.category_name || ''}
                     className="font-bold max-w-[70%]"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputCatTitleChange(e, index)}
                     placeholder={"Input Category Name"}

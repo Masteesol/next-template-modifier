@@ -20,8 +20,8 @@ import CategoryList, { CategoryHeaderButton } from "@/components/TemplateEditor/
 import GuidingDescriptionText from "@/components/TemplateEditor/GuidingDescription";
 //import debounce from 'lodash.debounce';
 import cookie from 'cookie'
-import createCategory from '@/api/categories';
-import createTemplate from '@/api/templates';
+import { createCategory, removeCategory } from '@/api/categories';
+import { createTemplate, removeTemplate } from '@/api/templates';
 
 interface Templates {
   title: string;
@@ -141,9 +141,13 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
   }
 
   const handleCreateTemplate = async () => {
+    if (!userID) {
+      console.error("User ID is null.");
+      return;
+    }
     try {
       const newID = uuidv4()
-      const newTemplate = await createTemplate(newID, "New Template", "Template text...", textTemplates[selectedCategory].category_id);
+      const newTemplate = await createTemplate(newID, "New Template", "Template text...", textTemplates[selectedCategory].category_id, userID);
       console.log(newTemplate)
       const updatedTemplates = [newTemplate[0], ...textTemplates[selectedCategory].templates];
       const updatedTextTemplates = textTemplates.map((item, index) => {
@@ -162,7 +166,15 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
     }
   }
 
-  const removeTemplate = (index: number) => {
+
+
+  const handleRemoveTemplate = (index: number, template_id: string) => {
+    if (!userID) {
+      console.error("User ID is null.");
+      return;
+    }
+    console.log("handleRemoveTemplate", template_id)
+    removeTemplate(template_id, userID)
     const updatedTemplates = textTemplates[selectedCategory].templates.filter((_, i) => i !== index);
     const updatedTextTemplates = textTemplates.map((item, index) => {
       if (index === selectedCategory) {
@@ -176,7 +188,15 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
     setTextTemplates(updatedTextTemplates);
   };
 
-  const removeCategory = (index: number) => {
+
+
+  const handleRemoveCategory = (index: number, category_id: string) => {
+    //console.log(categoryId)
+    if (!userID) {
+      console.error("User ID is null.");
+      return;
+    }
+    removeCategory(category_id, userID)
     const updatedCategories = textTemplates.filter((_, i) => i !== index);
     setTextTemplates(updatedCategories);
 
@@ -186,6 +206,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
       setSelectedCategory(updatedCategories.length > 0 ? 0 : -1);
     }
   };
+
   if (!authenticated) {
     window.location.replace("/sign-in")
   }
@@ -218,7 +239,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
                   addCategory={handleCreateCategory}
                   selectedCategory={selectedCategory}
                   handleSelectCategory={handleSelectCategory}
-                  removeCategory={removeCategory}
+                  handleRemoveCategory={handleRemoveCategory}
                   handleInputCatTitleChange={handleInputCatTitleChange}
                 />
               }
@@ -262,7 +283,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
                             categoryIndex={selectedCategory}
                             index={templateIndex}
                             template={template}
-                            removeTemplate={removeTemplate}
+                            handleRemoveTemplate={handleRemoveTemplate}
                             handleTextTemplateChange={handleTextTemplateChange}
                             ref={templateRefs[templateIndex]}
                           />

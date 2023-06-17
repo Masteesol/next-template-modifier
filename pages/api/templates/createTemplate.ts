@@ -3,7 +3,7 @@ import { NextApiResponse, NextApiRequest } from 'next'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const { template_id, title, text, category_id } = req.body;
+        const { template_id, title, text, category_id, user_id } = req.body;
 
         try {
             const { data, error } = await supabase
@@ -12,7 +12,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     template_id,
                     title,
                     text,
-                    category_id
+                    category_id,
+                    user_id
                 }])
                 .select()
 

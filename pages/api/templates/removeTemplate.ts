@@ -4,22 +4,16 @@ import { NextApiResponse, NextApiRequest } from 'next'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'DELETE') {
         const { template_id, user_id } = req.body;
+        console.log(template_id)
 
-        const { data: template, error } = await supabase
-            .from('templates')
-            .select('user_id')
-            .match({ id: template_id })
-
-        if (error || !template || template[0].user_id !== user_id)
-            return res.status(401).json({ error: error?.message || "Unauthorized" });
-
-        const deleteError = await supabase
+        const { error: deleteTempError } = await supabase
             .from('templates')
             .delete()
-            .match({ id: template_id })
+            .eq("template_id", template_id)
+            .match({ user_id })
 
-        if (deleteError)
-            return res.status(401).json({ error: deleteError });
+        if (deleteTempError)
+            return res.status(401).json({ error: deleteTempError });
 
         return res.status(200).json({ status: "Template removed successfully" });
     }

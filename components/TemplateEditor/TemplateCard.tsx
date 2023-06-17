@@ -33,7 +33,7 @@ const IconContainer = tw(FlexColCentered)`
 
 
 const TemplateCard = (props: any, ref: any) => {
-    const { categoryIndex, template, index, handleTextTemplateChange, removeTemplate } = props;
+    const { categoryIndex, template, index, handleTextTemplateChange, handleRemoveTemplate } = props;
     const templateIndex = index
     const [textTemplate, setTextTemplate] = useState(template);
     const [isEditActive, setIsEditActive] = useState<boolean>(false);
@@ -91,7 +91,6 @@ const TemplateCard = (props: any, ref: any) => {
             })
             .catch(err => console.log('Something went wrong', err));
     };
-    const handleRemoveTemplate = () => removeTemplate(index);
     let placeholderCount = 0; // this variable will track the number of placeholders encountered
     const regex = /#|\b\w+\b/g;
     const placeholders = (isEditActive ? stagedTemplate.text : textTemplate.text).match(regex)?.map((word: any, index: any) => {
@@ -146,7 +145,7 @@ const TemplateCard = (props: any, ref: any) => {
                     />
 
                     <IconContainer>
-                        <BsXLg onClick={handleRemoveTemplate} />
+                        <BsXLg onClick={() => handleRemoveTemplate(index, template.template_id)} />
                     </IconContainer>
                 </FlexRowCenteredY>
                 <DividerHorizontal />

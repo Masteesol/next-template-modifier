@@ -41,13 +41,13 @@ interface CateGoryListTypes {
     textTemplates: any;
     handleInputCatTitleChange: any
     handleSelectCategory: any;
-    removeCategory: any;
+    handleRemoveCategory: any;
     selectedCategory: any;
     addCategory: any;
 }
 
 
-const CategoryList = ({ viewCategories, handleViewCategorySelect, textTemplates, addCategory, selectedCategory, handleSelectCategory, removeCategory, handleInputCatTitleChange }: CateGoryListTypes) => {
+const CategoryList = ({ viewCategories, handleViewCategorySelect, textTemplates, addCategory, selectedCategory, handleSelectCategory, handleRemoveCategory, handleInputCatTitleChange }: CateGoryListTypes) => {
     return <FlexColContainer className="px-2">
         <FlexColCenteredX>
             <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
@@ -60,11 +60,11 @@ const CategoryList = ({ viewCategories, handleViewCategorySelect, textTemplates,
                     return <CategoryCard
                         key={item.category_id}
                         index={index}
-                        category={item.category_name}
+                        category={item}
                         selectedCategory={selectedCategory}
                         handleSelectCategory={() => handleSelectCategory(index)}
                         handleInputCatTitleChange={handleInputCatTitleChange}
-                        removeCategory={removeCategory} // New prop
+                        handleRemoveCategory={handleRemoveCategory} // New prop
                     />
                 })
             }

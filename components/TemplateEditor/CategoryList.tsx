@@ -58,9 +58,9 @@ const CategoryList = ({ viewCategories, handleViewCategorySelect, textTemplates,
                 textTemplates.length > 0 &&
                 textTemplates.map((item: any, index: number) => {
                     return <CategoryCard
-                        key={"cat-card-" + index}
+                        key={item.category_id}
                         index={index}
-                        category={item.category}
+                        category={item.category_name}
                         selectedCategory={selectedCategory}
                         handleSelectCategory={() => handleSelectCategory(index)}
                         handleInputCatTitleChange={handleInputCatTitleChange}

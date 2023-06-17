@@ -1,31 +1,22 @@
-import { useState, useEffect, createContext } from 'react';
+// useAuth.ts
+
+import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 
-interface IAuthContext {
-    isAuthenticated: boolean;
-    setIsAuthenticated: (value: boolean) => void;
-}
-
-//const AuthContext = createContext<IAuthContext | undefined>(undefined);
-
 export function useAuth() {
-    const [isAuthenticated, setIsAuthenticated] = useState<null | boolean>(null);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [email, setEmail] = useState<string | undefined>('');
-    const [name, setName] = useState<string | undefined>('');
 
     useEffect(() => {
-        const token = Cookies.get('bearerToken');
-        
+        const token = Cookies.get('supabaseToken');
+        console.log("token", token)
         if (token) {
             setIsAuthenticated(true);
             setEmail(Cookies.get('email'));
-            setName(Cookies.get('namesurname'));
-            
         } else {
             setIsAuthenticated(false);
         }
     }, []);
 
-    console.log("return: " + isAuthenticated);
-    return { isAuthenticated, setIsAuthenticated, email, name };
+    return { isAuthenticated, setIsAuthenticated, email };
 }

@@ -2,40 +2,68 @@ import Head from "next/head";
 import React, { useState, useEffect } from "react";
 import PageLayout from "@/components/PageLayout";
 import { FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCentered, FlexRowCenteredY, FlexRowContainer } from "@/components/styled-global-components";
-//import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+
 import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+//import { useTranslation } from "next-i18next";
 import { v4 as uuidv4 } from 'uuid';
 import tw from "tailwind-styled-components";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 
-import mockData from "@/mockData/templateText.json"
+//import mockData from "@/mockData/templateText.json"
 //import mockData from "@/mockData/templateTextEmpty.json"
 import ForwardedRefTemplateCard from "@/components/TemplateEditor/TemplateCard";
 import TemplateNavButton from "@/components/TemplateEditor/TemplateNavButton";
 import CategoryList, { CategoryHeaderButton } from "@/components/TemplateEditor/CategoryList";
 import GuidingDescriptionText from "@/components/TemplateEditor/GuidingDescription";
+//import debounce from 'lodash.debounce';
+import cookie from 'cookie'
+import createCategory from '@/api/categories';
+import createTemplate from '@/api/templates';
 
-interface Template {
+interface Templates {
   title: string;
   text: string;
-  id: string;
+  template_id: string;
 }
 
-interface Category {
-  category: string;
-  templates: Template[];
+interface TemplatesContainer {
+  category_id: string;
+  category_name: string;
+  templates: Templates[];
 }
 
-
-export default function Page() {
+export default function Page({ authenticated, userID }) {
   //const { t } = useTranslation("common");
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [textTemplates, setTextTemplates] = useState<Category[]>(mockData.templateText);
+  const [textTemplates, setTextTemplates] = useState<TemplatesContainer[]>([]);
   const [templateRefs, setTemplateRefs] = useState<React.RefObject<HTMLDivElement>[]>([]);
   const [viewCategories, setViewCategories] = useState(true)
   const [viewNavigation, setViewNavigation] = useState(true)
+  //const [categoryRequestInProgress, setCategoryRequestInProgress] = useState(false);
+
+  //console.log()
+  useEffect(() => {
+    const fetchTemplatesForUser = async (userId: string | undefined) => {
+      const response = await fetch(`/api/templates?userId=${userId}`);
+      const data = await response.json();
+
+      return data;
+    };
+
+    // Call the async function and handle the response
+    fetchTemplatesForUser(userID).then((data) => {
+      //console.log(data)
+      if (data) {
+        // The response data should be mapped to your TemplatesContainer structure
+        let templatesContainers: TemplatesContainer[] = data;
+        console.log(templatesContainers, "templatesContainers")
+        setTextTemplates(templatesContainers);
+      }
+    });
+  }, [userID]); // Ensure the effect runs when the userID changes
+
 
   const handleSelectCategory = (index: number) => {
     setSelectedCategory(index);
@@ -58,12 +86,11 @@ export default function Page() {
 
   const handleInputCatTitleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const newTextTemplates = [...textTemplates];
-    newTextTemplates[index].category = e.target.value;
+    newTextTemplates[index].category_name = e.target.value;
     setTextTemplates(newTextTemplates);
   };
 
   const handleTextTemplateChange = (categoryIndex: number, templateIndex: number, newTemplate: any) => {
-
     setTextTemplates(prevTemplates => {
       const newTemplates = [...prevTemplates];
       // Copy the templates array of the category
@@ -77,40 +104,48 @@ export default function Page() {
       };
       return newTemplates;
     });
-    console.log(textTemplates)
-  };
-
-
-  const addCategory = () => {
-    const newCategory = {
-      category: "New Category",
-      templates: [],
-    };
-    const updatedTextTemplates = [newCategory, ...textTemplates];
-    setTextTemplates(updatedTextTemplates);
-    setSelectedCategory(0);
-
     //console.log(textTemplates)
   };
-  const addTemplate = () => {
-    const newID = uuidv4()
-    const newTemplate = {
-      id: newID,
-      title: "New Template",
-      text: "Click the edit button to create a new template.\n\nUse the hash symbol to create placeholders for your template text.\n\nWhen you save your template, you will see placeholders and input fields for each hash symbol in the template.\n\n An empty placeholder look like this: # \n\n"
-    };
-    const updatedTemplates = [newTemplate, ...textTemplates[selectedCategory].templates];
-    const updatedTextTemplates = textTemplates.map((item, index) => {
-      if (index === selectedCategory) {
-        return {
-          ...item,
-          templates: updatedTemplates,
-        };
+
+  const handleCreateCategory = async () => {
+    try {
+      const newCategory = await createCategory("New Category", userID);
+      const { category_id, category_name } = newCategory[0]
+      const newCategoryWithTemplates: TemplatesContainer = {
+        category_id: category_id,
+        category_name: category_name,
+        templates: []
       }
-      return item;
-    });
-    setTextTemplates(updatedTextTemplates);
-  };
+      const updatedTextTemplates = [newCategoryWithTemplates, ...textTemplates];
+
+      setTextTemplates(updatedTextTemplates);
+      setSelectedCategory(0);
+    } catch (error) {
+      console.error("Failed to create category:", error);
+    }
+  }
+
+  const handleCreateTemplate = async () => {
+    try {
+      const newID = uuidv4()
+      const newTemplate = await createTemplate(newID, "New Template", "Template text...", textTemplates[selectedCategory].category_id);
+      console.log(newTemplate)
+      const updatedTemplates = [newTemplate[0], ...textTemplates[selectedCategory].templates];
+      const updatedTextTemplates = textTemplates.map((item, index) => {
+        if (index === selectedCategory) {
+          return {
+            ...item,
+            templates: updatedTemplates,
+          };
+        }
+        return item;
+      });
+      setTextTemplates(updatedTextTemplates);
+      console.log("new text templates", textTemplates)
+    } catch (error) {
+      console.error("Failed to create template:", error);
+    }
+  }
 
   const removeTemplate = (index: number) => {
     const updatedTemplates = textTemplates[selectedCategory].templates.filter((_, i) => i !== index);
@@ -136,7 +171,9 @@ export default function Page() {
       setSelectedCategory(updatedCategories.length > 0 ? 0 : -1);
     }
   };
-
+  if (!authenticated) {
+    window.location.replace("/sign-in")
+  }
   return (
     <>
       <Head>
@@ -151,7 +188,7 @@ export default function Page() {
             {!viewCategories &&
               <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
             }
-            {textTemplates.length > 0 &&
+            {textTemplates?.length > 0 &&
               textTemplates[selectedCategory].templates.length > 0 && !viewNavigation &&
               <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
             }
@@ -163,7 +200,7 @@ export default function Page() {
                   viewCategories={viewCategories}
                   handleViewCategorySelect={handleViewCategorySelect}
                   textTemplates={textTemplates}
-                  addCategory={addCategory}
+                  addCategory={handleCreateCategory}
                   selectedCategory={selectedCategory}
                   handleSelectCategory={handleSelectCategory}
                   removeCategory={removeCategory}
@@ -190,7 +227,7 @@ export default function Page() {
                 </FlexColCenteredX>
 
                 <FlexColCentered className="mt-auto w-full mb-2 gap-4">
-                  <AddTemplateButton onClick={addTemplate} />
+                  <AddTemplateButton onClick={handleCreateTemplate} />
                 </FlexColCentered>
 
               </FlexColContainer>
@@ -198,7 +235,7 @@ export default function Page() {
           </FlexRowContainer>
           <FlexRowContainer className="gap-4 w-full justify-center overflow-y-auto h-full" id="templates-container">
             <FlexColContainer className="w-full max-w-[900px] gap-4 relative h-full">
-              {textTemplates.length > 0 && textTemplates[0].category !== undefined ?
+              {textTemplates.length > 0 && textTemplates[0].category_name !== undefined ?
                 <FlexColContainer className="gap-4 h-full">
                   <FlexColContainer className="max-h-[77vh] h-full" >
                     <FlexColContainer className="gap-4 h-full">
@@ -206,7 +243,7 @@ export default function Page() {
                         textTemplates[selectedCategory].templates.length > 0
                         && textTemplates[selectedCategory].templates.map((template, templateIndex) =>
                           <ForwardedRefTemplateCard
-                            key={template.id}
+                            key={template.template_id}
                             categoryIndex={selectedCategory}
                             index={templateIndex}
                             template={template}
@@ -224,12 +261,11 @@ export default function Page() {
                               <h2>Add Template</h2>
                             </FlexColCentered>
                             <FlexColCentered className="w-full" >
-                              <AddTemplateButton onClick={addTemplate} />
+                              <AddTemplateButton onClick={handleCreateTemplate} />
                             </FlexColCentered>
                           </FlexColContainer>
                         </FlexColCentered>
                       }
-
                     </FlexColContainer>
                   </FlexColContainer>
 
@@ -278,11 +314,15 @@ const AddTemplateButton = ({ onClick }: any) => {
 
 
 
-
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookies = context.req ? cookie.parse(context.req.headers.cookie || '') : undefined
+  const token = cookies && cookies.supabaseToken
+  const userID = cookies && cookies.userID
   return {
     props: {
-      ...(await serverSideTranslations(locale as string, ["common"])),
-    },
-  };
-};
+      authenticated: Boolean(token),
+      userID: userID || null,
+      ...(await serverSideTranslations(context.locale as string, ["common"]))
+    }
+  }
+}

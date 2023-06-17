@@ -65,7 +65,7 @@ const TemplateCard = (props: any, ref: any) => {
     };
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newTemplate = { title: e.target.value, text: textTemplate.text };
+        const newTemplate = { title: e.target.value, text: textTemplate.text, template_id: template.template_id };
         setTextTemplate(newTemplate);
         handleTextTemplateChange(categoryIndex, index, newTemplate);
     };
@@ -100,7 +100,7 @@ const TemplateCard = (props: any, ref: any) => {
             placeholderCount += 1;
             return (
                 <CardInput
-                    key={index}
+                    key={`input-${count}-${templateIndex}-${template.template_id}`}
                     type="text"
                     placeholder={"Word " + (index + 1)}
                     value={!isEditActive && inputValues[count] || ''}
@@ -119,7 +119,7 @@ const TemplateCard = (props: any, ref: any) => {
     const displayText = textTemplate.text.split("#").map((segment: any, index: number) => {
         if (index < textTemplate.text.split("#").length - 1) {
             return (
-                <span key={index}>
+                <span key={`inline-${template.template_id}-${index}`}>
                     {segment}
                     <label
                         htmlFor={`input-${index}-${templateIndex}`}
@@ -134,59 +134,57 @@ const TemplateCard = (props: any, ref: any) => {
         }
     });
     return (
-        <>
-            <CardBaseLight className="w-full" ref={ref}>
-                <FlexColContainer className="min-h-[15rem] w-full p-4 gap-4">
-                    <FlexRowCenteredY className="justify-between gap-4">
-                        <InputBase
-                            type="text"
-                            value={textTemplate.title}
-                            className="text-2xl"
-                            onChange={handleTitleChange}
-                            placeholder="Template Title..."
-                        />
+        <CardBaseLight className="w-full" ref={ref} key={template.template_id}>
+            <FlexColContainer className="min-h-[15rem] w-full p-4 gap-4">
+                <FlexRowCenteredY className="justify-between gap-4">
+                    <InputBase
+                        type="text"
+                        value={textTemplate.title}
+                        className="text-2xl"
+                        onChange={handleTitleChange}
+                        placeholder="Template Title..."
+                    />
 
-                        <IconContainer>
-                            <BsXLg onClick={handleRemoveTemplate} />
-                        </IconContainer>
-                    </FlexRowCenteredY>
-                    <DividerHorizontal />
-                    <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">
-                        {placeholders}
+                    <IconContainer>
+                        <BsXLg onClick={handleRemoveTemplate} />
+                    </IconContainer>
+                </FlexRowCenteredY>
+                <DividerHorizontal />
+                <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">
+                    {placeholders}
+                </div>
+                <DividerHorizontal />
+                {isEditActive
+                    ?
+                    <textarea className="border-0 rounded bg-slate-50 dark:bg-gray-800 min-h-[15rem]"
+                        value={stagedTemplate.text}
+                        onChange={handleTextChange}
+                    />
+                    : <div className="min-h-[10rem]">
+                        <pre className="font-sans"
+                            style={{
+                                whiteSpace: "pre-wrap",
+                                wordWrap: "break-word"
+                            }}>{displayText}
+                        </pre>
                     </div>
-                    <DividerHorizontal />
-                    {isEditActive
-                        ?
-                        <textarea className="border-0 rounded bg-slate-50 dark:bg-gray-800 min-h-[15rem]"
-                            value={stagedTemplate.text}
-                            onChange={handleTextChange}
-                        />
-                        : <div className="min-h-[10rem]">
-                            <pre className="font-sans"
-                                style={{
-                                    whiteSpace: "pre-wrap",
-                                    wordWrap: "break-word"
-                                }}>{displayText}
-                            </pre>
-                        </div>
-                    }
-                    <FlexRowCenteredY className="justify-end gap-4">
+                }
+                <FlexRowCenteredY className="justify-end gap-4">
 
-                        <IconContainer onClick={handleEditActive}>
-                            {!isEditActive ? <FaEdit /> : <FaArrowLeft />}
-                        </IconContainer>
-                        {isEditActive &&
-                            <IconContainer onClick={handleApprove}>
-                                <FaCheck />
-                            </IconContainer>}
-                        {!isEditActive &&
-                            <IconContainer onClick={handleCopy}>
-                                {!hasBeenCopied ? <FaCopy /> : <FaCheck />}
-                            </IconContainer>}
-                    </FlexRowCenteredY>
-                </FlexColContainer>
-            </CardBaseLight>
-        </>
+                    <IconContainer onClick={handleEditActive}>
+                        {!isEditActive ? <FaEdit /> : <FaArrowLeft />}
+                    </IconContainer>
+                    {isEditActive &&
+                        <IconContainer onClick={handleApprove}>
+                            <FaCheck />
+                        </IconContainer>}
+                    {!isEditActive &&
+                        <IconContainer onClick={handleCopy}>
+                            {!hasBeenCopied ? <FaCopy /> : <FaCheck />}
+                        </IconContainer>}
+                </FlexRowCenteredY>
+            </FlexColContainer>
+        </CardBaseLight>
     );
 };
 

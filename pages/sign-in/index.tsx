@@ -5,9 +5,7 @@ import { Badge, Label, TextInput } from "flowbite-react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer } from "@/components/styled-global-components";
 import { translateOrDefault } from "@/utils/i18nUtils";
-import axios from "axios";
 import { useState } from "react"
-import Cookies from 'js-cookie';
 import React from "react";
 
 const FormLogin = () => {
@@ -19,36 +17,32 @@ const FormLogin = () => {
   const [passwordEmpty, setPasswordEmpty] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  // Client-side function
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    try {
 
+    const response = await fetch('/api/signIn', {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
-      const bearerURL = process.env.NEXT_PUBLIC_API_URL + "/api/sanctum/token";
-      const data = {
-        email: email,
-        password: password,
-      };
-      const response = await axios.post(bearerURL, data);
-      console.log(response)
-      const in30Minutes = 1 / 48;
-      Cookies.set('bearerToken', response.data.token, { expires: in30Minutes });
-      Cookies.set('namesurname', response.data.name, { expires: in30Minutes });
-      Cookies.set('email', response.data.email, { expires: in30Minutes });
-
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error during form submission", errorData.error);
+      setErrorMessage(errorData.error);
+    } else {
       const devUrl = process.env.NEXT_PUBLIC_DEV_BASE_URL as string;
       const prodUrl = process.env.NEXT_PUBLIC_BASE_URL as string;
       window.location.replace(process.env.NEXT_PUBLIC_API_ENV === 'development' ? devUrl : prodUrl);
-    } catch (error: any) {  // change unknown error type to any
-      console.error("Error during form submission", error);
-      // Check if the error response status is 400, else show generic error
-      if (error.response && error.response.status === 400) {
-        setErrorMessage("The email or password is incorrect");
-      } else {
-        setErrorMessage("Oops! Something went wrong");
-      }
     }
   };
+
   const handleEmailChange = (e: any) => {
     setEmail(e.target.value);
     setEmailEmpty(e.target.value === "");

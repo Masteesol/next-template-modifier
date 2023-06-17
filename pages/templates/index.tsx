@@ -1,5 +1,6 @@
 import Head from "next/head";
 import React, { useState, useEffect } from "react";
+import { NextPage } from 'next';
 import PageLayout from "@/components/PageLayout";
 import { FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCentered, FlexRowCenteredY, FlexRowContainer } from "@/components/styled-global-components";
 
@@ -34,7 +35,13 @@ interface TemplatesContainer {
   templates: Templates[];
 }
 
-export default function Page({ authenticated, userID }) {
+type PageProps = {
+  authenticated: boolean,
+  userID: string | null,
+}
+
+
+const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
   //const { t } = useTranslation("common");
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [textTemplates, setTextTemplates] = useState<TemplatesContainer[]>([]);
@@ -45,20 +52,24 @@ export default function Page({ authenticated, userID }) {
 
   //console.log()
   useEffect(() => {
-    const fetchTemplatesForUser = async (userId: string | undefined) => {
+    const fetchTemplatesForUser = async (userId: string | undefined | null) => {
+      if (!userId) {
+        return Promise.resolve(null); // or some other default value
+      }
+
       const response = await fetch(`/api/templates?userId=${userId}`);
       const data = await response.json();
 
       return data;
     };
 
+
     // Call the async function and handle the response
     fetchTemplatesForUser(userID).then((data) => {
-      //console.log(data)
       if (data) {
         // The response data should be mapped to your TemplatesContainer structure
         let templatesContainers: TemplatesContainer[] = data;
-        console.log(templatesContainers, "templatesContainers")
+        //console.log(templatesContainers, "templatesContainers")
         setTextTemplates(templatesContainers);
       }
     });
@@ -108,6 +119,10 @@ export default function Page({ authenticated, userID }) {
   };
 
   const handleCreateCategory = async () => {
+    if (!userID) {
+      console.error("User ID is null.");
+      return;
+    }
     try {
       const newCategory = await createCategory("New Category", userID);
       const { category_id, category_name } = newCategory[0]
@@ -280,7 +295,6 @@ export default function Page({ authenticated, userID }) {
   );
 }
 
-
 const NavigationHeaderButton = ({ viewNavigation, handleViewNavigationSelect }: any) => {
   return <FlexRowCentered className={`p-4 gap-4 rounded`}>
     <h2>Templates</h2>
@@ -326,3 +340,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   }
 }
+export default Page;

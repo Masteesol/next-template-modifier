@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import {
-  FlexColCentered,
+
   FlexColContainer,
   FlexRowContainer,
-  H1,
+
 } from "../styled-global-components";
 import TopBar from "./PageLayoutComponents/TopBar";
 import Sidebar from "./PageLayoutComponents/Sidebar";

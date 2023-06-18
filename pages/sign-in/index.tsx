@@ -7,7 +7,7 @@ import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer 
 import { translateOrDefault } from "@/utils/i18nUtils";
 import { useState } from "react"
 import React from "react";
-import { login, setUserInfo } from "@/api/auth";
+import { login } from "@/api/auth";
 import checkEnv from "@/utils/checkEnv";
 const FormLogin = () => {
   const { t } = useTranslation("common");

@@ -2,7 +2,7 @@ import Head from "next/head";
 import React, { useState, useEffect } from "react";
 import { NextPage } from 'next';
 import PageLayout from "@/components/PageLayout";
-import { FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCentered, FlexRowCenteredY, FlexRowContainer } from "@/components/styled-global-components";
+import { CardBaseLightHover, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCentered, FlexRowCenteredY, FlexRowContainer } from "@/components/styled-global-components";
 
 import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
@@ -69,7 +69,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
     fetchTemplatesForUser(userID).then((data) => {
       if (data) {
         // The response data should be mapped to your TemplatesContainer structure
-        let templatesContainers: TemplatesContainer[] = data;
+        const templatesContainers: TemplatesContainer[] = data;
         //console.log(templatesContainers, "templatesContainers")
         setTextTemplates(templatesContainers);
       }
@@ -301,12 +301,13 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
                       {textTemplates[selectedCategory].templates.length === 0 &&
                         <FlexColCentered className="h-full ">
                           <FlexColContainer className="max-w-[400px] w-full gap-4">
-                            <GuidingDescriptionText>Click the add button to create new template</GuidingDescriptionText>
-                            <FlexColCentered className="bg-green-200 dark:bg-green-800 w-full p-4 rounded">
+                            <GuidingDescriptionText>Click the &quot;+&quot; button to create new template</GuidingDescriptionText>
+                            {/**  <FlexColCentered className="bg-green-200 dark:bg-green-800 w-full p-4 rounded">
                               <h2>Add Template</h2>
-                            </FlexColCentered>
+                            </FlexColCentered>*/}
+
                             <FlexColCentered className="w-full" >
-                              <AddTemplateButton onClick={handleCreateTemplate} />
+                              <AddTemplateButtonEmpty onClick={handleCreateTemplate} />
                             </FlexColCentered>
                           </FlexColContainer>
                         </FlexColCentered>
@@ -337,15 +338,15 @@ const NavigationHeaderButton = ({ viewNavigation, handleViewNavigationSelect }: 
 
 
 const AddButton = tw.button`
-w-full
-bg-gray-400
-rounded
-p-4
-text-gray-900
-dark:text-gray-500
-dark:bg-gray-700
-hover:bg-gray-500
-hover:dark:text-gray-300
+  w-full
+  bg-gray-400
+  rounded
+  p-4
+  text-gray-900
+  dark:text-gray-500
+  dark:bg-gray-700
+  hover:bg-gray-500
+  hover:dark:text-gray-300
 `
 
 const AddTemplateButton = ({ onClick }: any) => {
@@ -355,6 +356,15 @@ const AddTemplateButton = ({ onClick }: any) => {
     </FlexColCentered>
   </AddButton>
 }
+
+const AddTemplateButtonEmpty = ({ onClick }: any) => {
+  return <CardBaseLightHover className="w-full bg-green-300 p-4 hover:bg-green-200 cursor-pointer" onClick={onClick}>
+    <FlexColCentered>
+      <FaPlus />
+    </FlexColCentered>
+  </CardBaseLightHover>
+}
+
 
 
 

@@ -1,4 +1,6 @@
 import Head from "next/head";
+import { NextPage } from 'next';
+import cookie from 'cookie'
 import { useTranslation } from "next-i18next";
 import { GetServerSideProps } from 'next';
 import { Badge, Label, TextInput } from "flowbite-react";
@@ -9,6 +11,8 @@ import { useState } from "react"
 import React from "react";
 import { login } from "@/api/auth";
 import checkEnv from "@/utils/checkEnv";
+import PageLayout from "@/components/PageLayout";
+
 const FormLogin = () => {
   const { t } = useTranslation("common");
 
@@ -24,7 +28,7 @@ const FormLogin = () => {
     try {
       const response = await login(email, password)
       console.log("response", response)
-      window.location.replace(checkEnv());
+      window.location.replace(checkEnv() + "/templates");
     } catch (error) {
       console.error("Error during form submission", error);
       setErrorMessage("Either password or email is wrong");
@@ -80,9 +84,12 @@ const FormLogin = () => {
   );
 };
 
+type PageProps = {
+  authenticated: boolean,
+  userID: string | null,
+}
 
-
-export default function Page() {
+const Page: NextPage<PageProps> = ({ authenticated }) => {
   const { t } = useTranslation("common");
   /*
   const handleSubmit = () => {
@@ -96,22 +103,24 @@ export default function Page() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <FlexColCentered className="min-h-[100vh] min-w-full relative gap-8">
-        <H1>{translateOrDefault(t, "pages.signIn.heading", "Sign In")}</H1>
-        <FormLogin />
-      </FlexColCentered>
+      <PageLayout authenticated={authenticated}>
+        <FlexColCentered className="min-h-[100vh] min-w-full relative gap-8">
+          <H1>{translateOrDefault(t, "pages.signIn.heading", "Sign In")}</H1>
+          <FormLogin />
+        </FlexColCentered>
+      </PageLayout>
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookies = context.req ? cookie.parse(context.req.headers.cookie || '') : undefined
+  const token = cookies && cookies.supabaseToken
   return {
     props: {
-      ...(await serverSideTranslations(locale as string, ["common"])),
-    },
-  };
-};
-
-
-
-
+      authenticated: Boolean(token),
+      ...(await serverSideTranslations(context.locale as string, ["common"]))
+    }
+  }
+}
+export default Page;

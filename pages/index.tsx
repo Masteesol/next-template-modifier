@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { NextPage } from 'next';
 import Link from "next/link";
 import React, { useState } from "react";
 import PageLayout from "../components/PageLayout";
@@ -8,6 +9,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
 import TemplateCardStandAlone from "@/components/TemplateEditor/Homepage/TemplateCardStandAlone";
+import cookie from 'cookie'
 
 const steps = [
   { title: "Intro", excerpt: "Getting Started", details: "This is a template modifier, created to simplify the job of creating and modifying text templates, and the copying them to the clipboard.", editorContentArray: ["Dear New User"] },
@@ -17,7 +19,11 @@ const steps = [
   { title: "Copy", excerpt: "Copy text to clipboard", details: "Click on the copy icon down in the right corner to copy the modified text to you clipboard.", editorContentArray: ["Mr. Doe", "1234567", "12/6/23", "16:00", "20:00"] },
 ];
 
-export default function Home() {
+type PageProps = {
+  authenticated: boolean,
+}
+
+const Page: NextPage<PageProps> = ({ authenticated }) => {
   //const { t } = useTranslation("common");
   const [activeStep, setActiveStep] = useState(0);
   return (
@@ -28,9 +34,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <PageLayout>
+      <PageLayout authenticated={authenticated}>
         <FlexColCenteredX className="w-full min-h-full p-4">
-          <Link href="/templates" className="mb-[5rem]">
+          <Link href={authenticated ? "/templates" : "/sign-in"} className="mb-[5rem]">
             <CardBaseLightHover className="p-4 text-xl rounded bg-green-200">
               <h4>Start Modifying Templates!</h4>
             </CardBaseLightHover>
@@ -42,7 +48,6 @@ export default function Home() {
               <h2 className="text-4xl">{steps[activeStep].title}</h2>
               <p className="text-center">{steps[activeStep].details}</p>
               <TemplateCardStandAlone steps={steps} activeStep={activeStep} />
-
             </FlexColCenteredX>
           </FlexColCentered>
         </FlexColCenteredX>
@@ -51,14 +56,19 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookies = context.req ? cookie.parse(context.req.headers.cookie || '') : undefined
+  const token = cookies && cookies.supabaseToken
+  const userID = cookies && cookies.userID
   return {
     props: {
-      ...(await serverSideTranslations(locale as string, ["common"])),
-    },
-  };
-};
-
+      authenticated: Boolean(token),
+      userID: userID || null,
+      ...(await serverSideTranslations(context.locale as string, ["common"]))
+    }
+  }
+}
+export default Page;
 
 interface StepperTypes {
   title: string;
@@ -104,3 +114,4 @@ const StepsComponent = ({ activeStep, setActiveStep }: StepComponentTypes) => {
     </ol>
   );
 }
+

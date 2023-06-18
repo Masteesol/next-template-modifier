@@ -1,25 +1,23 @@
 import React, { useRef, useEffect } from "react";
 import {
-
   FlexColContainer,
   FlexRowContainer,
-
 } from "../styled-global-components";
 import TopBar from "./PageLayoutComponents/TopBar";
 import Sidebar from "./PageLayoutComponents/Sidebar";
 import IdComponent from "./PageLayoutComponents/idComponent";
 import useDarkMode from "@/hooks/useDarkMode";
-//import { Error400PageContent } from "@/components/ErrorPageComponent";
 
 interface PageLayoutProps {
   children: React.ReactNode;
+  authenticated: boolean;
 }
 
-const PageLayout = ({ children }: PageLayoutProps) => {
+const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
   const navRef = useRef<HTMLDivElement>(null);
   const breadcrumbsRef = useRef<HTMLDivElement>(null);
   const [darkMode, toggleDarkMode] = useDarkMode();
-
+  console.log(authenticated)
   useEffect(() => {
     const navHeight = navRef.current?.offsetHeight ?? 0;
     const breadcrumbsHeight = breadcrumbsRef.current?.offsetHeight ?? 0;
@@ -34,7 +32,7 @@ const PageLayout = ({ children }: PageLayoutProps) => {
   return (
     <div className={`${darkMode ? "dark" : ""}`}>
       <FlexRowContainer className="text-slate-900 dark:text-white">
-        <Sidebar />
+        {authenticated && <Sidebar />}
         <FlexColContainer className="w-full ">
           <TopBar
             ref={navRef}

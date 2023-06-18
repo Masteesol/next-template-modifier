@@ -103,7 +103,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <PageLayout>
+      <PageLayout authenticated={authenticated}>
         <FlexColContainer className="min-h-full gap-8 w-full px-4">
           <H1>{translateOrDefault(t, "pages.settings.heading", "Settings")}</H1>
           <FlexColContainer className="gap-4">
@@ -164,6 +164,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = context.req ? cookie.parse(context.req.headers.cookie || '') : undefined
   const token = cookies && cookies.supabaseToken
   const userID = cookies && cookies.userID
+  const authenticated = token
+  if (!authenticated) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
   return {
     props: {
       authenticated: Boolean(token),

@@ -215,10 +215,6 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
       setSelectedCategory(updatedCategories.length > 0 ? 0 : -1);
     }
   };
-
-  if (!authenticated) {
-    window.location.replace("/sign-in")
-  }
   return (
     <>
       <Head>
@@ -227,7 +223,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <PageLayout>
+      <PageLayout authenticated={authenticated}>
         <FlexRowContainer className="h-full gap-2 overflow-x-auto">
           <FlexRowContainer className="gap-4 absolute top-[-5px] w-[90%] justify-end">
             {!viewCategories &&
@@ -372,6 +368,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = context.req ? cookie.parse(context.req.headers.cookie || '') : undefined
   const token = cookies && cookies.supabaseToken
   const userID = cookies && cookies.userID
+  const authenticated = token
+  if (!authenticated) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
   return {
     props: {
       authenticated: Boolean(token),

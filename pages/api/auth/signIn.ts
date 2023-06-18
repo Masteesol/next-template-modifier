@@ -1,18 +1,23 @@
 // pages/api/signIn.js
 
+import { getUserInfo } from '@/api/profile';
 import supabase from '@/utils/initSupabase';
 import cookie from 'cookie';
+
 import { NextApiResponse, NextApiRequest } from 'next'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { email, password } = req.body;
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
+    const userData = await getUserInfo(data?.session?.user?.id ? data.session.user.id : "")
+
     if (error) {
         console.log('Error: ', error.message);
         return res.status(401).json({ error: error.message });
     }
-    console.log("data", data.user)
+
+
     // Store the session in secure cookies
     res.setHeader('Set-Cookie', [
         cookie.serialize('supabaseToken', data.session.access_token, {
@@ -38,5 +43,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }),
     ]);
 
-    res.status(200).json({ message: 'Signed in' });
+    res.status(200).json({ name: userData, email: email });
 }

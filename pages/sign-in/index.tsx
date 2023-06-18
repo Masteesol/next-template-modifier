@@ -7,7 +7,8 @@ import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer 
 import { translateOrDefault } from "@/utils/i18nUtils";
 import { useState } from "react"
 import React from "react";
-
+import { login, setUserInfo } from "@/api/auth";
+import checkEnv from "@/utils/checkEnv";
 const FormLogin = () => {
   const { t } = useTranslation("common");
 
@@ -20,26 +21,13 @@ const FormLogin = () => {
   // Client-side function
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
-    const response = await fetch('/api/signIn', {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Error during form submission", errorData.error);
-      setErrorMessage(errorData.error);
-    } else {
-      const devUrl = process.env.NEXT_PUBLIC_DEV_BASE_URL as string;
-      const prodUrl = process.env.NEXT_PUBLIC_BASE_URL as string;
-      window.location.replace(process.env.NEXT_PUBLIC_API_ENV === 'development' ? devUrl : prodUrl);
+    try {
+      const response = await login(email, password)
+      console.log("response", response)
+      window.location.replace(checkEnv());
+    } catch (error) {
+      console.error("Error during form submission", error);
+      setErrorMessage("Either password or email is wrong");
     }
   };
 

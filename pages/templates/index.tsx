@@ -11,8 +11,6 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { v4 as uuidv4 } from 'uuid';
 import tw from "tailwind-styled-components";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
-//import mockData from "@/mockData/templateText.json"
-//import mockData from "@/mockData/templateTextEmpty.json"
 import { debounce } from 'lodash';
 import ForwardedRefTemplateCard from "@/components/TemplateEditor/TemplateCard";
 import TemplateNavButton from "@/components/TemplateEditor/TemplateNavButton";
@@ -65,7 +63,6 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
 
       const response = await fetch(`/api/templates?userId=${userId}`);
       const data = await response.json();
-
       return data;
     };
     // Call the async function and handle the response

@@ -152,7 +152,7 @@ const TemplateCard = (props: any, ref: any) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-4">
                     {placeholders}
                 </div>
-                <DividerHorizontal />
+                {placeholderCount > 0 && <DividerHorizontal />}
                 {isEditActive
                     ?
                     <textarea className="border-0 rounded bg-slate-50 dark:bg-gray-800 min-h-[15rem]"

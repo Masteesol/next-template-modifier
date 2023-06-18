@@ -1,8 +1,9 @@
 import Head from "next/head";
+import { NextPage } from 'next';
 import { GetServerSideProps } from 'next';
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import PageLayout from "../../components/PageLayout";
 import {
@@ -18,18 +19,26 @@ import {
 import { translateOrDefault } from "@/utils/i18nUtils";
 import { Label, TextInput, Badge } from "flowbite-react";
 import { FaEdit } from "react-icons/fa";
-import Cookies from 'js-cookie';
 import React from "react";
-import axios from "axios";
-//import { set } from "immutable";
+import cookie from 'cookie'
+import JSCookie from "js-cookie"
+import { getUserInfo } from "@/api/profile";
 
-import { useAuth } from "@/hooks/useAuth";
+type PageProps = {
+  authenticated: boolean,
+  userID: string | null,
+}
 
-export default function Home() {
+interface userInfo {
+  first_name: string | readonly string[] | undefined | null;
+  last_name: string | readonly string[] | undefined | null;
+  subscription_tier: string;
+}
+
+const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
   const { t } = useTranslation("common");
-  const { email, name } = useAuth(); // get this from your custom hook
-
-  const [isActive, setIsActive] = useState(false)
+  const [userInfo, setUserInfo] = useState<userInfo | null>(null)
+  const [isPasswordActive, setIsPasswordActive] = useState(false)
   const [newPassword, setNewPassword] = useState('');
   const [repeatNewPassword, setRepeatNewPassword] = useState('');
   const [passwordMismatch, setPasswordMismatch] = useState(false);
@@ -37,8 +46,25 @@ export default function Home() {
   const [passwordSaved, setPasswordSaved] = useState(false);
   const [passwordNotStrongEnough, setPasswordNotStrongEnough] = useState(false);
 
-  const passwordCheck = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&+])[A-Za-z\d@$!%*?&+]{12,}$/;
+  useEffect(() => {
+    const setUserData = async () => {
+      if (!userID) {
+        return Promise.resolve(null); // or some other default value
+      }
+      const response = await getUserInfo(userID)
+      console.log(response)
+      return response;
+    }
+    setUserData().then((data) => {
+      if (data) {
+        console.log(data)
+        setUserInfo(data)
+      }
+    })
+  }, [userID])
 
+  const passwordCheck = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&+])[A-Za-z\d@$!%*?&+]{12,}$/;
+  useEffect
   const handlePasswordSubmit = (e: any) => {
     e.preventDefault();
 
@@ -60,29 +86,15 @@ export default function Home() {
       return;
     } else {
 
-      const itemsUrl = process.env.NEXT_PUBLIC_API_URL + "/api/user/reset-password";
-      const data = {
-        'email': Cookies.get('email'),
-        'password': newPassword
-      }
-      const configData = {
-        headers: {
-          'Authorization': 'Bearer ' + Cookies.get('bearerToken')
-        }
-      }
-      axios.post(itemsUrl, data, configData).then((response) => {
-        const in30Minutes = 1 / 48;
-        Cookies.set('bearerToken', response.data.token, { expires: in30Minutes });
-        setPasswordSaved(true);
-      });
+
     }
-
-
+  }
+  const handleEditActive = () => {
+    setIsPasswordActive(!isPasswordActive)
   }
 
-
-  const handleEditActive = () => {
-    setIsActive(!isActive)
+  if (!authenticated) {
+    window.location.replace("/sign-in")
   }
   return (
     <>
@@ -98,23 +110,30 @@ export default function Home() {
           <FlexColContainer className="gap-4">
             <h2 className="text-xl">User Information</h2>
             <FlexColRowContainerLg className="gap-4">
-              <FormWrapper className={`${isActive && "bg-gray-200 dark:bg-gray-900"}`}>
+              <FormWrapper className={`${isPasswordActive && "bg-gray-200 dark:bg-gray-900"}`}>
                 <Form>
-                  <Label htmlFor="full-name">Full Name</Label>
-                  <TextInput type="text" disabled={isActive ? true : false} id="full-name" defaultValue={name} />
+                  <Label htmlFor="first_name">Full Name</Label>
+                  <TextInput
+                    type="text"
+                    disabled={isPasswordActive ? true : false}
+                    id="first_name"
+                    defaultValue={userInfo && userInfo.first_name ? userInfo.first_name : ''}
+                  />
+                  <Label htmlFor="last_name">Full Name</Label>
+                  <TextInput type="text" disabled={isPasswordActive ? true : false} id="last_name" defaultValue={userInfo && userInfo.last_name ? userInfo.last_name : ''} />
                   <Label htmlFor="email">Email</Label>
-                  <TextInput type="email" id="email" disabled={isActive ? true : false} defaultValue={email} />
+                  <TextInput type="email" id="email" disabled={isPasswordActive ? true : false} defaultValue={"email"} />
 
                   <FlexColContainer className="gap-4">
                     <FlexRowContainer className="justify-between">
                       <Label htmlFor="old-password">Password</Label>
-                      <FaEdit className={`hover:text-slate-300 cursor-pointer ${isActive && "text-slate-300"}`} onClick={handleEditActive} />
+                      <FaEdit className={`hover:text-slate-300 cursor-pointer ${isPasswordActive && "text-slate-300"}`} onClick={handleEditActive} />
                     </FlexRowContainer>
                     <TextInput type="password" id="old-password" disabled={true} value={"placeholder12"} />
                   </FlexColContainer>
                 </Form>
               </FormWrapper>
-              {isActive &&
+              {isPasswordActive &&
                 <FormWrapper>
                   <Form onSubmit={handlePasswordSubmit}>
                     <FlexColContainer className="gap-4">
@@ -142,10 +161,17 @@ export default function Home() {
 }
 
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookies = context.req ? cookie.parse(context.req.headers.cookie || '') : undefined
+  const token = cookies && cookies.supabaseToken
+  const userID = cookies && cookies.userID
   return {
     props: {
-      ...(await serverSideTranslations(locale as string, ["common"])),
-    },
-  };
-};
+      authenticated: Boolean(token),
+      userID: userID || null,
+      ...(await serverSideTranslations(context.locale as string, ["common"]))
+    }
+  }
+}
+
+export default Page

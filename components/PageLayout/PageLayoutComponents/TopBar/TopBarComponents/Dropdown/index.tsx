@@ -5,7 +5,8 @@ import { FlexRowCenteredY } from "@/components/styled-global-components";
 import LanguageSwitcher from "../LanguageSwitcher";
 import { useRouter } from "next/router";
 import { useAuth } from "@/hooks/useAuth";
-
+import JSCookies from "js-cookie"
+import { logOut } from "@/api/auth";
 
 const NavItemContainer = tw.div`
   flex
@@ -64,9 +65,8 @@ interface DropDownProps {
     darkMode: boolean;
 }
 
-const NavDropdown = ({ onDarkModeToggle, darkMode}: DropDownProps, ) => {
+const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
     const router = useRouter(); // import this from next/router
-    const { setIsAuthenticated, email, name } = useAuth(); // get this from your custom hook
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null); // Specify the type for the ref
 
@@ -85,10 +85,16 @@ const NavDropdown = ({ onDarkModeToggle, darkMode}: DropDownProps, ) => {
     }, []);
 
     const handleSignOut = () => {
-        localStorage.removeItem('key'); // clear the token
-        setIsAuthenticated(false); // update the authentication state
-        router.push('/sign-in'); // redirect to sign in page
+        logOut()
+            .then(() => {
+                router.push('/sign-in'); // redirect to sign in page
+            })
+            .catch((error) => {
+                console.error('Failed to sign out:', error);
+                // Here you could set an error state, show a toast notification, etc.
+            });
     };
+
 
     return (
         <NavItemContainer>
@@ -99,10 +105,10 @@ const NavDropdown = ({ onDarkModeToggle, darkMode}: DropDownProps, ) => {
                 <Dropdown ref={dropdownRef}>
                     <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                         <span className="block text-sm">
-                            {name}
+                            {JSCookies.get("full_name") ? JSCookies.get("full_name") : ""}
                         </span>
-                        <span className="block truncate text-sm font-medium">
-                           {email}
+                        <span className="block truncate text-sm font-bold">
+                            {JSCookies.get("public_email") ? JSCookies.get("public_email") : ""}
                         </span>
                     </div>
                     <ListContainer>

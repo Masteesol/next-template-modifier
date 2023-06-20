@@ -5,7 +5,7 @@ import { useTranslation } from "next-i18next";
 import { GetServerSideProps } from 'next';
 import { Badge, Label, TextInput } from "flowbite-react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer, FlexColContainer, HollowButton, FlexRowCentered } from "@/components/styled-global-components";
+import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer, FlexColContainer, FlexRowCentered } from "@/components/styled-global-components";
 import { translateOrDefault } from "@/utils/i18nUtils";
 import { useState } from "react"
 import React from "react";
@@ -53,9 +53,7 @@ const FormLogin = () => {
             try {
                 const response = await registerUser(email, newPassword, firstName, lastName)
                 console.log("response", response)
-                if (response) {
-                    window.location.replace(checkEnv() + "/sign-in")
-                }
+                window.location.replace(checkEnv() + "/sign-in")
                 console.log("Logged in")
             } catch (error) {
                 console.error("Error during form submission", error);
@@ -70,7 +68,7 @@ const FormLogin = () => {
 
                 <div>
                     <div className="mb-2 block">
-                        <Label htmlFor="first_name" value={translateOrDefault(t, "pages.signIn.form.labels.username", "First Name")} />
+                        <Label htmlFor="first_name" value={translateOrDefault(t, "pages.signup.form.labels.firstname", "First Name")} />
                     </div>
                     <TextInput
                         id="first_name"
@@ -82,7 +80,7 @@ const FormLogin = () => {
                 </div>
                 <div>
                     <div className="mb-2 block">
-                        <Label htmlFor="last_name" value={translateOrDefault(t, "pages.signIn.form.labels.username", "Last Name")} />
+                        <Label htmlFor="last_name" value={translateOrDefault(t, "pages.signup.form.labels.lastname", "Last Name")} />
                     </div>
                     <TextInput
                         id="last_name"
@@ -149,7 +147,7 @@ const Page: NextPage<PageProps> = ({ authenticated }) => {
                     <H1>{translateOrDefault(t, "pages.signUp.heading", "Sign Up")}</H1>
                     <FormLogin />
                     <FlexRowCentered className="gap-2">
-                        <p>Not a user?</p>
+                        <p>Existing user?</p>
                         <Link className="text-green-500" href="/sign-in">Sign In</Link>
                     </FlexRowCentered>
                 </FlexColCentered>

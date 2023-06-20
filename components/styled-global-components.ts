@@ -6,22 +6,16 @@ export const H1 = tw.h1`
     text-2xl
     md:text-3xl
     xl:text-5xl
-    text-slate-900
-    dark:text-slate-200
 `;
 
 export const H2 = tw.h2`
     text-2xl
     lg:text-4xl
-    text-slate-900
-    dark:text-slate-200
 `;
 
 export const H3 = tw.h3`
     text-2xl
     lg:3xl
-    xl:4xl
-    font-bold
 `;
 
 //Buttons

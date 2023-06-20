@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import Link from "next/link";
 import React, { useState } from "react";
 import PageLayout from "../components/PageLayout";
-import { CardBaseLightHover, FlexColCentered, FlexColCenteredX } from "../components/styled-global-components";
+import { CardBaseLightHover, FlexColCentered, FlexColCenteredX, FlexColContainer, H2 } from "../components/styled-global-components";
 //import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
@@ -35,14 +35,21 @@ const Page: NextPage<PageProps> = ({ authenticated }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout authenticated={authenticated}>
-        <FlexColCenteredX className="w-full min-h-full p-4">
+        {!authenticated &&
+          <FlexColContainer className="w-full py-8 px-8 bg-green-400 text-white items-center">
+            <FlexColContainer className="w-full max-w-[1980px]">
+              <h1>Template Modifier App</h1>
+              <H2>Simplify your work flow</H2>
+            </FlexColContainer>
+          </FlexColContainer>
+        }
+        <FlexColCenteredX className="w-full min-h-full p-4 my-8">
           <Link href={authenticated ? "/templates" : "/sign-in"} className="mb-[5rem]">
             <CardBaseLightHover className="p-4 text-xl rounded bg-green-200">
               <h4>Start Modifying Templates!</h4>
             </CardBaseLightHover>
           </Link>
           <FlexColCentered className="gap-8 max-w-[800px] h-full">
-
             <StepsComponent activeStep={activeStep} setActiveStep={setActiveStep} />
             <FlexColCenteredX className="gap-8 h-full mt-10">
               <h2 className="text-4xl">{steps[activeStep].title}</h2>

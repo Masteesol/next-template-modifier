@@ -17,7 +17,7 @@ const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
   const navRef = useRef<HTMLDivElement>(null);
   const breadcrumbsRef = useRef<HTMLDivElement>(null);
   const [darkMode, toggleDarkMode] = useDarkMode();
-  console.log(authenticated)
+  //console.log(authenticated)
   useEffect(() => {
     const navHeight = navRef.current?.offsetHeight ?? 0;
     const breadcrumbsHeight = breadcrumbsRef.current?.offsetHeight ?? 0;
@@ -38,8 +38,9 @@ const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
             ref={navRef}
             darkMode={darkMode}
             onDarkModeToggle={handleDarkModeToggle}
+            authenticated={authenticated}
           />
-          <IdComponent ref={breadcrumbsRef} />
+          {authenticated && <IdComponent ref={breadcrumbsRef} />}
           <FlexColContainer
             id="main"
             className="w-full overflow-auto bg-slate-50 dark:bg-gray-800 box-border"
@@ -51,6 +52,7 @@ const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
     </div>
   );
 };
+
 
 
 export default PageLayout;

@@ -45,3 +45,30 @@ export const logOut = async () => {
     JSCookie.remove('full_name');
     JSCookie.remove('public_email');
 }
+
+export const registerUser = async (email: string, password: string, first_name: string, last_name: string) => {
+    //console.log(email, password, first_name, last_name)
+    try {
+        const response = await fetch('/api/auth/signUp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                password,
+                first_name,
+                last_name
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+
+        const { data } = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+}

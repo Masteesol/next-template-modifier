@@ -38,10 +38,10 @@ export const GenericButton = tw.button`
 `
 
 export const SubmitButton = tw(GenericButton)`
-    bg-slate-700
-    dark:bg-slate-400
+    bg-green-700
+    dark:bg-green-400
     text-white
-    dark:text-slate-900
+    dark:text-green-900
 `
 
 export const LinkButton = tw(GenericButton)`

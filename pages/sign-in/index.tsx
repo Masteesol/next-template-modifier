@@ -5,13 +5,14 @@ import { useTranslation } from "next-i18next";
 import { GetServerSideProps } from 'next';
 import { Badge, Label, TextInput } from "flowbite-react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer } from "@/components/styled-global-components";
+import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer, FlexRowCentered } from "@/components/styled-global-components";
 import { translateOrDefault } from "@/utils/i18nUtils";
 import { useState } from "react"
 import React from "react";
 import { login } from "@/api/auth";
 import checkEnv from "@/utils/checkEnv";
 import PageLayout from "@/components/PageLayout";
+import Link from "next/link";
 
 const FormLogin = () => {
   const { t } = useTranslation("common");
@@ -88,7 +89,6 @@ type PageProps = {
   authenticated: boolean,
   userID: string | null,
 }
-
 const Page: NextPage<PageProps> = ({ authenticated }) => {
   const { t } = useTranslation("common");
   /*
@@ -107,6 +107,10 @@ const Page: NextPage<PageProps> = ({ authenticated }) => {
         <FlexColCentered className="min-h-[100vh] min-w-full relative gap-8">
           <H1>{translateOrDefault(t, "pages.signIn.heading", "Sign In")}</H1>
           <FormLogin />
+          <FlexRowCentered className="gap-2">
+            <p>Not a user?</p>
+            <Link className="text-green-500" href="/sign-up">Sign up</Link>
+          </FlexRowCentered>
         </FlexColCentered>
       </PageLayout>
     </>

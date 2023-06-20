@@ -29,6 +29,7 @@ const Divider = tw.span`
 interface NavProps {
   onDarkModeToggle: () => void;
   darkMode: boolean;
+  authenticated: boolean;
 }
 
 
@@ -38,12 +39,16 @@ const Nav = forwardRef<HTMLDivElement, NavProps>((props, ref) => {
   return (
     <div ref={ref}>
       <NavElement className="bg-white shadow dark:bg-gray-800">
-        <span className="p-3">Template Modifier</span>
-        <FlexRowCenteredY className="ml-auto p-2 gap-4">
-          <Divider />
-          <NavItemContainer>
-            <NavDropdown onDarkModeToggle={props.onDarkModeToggle} darkMode={props.darkMode} />          </NavItemContainer>
-        </FlexRowCenteredY>
+        <a href="/" className="p-3">
+          <span>Template Modifier</span>
+        </a>
+        {props.authenticated &&
+          <FlexRowCenteredY className="ml-auto p-2 gap-4">
+            <Divider />
+            <NavItemContainer>
+              <NavDropdown onDarkModeToggle={props.onDarkModeToggle} darkMode={props.darkMode} />          </NavItemContainer>
+          </FlexRowCenteredY>}
+
       </NavElement>
     </div>
   );

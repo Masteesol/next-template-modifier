@@ -61,7 +61,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
         return Promise.resolve(null); // or some other default value
       }
 
-      const response = await fetch(`/api/templates?userId=${userId}`);
+      const response = await fetch(`/api/templates/getTemplates?userId=${userId}`);
       const data = await response.json();
       return data;
     };

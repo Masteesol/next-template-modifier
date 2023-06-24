@@ -1,6 +1,6 @@
 // pages/api/signIn.js
 
-import { getUserInfo } from '@/api/profile';
+import { getUserInfo } from '@/requests/profile';
 import supabase from '@/utils/initSupabase';
 import cookie from 'cookie';
 

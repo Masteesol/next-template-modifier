@@ -17,8 +17,8 @@ import TemplateNavButton from "@/components/TemplateEditor/TemplateNavButton";
 import CategoryList, { CategoryHeaderButton } from "@/components/TemplateEditor/CategoryList";
 import GuidingDescriptionText from "@/components/TemplateEditor/GuidingDescription";
 import cookie from 'cookie'
-import { createCategory, removeCategory, updateCategory } from '@/api/categories';
-import { createTemplate, removeTemplate, updateTemplate } from '@/api/templates';
+import { createCategory, removeCategory, updateCategory } from '@/requests/categories';
+import { createTemplate, removeTemplate, updateTemplate } from '@/requests/templates';
 
 interface Templates {
   title: string;

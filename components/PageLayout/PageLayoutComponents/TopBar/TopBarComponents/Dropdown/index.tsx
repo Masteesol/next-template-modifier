@@ -5,7 +5,7 @@ import { FlexRowCenteredY } from "@/components/styled-global-components";
 import LanguageSwitcher from "../LanguageSwitcher";
 import { useRouter } from "next/router";
 import JSCookies from "js-cookie"
-import { logOut } from "@/api/auth";
+import { logOut } from "@/requests/auth";
 
 const NavItemContainer = tw.div`
   flex

@@ -9,7 +9,7 @@ import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer,
 import { translateOrDefault } from "@/utils/i18nUtils";
 import { useState } from "react"
 import React from "react";
-import { registerUser } from "@/api/auth";
+import { registerUser } from "@/requests/auth";
 import checkEnv from "@/utils/checkEnv";
 import PageLayout from "@/components/PageLayout";
 import Link from "next/link";

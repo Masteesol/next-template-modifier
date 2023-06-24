@@ -21,7 +21,7 @@ import { Label, TextInput, Badge } from "flowbite-react";
 import { FaEdit } from "react-icons/fa";
 import React from "react";
 import cookie from 'cookie'
-import { getUserInfo } from "@/api/profile";
+import { getUserInfo } from "@/requests/profile";
 
 type PageProps = {
   authenticated: boolean,

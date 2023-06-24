@@ -10,13 +10,12 @@ import { translateOrDefault } from "@/utils/i18nUtils";
 import { useState } from "react"
 import React from "react";
 import { login } from "@/requests/auth";
-import checkEnv from "@/utils/checkEnv";
 import PageLayout from "@/components/PageLayout";
 import Link from "next/link";
-
+import { useRouter } from "next/router";
 const FormLogin = () => {
   const { t } = useTranslation("common");
-
+  const router = useRouter()
   const [email, setEmail] = useState("");
   const [emailEmpty, setEmailEmpty] = useState(false);
   const [password, setPassword] = useState("");
@@ -29,7 +28,7 @@ const FormLogin = () => {
     try {
       const response = await login(email, password)
       console.log("response", response)
-      window.location.replace(checkEnv() + "/templates");
+      router.push("/templates")
     } catch (error) {
       console.error("Error during form submission", error);
       setErrorMessage("Either password or email is wrong");

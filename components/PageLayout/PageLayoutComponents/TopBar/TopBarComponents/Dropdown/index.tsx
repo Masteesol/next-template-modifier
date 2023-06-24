@@ -3,7 +3,6 @@ import tw from "tailwind-styled-components";
 import { useState, useEffect, useRef } from "react";
 import { FlexRowCenteredY } from "@/components/styled-global-components";
 import LanguageSwitcher from "../LanguageSwitcher";
-import { useRouter } from "next/router";
 import JSCookies from "js-cookie"
 import { logOut } from "@/requests/auth";
 
@@ -65,7 +64,6 @@ interface DropDownProps {
 }
 
 const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
-    const router = useRouter(); // import this from next/router
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null); // Specify the type for the ref
 
@@ -83,16 +81,18 @@ const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
         };
     }, []);
 
-    const handleSignOut = () => {
-        logOut()
-            .then(() => {
-                router.push('/sign-in'); // redirect to sign in page
-            })
-            .catch((error) => {
-                console.error('Failed to sign out:', error);
-                // Here you could set an error state, show a toast notification, etc.
-            });
+    const handleSignOut = async () => {
+        try {
+            await logOut();
+            // redirect to sign in page with a full page reload
+            window.location.href = '/sign-in';
+        } catch (error) {
+            console.error('Failed to sign out:', error);
+            // Here you could set an error state, show a toast notification, etc.
+        }
     };
+
+
 
 
     return (

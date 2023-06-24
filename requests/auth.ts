@@ -32,20 +32,22 @@ export const login = async (email: string, password: string) => {
     }
 }
 
-export const logOut = async () => {
+export const logOut = () => {
     const baseUrl = checkEnv()
 
-    fetch(baseUrl + '/api/auth/signOut', {
+    return fetch(baseUrl + '/api/auth/signOut', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
     })
         .then((res) => res.json())
-        .then((data) => console.log(data)) // Logs "Signed out"
+        .then((data) => {
+            console.log(data); // Logs "Signed out"
+            JSCookie.remove('full_name');
+            JSCookie.remove('public_email');
+        })
         .catch((err) => console.error(err));
-    JSCookie.remove('full_name');
-    JSCookie.remove('public_email');
 }
 
 export const registerUser = async (email: string, password: string, first_name: string, last_name: string) => {

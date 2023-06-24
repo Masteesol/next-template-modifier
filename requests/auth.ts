@@ -10,6 +10,8 @@ export const setUserInfo = async (first_name: string, last_name: string, email: 
 
 export const login = async (email: string, password: string) => {
     const baseUrl = checkEnv()
+    console.log("email", email)
+    console.log("password", password)
     const response = await fetch(baseUrl + '/api/auth/signIn', {
         method: 'POST',
         body: JSON.stringify({

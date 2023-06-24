@@ -8,6 +8,7 @@ import { NextApiResponse, NextApiRequest } from 'next'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { email, password } = req.body;
+    console.log("api", email, password)
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     const userData = await getUserInfo(data?.session?.user?.id ? data.session.user.id : "")
@@ -16,8 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log('Error: ', error.message);
         return res.status(401).json({ error: error.message });
     }
-
-
     // Store the session in secure cookies
     res.setHeader('Set-Cookie', [
         cookie.serialize('supabaseToken', data.session.access_token, {

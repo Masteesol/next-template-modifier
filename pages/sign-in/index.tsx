@@ -7,18 +7,16 @@ import { Badge, Label, TextInput } from "flowbite-react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer, FlexRowCentered } from "@/components/styled-global-components";
 import { translateOrDefault } from "@/utils/i18nUtils";
-import { useState } from "react"
+import { useState, useContext } from "react"
 import React from "react";
 import { login } from "@/requests/auth";
 import PageLayout from "@/components/PageLayout";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { LoadingContext } from '@/context/LoadingContext';
 
-interface FormTypes {
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
-const FormLogin = ({ setIsLoading }: FormTypes) => {
+const FormLogin = ({ setIsLoading }: any) => {
   const { t } = useTranslation("common");
   const router = useRouter()
   const [email, setEmail] = useState("");
@@ -98,7 +96,7 @@ type PageProps = {
 }
 const Page: NextPage<PageProps> = ({ authenticated }) => {
   const { t } = useTranslation("common");
-  const [isLoading, setIsLoading] = useState(false)
+  const { setIsLoading } = useContext(LoadingContext);
   return (
     <>
       <Head>
@@ -108,21 +106,14 @@ const Page: NextPage<PageProps> = ({ authenticated }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout authenticated={authenticated}>
-        {isLoading
-          ?
-          <FlexColCentered className="w-full h-full ">
-            <div className="loader text-green-400"></div>
-          </FlexColCentered>
-          :
-          <FlexColCentered className="min-h-[100vh] min-w-full relative gap-8">
-            <H1>{translateOrDefault(t, "pages.signIn.heading", "Sign In")}</H1>
-            <FormLogin setIsLoading={setIsLoading} />
-            <FlexRowCentered className="gap-2">
-              <p>Not a user?</p>
-              <Link className="text-green-500" href="/sign-up">Sign up</Link>
-            </FlexRowCentered>
-          </FlexColCentered>}
-
+        <FlexColCentered className="min-h-[100vh] min-w-full relative gap-8">
+          <H1>{translateOrDefault(t, "pages.signIn.heading", "Sign In")}</H1>
+          <FormLogin setIsLoading={setIsLoading} />
+          <FlexRowCentered className="gap-2">
+            <p>Not a user?</p>
+            <Link className="text-green-500" href="/sign-up">Sign up</Link>
+          </FlexRowCentered>
+        </FlexColCentered>
       </PageLayout>
     </>
   );

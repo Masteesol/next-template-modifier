@@ -65,6 +65,7 @@ const SidebarElement = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };

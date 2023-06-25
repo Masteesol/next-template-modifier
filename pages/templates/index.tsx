@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NextPage } from 'next';
 import PageLayout from "@/components/PageLayout";
 import {
@@ -28,6 +28,7 @@ import GuidingDescriptionText from "@/components/TemplateEditor/GuidingDescripti
 import cookie from 'cookie'
 import { createCategory, removeCategory, updateCategory } from '@/requests/categories';
 import { createTemplate, removeTemplate, updateTemplate } from '@/requests/templates';
+import { LoadingContext } from '@/context/LoadingContext';
 
 interface Templates {
   title: string;
@@ -63,8 +64,8 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
   const [templateRefs, setTemplateRefs] = useState<React.RefObject<HTMLDivElement>[]>([]);
   const [viewCategories, setViewCategories] = useState(true)
   const [viewNavigation, setViewNavigation] = useState(true)
-  const [isLoading, setIsLoading] = useState(false)
-
+  const { setIsLoading } = useContext(LoadingContext);
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const fetchTemplatesForUser = async (userId: string | undefined | null) => {
       if (!userId) {
@@ -85,8 +86,8 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
         setTextTemplates(templatesContainers);
       }
     });
-  }, [userID]); // Ensure the effect runs when the userID changes
-
+  }, [userID]);
+  /* eslint-disable react-hooks/exhaustive-deps */
   const handleSelectCategory = (index: number) => {
     setSelectedCategory(index);
   }
@@ -235,108 +236,101 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout authenticated={authenticated}>
-        {isLoading
-          ?
-          <FlexColCentered className="w-full h-full ">
-            <div className="loader text-green-400"></div>
-          </FlexColCentered>
-          :
-          <FlexRowContainer className="h-full gap-2 overflow-x-auto">
-            <FlexColContainer className="absolute rounded shadow bottom-[5vh] right-0 z-50 bg-slate-100">
-              {!viewCategories &&
-                <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
+        <FlexRowContainer className="h-full gap-2 overflow-x-auto">
+          <FlexColContainer className="absolute rounded shadow bottom-[5vh] right-0 z-50 bg-slate-100">
+            {!viewCategories &&
+              <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
+            }
+            {textTemplates?.length > 0 &&
+              textTemplates[selectedCategory].templates.length > 0 && !viewNavigation &&
+              <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
+            }
+          </FlexColContainer>
+          <FlexRowContainer className=" gap-2 h-full">
+            <FlexRowContainer className="h-full">
+              {viewCategories &&
+                <CategoryList
+                  viewCategories={viewCategories}
+                  handleViewCategorySelect={handleViewCategorySelect}
+                  textTemplates={textTemplates}
+                  addCategory={handleCreateCategory}
+                  selectedCategory={selectedCategory}
+                  handleSelectCategory={handleSelectCategory}
+                  handleRemoveCategory={handleRemoveCategory}
+                  handleInputCatTitleChange={handleInputCatTitleChange}
+                />
               }
-              {textTemplates?.length > 0 &&
-                textTemplates[selectedCategory].templates.length > 0 && !viewNavigation &&
-                <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
-              }
-            </FlexColContainer>
-            <FlexRowContainer className=" gap-2 h-full">
-              <FlexRowContainer className="h-full">
-                {viewCategories &&
-                  <CategoryList
-                    viewCategories={viewCategories}
-                    handleViewCategorySelect={handleViewCategorySelect}
-                    textTemplates={textTemplates}
-                    addCategory={handleCreateCategory}
-                    selectedCategory={selectedCategory}
-                    handleSelectCategory={handleSelectCategory}
-                    handleRemoveCategory={handleRemoveCategory}
-                    handleInputCatTitleChange={handleInputCatTitleChange}
-                  />
-                }
-              </FlexRowContainer>
-              {viewCategories && <DividerPipe />}
-              {
-                textTemplates.length > 0 &&
-                textTemplates[selectedCategory].templates.length > 0 &&
-                viewNavigation &&
-                <FlexColContainer className="p-2">
-                  <FlexColCenteredX className="w-full gap-4 min-w-[18rem] max-w-[18rem] max-h-[90%] overflow-y-auto">
-                    <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
-                    {textTemplates[selectedCategory].templates.map((template, templateIndex) => (
-                      <TemplateNavButton
-                        template={template}
-                        index={templateIndex}
-                        categoryIndex={selectedCategory}
-                        templateRefs={templateRefs}
-                        key={`template-nav-button-${selectedCategory}-${templateIndex}`}
-                      />
-                    ))}
-                  </FlexColCenteredX>
-                  <FlexColCentered className="mt-auto w-full mb-2 gap-4">
-                    <AddTemplateButton onClick={handleCreateTemplate} />
-                  </FlexColCentered>
-                </FlexColContainer>
-              }
-              {textTemplates.length > 0 &&
-                textTemplates[selectedCategory].templates.length > 0 &&
-                viewNavigation && <DividerPipe />}
             </FlexRowContainer>
-            <FlexRowContainer className="gap-4 w-full justify-center overflow-y-auto h-full" id="templates-container">
-              <FlexColContainer className="w-full max-w-[900px] gap-4 relative h-full">
-                {textTemplates.length > 0 && textTemplates[0].category_name !== undefined ?
-                  <FlexColContainer className="gap-4 h-full">
-                    <FlexColContainer className="max-h-[77vh] h-full" >
-                      <FlexColContainer className="gap-4 h-full">
-                        {
-                          textTemplates[selectedCategory].templates.length > 0
-                          && textTemplates[selectedCategory].templates.map((template, templateIndex) =>
-                            <ForwardedRefTemplateCard
-                              key={template.template_id}
-                              categoryIndex={selectedCategory}
-                              index={templateIndex}
-                              template={template}
-                              handleRemoveTemplate={handleRemoveTemplate}
-                              handleTextTemplateChange={handleTextTemplateChange}
-                              ref={templateRefs[templateIndex]}
-                            />
-                          )
-                        }
-                        {textTemplates[selectedCategory].templates.length === 0 &&
-                          <FlexColCentered className="h-full ">
-                            <FlexColContainer className="max-w-[400px] w-full gap-4">
-                              <GuidingDescriptionText>Click the &quot;+&quot; button to create new template</GuidingDescriptionText>
-                              {/**  <FlexColCentered className="bg-green-200 dark:bg-green-800 w-full p-4 rounded">
+            {viewCategories && <DividerPipe />}
+            {
+              textTemplates.length > 0 &&
+              textTemplates[selectedCategory].templates.length > 0 &&
+              viewNavigation &&
+              <FlexColContainer className="p-2">
+                <FlexColCenteredX className="w-full gap-4 min-w-[18rem] max-w-[18rem] max-h-[90%] overflow-y-auto">
+                  <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
+                  {textTemplates[selectedCategory].templates.map((template, templateIndex) => (
+                    <TemplateNavButton
+                      template={template}
+                      index={templateIndex}
+                      categoryIndex={selectedCategory}
+                      templateRefs={templateRefs}
+                      key={`template-nav-button-${selectedCategory}-${templateIndex}`}
+                    />
+                  ))}
+                </FlexColCenteredX>
+                <FlexColCentered className="mt-auto w-full mb-2 gap-4">
+                  <AddTemplateButton onClick={handleCreateTemplate} />
+                </FlexColCentered>
+              </FlexColContainer>
+            }
+            {textTemplates.length > 0 &&
+              textTemplates[selectedCategory].templates.length > 0 &&
+              viewNavigation && <DividerPipe />}
+          </FlexRowContainer>
+          <FlexRowContainer className="gap-4 w-full justify-center overflow-y-auto h-full" id="templates-container">
+            <FlexColContainer className="w-full max-w-[900px] gap-4 relative h-full">
+              {textTemplates.length > 0 && textTemplates[0].category_name !== undefined ?
+                <FlexColContainer className="gap-4 h-full">
+                  <FlexColContainer className="max-h-[77vh] h-full" >
+                    <FlexColContainer className="gap-4 h-full">
+                      {
+                        textTemplates[selectedCategory].templates.length > 0
+                        && textTemplates[selectedCategory].templates.map((template, templateIndex) =>
+                          <ForwardedRefTemplateCard
+                            key={template.template_id}
+                            categoryIndex={selectedCategory}
+                            index={templateIndex}
+                            template={template}
+                            handleRemoveTemplate={handleRemoveTemplate}
+                            handleTextTemplateChange={handleTextTemplateChange}
+                            ref={templateRefs[templateIndex]}
+                          />
+                        )
+                      }
+                      {textTemplates[selectedCategory].templates.length === 0 &&
+                        <FlexColCentered className="h-full ">
+                          <FlexColContainer className="max-w-[400px] w-full gap-4">
+                            <GuidingDescriptionText>Click the &quot;+&quot; button to create new template</GuidingDescriptionText>
+                            {/**  <FlexColCentered className="bg-green-200 dark:bg-green-800 w-full p-4 rounded">
                               <h2>Add Template</h2>
                             </FlexColCentered>*/}
 
-                              <FlexColCentered className="w-full" >
-                                <AddTemplateButtonEmpty onClick={handleCreateTemplate} />
-                              </FlexColCentered>
-                            </FlexColContainer>
-                          </FlexColCentered>
-                        }
-                      </FlexColContainer>
+                            <FlexColCentered className="w-full" >
+                              <AddTemplateButtonEmpty onClick={handleCreateTemplate} />
+                            </FlexColCentered>
+                          </FlexColContainer>
+                        </FlexColCentered>
+                      }
                     </FlexColContainer>
-
                   </FlexColContainer>
-                  : <FlexColContainer className="w-full max-w-[800px]"><GuidingDescriptionText>Your templates will show up here, but first add a template category.</GuidingDescriptionText></FlexColContainer>
-                }
-              </FlexColContainer>
-            </FlexRowContainer>
+
+                </FlexColContainer>
+                : <FlexColContainer className="w-full max-w-[800px]"><GuidingDescriptionText>Your templates will show up here, but first add a template category.</GuidingDescriptionText></FlexColContainer>
+              }
+            </FlexColContainer>
           </FlexRowContainer>
-        }
+        </FlexRowContainer>
       </PageLayout>
     </>
   );

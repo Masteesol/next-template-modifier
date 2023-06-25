@@ -1,10 +1,11 @@
 import { FaSun, FaMoon, FaCog, FaSignOutAlt, FaUser } from "react-icons/fa";
 import tw from "tailwind-styled-components";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { FlexRowCenteredY } from "@/components/styled-global-components";
 import LanguageSwitcher from "../LanguageSwitcher";
 import JSCookies from "js-cookie"
 import { logOut } from "@/requests/auth";
+import { LoadingContext } from "@/context/LoadingContext";
 
 const NavItemContainer = tw.div`
   flex
@@ -64,6 +65,7 @@ interface DropDownProps {
 }
 
 const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
+    const { setIsLoading } = useContext(LoadingContext);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null); // Specify the type for the ref
 
@@ -83,17 +85,16 @@ const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
 
     const handleSignOut = async () => {
         try {
+            setIsLoading(true)
             await logOut();
             // redirect to sign in page with a full page reload
             window.location.href = '/sign-in';
         } catch (error) {
+            setIsLoading(false)
             console.error('Failed to sign out:', error);
             // Here you could set an error state, show a toast notification, etc.
         }
     };
-
-
-
 
     return (
         <NavItemContainer>

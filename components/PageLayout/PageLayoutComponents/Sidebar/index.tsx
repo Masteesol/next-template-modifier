@@ -14,8 +14,10 @@ import {
 import tw from "tailwind-styled-components";
 import { FlexColCenteredX, FlexColCentered } from "@/components/styled-global-components";
 import Link from "next/link";
-import { useTranslation } from "next-i18next";
-import { translateOrDefault } from "@/utils/i18nUtils";
+//import { useTranslation } from "next-i18next";
+//import { translateOrDefault } from "@/utils/i18nUtils";
+import Image from "next/image";
+import logo from "@/public/logo.png"
 
 const Sidebar = tw.aside`
   w-[3.5rem]
@@ -24,8 +26,8 @@ const Sidebar = tw.aside`
   bg-white
   text-xs
   p-2
-  bg-green-300
-  dark:bg-green-600
+  bg-white
+  dark:bg-slate-900
   text-white
   absolute
   md:relative
@@ -34,26 +36,11 @@ const Sidebar = tw.aside`
 
 const SideBarItemContainer = tw(FlexColCentered)`
   my-1
-  text-slate-900
+  text-black
   dark:text-white
   dark:hover:bg-green-800
   hover:bg-green-200
   rounded
-  group
-`;
-
-const SidebarText = tw.p`
-  text-center
-  text-xs
-  absolute
-  left-10
-  bg-slate-100
-  p-1
-  rounded
-  opacity-0
-  group-hover:opacity-100
-  transition-opacity
-  duration-200
 `;
 
 const ToggleButton = tw.button`
@@ -74,7 +61,7 @@ const ToggleButton = tw.button`
 
 
 const SidebarElement = () => {
-  const { t } = useTranslation("common");
+  //const { t } = useTranslation("common");
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -106,11 +93,15 @@ const SidebarElement = () => {
         <FlexColCenteredX className="w-full">
           <SideBarItemContainer>
             <Link href="/" className="flex flex-col items-center relative p-2">
+              <Image src={logo} alt="logo" height={25} width={25} />
+            </Link>
+          </SideBarItemContainer>
+          <SideBarItemContainer>
+            <Link href="/" className="flex flex-col items-center relative p-2">
               {router.pathname === "/"
                 ? <BsHouseDoorFill size={28} />
                 : <BsHouseDoor size={28} />
               }
-              <SidebarText>{translateOrDefault(t, "navigation.home", "Home")}</SidebarText>
             </Link>
           </SideBarItemContainer>
           <SideBarItemContainer>
@@ -119,7 +110,6 @@ const SidebarElement = () => {
                 ? <BsFileEarmarkTextFill size={28} />
                 : <BsFileEarmarkText size={28} />
               }
-              <SidebarText>{translateOrDefault(t, "navigation.templates", "Templates")}</SidebarText>
             </Link>
           </SideBarItemContainer>
           <SideBarItemContainer>
@@ -128,7 +118,6 @@ const SidebarElement = () => {
                 ? <BsPersonFill size={25} />
                 : <BsPerson size={25} />
               }
-              <SidebarText>{translateOrDefault(t, "navigation.settings", "Settings")}</SidebarText>
             </Link>
           </SideBarItemContainer>
         </FlexColCenteredX>

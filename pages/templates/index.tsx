@@ -2,14 +2,23 @@ import Head from "next/head";
 import React, { useState, useEffect } from "react";
 import { NextPage } from 'next';
 import PageLayout from "@/components/PageLayout";
-import { CardBaseLightHover, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCentered, FlexRowCenteredY, FlexRowContainer } from "@/components/styled-global-components";
+import {
+  CardBaseLightHover,
+  DividerPipe,
+  FlexColCentered,
+  FlexColCenteredX,
+  FlexColContainer,
+  FlexRowCentered,
+  FlexRowCenteredY,
+  FlexRowContainer,
+  AddButton,
+} from "@/components/styled-global-components";
 
 import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 //import { useTranslation } from "next-i18next";
 import { v4 as uuidv4 } from 'uuid';
-import tw from "tailwind-styled-components";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import { debounce } from 'lodash';
 import ForwardedRefTemplateCard from "@/components/TemplateEditor/TemplateCard";
@@ -225,7 +234,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
       </Head>
       <PageLayout authenticated={authenticated}>
         <FlexRowContainer className="h-full gap-2 overflow-x-auto">
-          <FlexRowContainer className="gap-4 absolute top-[-5px] w-[90%] justify-end">
+          <FlexColContainer className="absolute rounded shadow bottom-[5vh] right-0 z-50 bg-slate-100">
             {!viewCategories &&
               <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
             }
@@ -233,9 +242,9 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
               textTemplates[selectedCategory].templates.length > 0 && !viewNavigation &&
               <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
             }
-          </FlexRowContainer>
-          <FlexRowContainer className="bg-gray-200 dark:bg-gray-700 gap-2 h-full">
-            <FlexRowContainer className="h-full bg-gray-300 dark:bg-gray-600">
+          </FlexColContainer>
+          <FlexRowContainer className=" gap-2 h-full">
+            <FlexRowContainer className="h-full">
               {viewCategories &&
                 <CategoryList
                   viewCategories={viewCategories}
@@ -249,6 +258,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
                 />
               }
             </FlexRowContainer>
+            {viewCategories && <DividerPipe />}
             {
               textTemplates.length > 0 &&
               textTemplates[selectedCategory].templates.length > 0 &&
@@ -266,13 +276,14 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
                     />
                   ))}
                 </FlexColCenteredX>
-
                 <FlexColCentered className="mt-auto w-full mb-2 gap-4">
                   <AddTemplateButton onClick={handleCreateTemplate} />
                 </FlexColCentered>
-
               </FlexColContainer>
             }
+            {textTemplates.length > 0 &&
+              textTemplates[selectedCategory].templates.length > 0 &&
+              viewNavigation && <DividerPipe />}
           </FlexRowContainer>
           <FlexRowContainer className="gap-4 w-full justify-center overflow-y-auto h-full" id="templates-container">
             <FlexColContainer className="w-full max-w-[900px] gap-4 relative h-full">
@@ -332,25 +343,14 @@ const NavigationHeaderButton = ({ viewNavigation, handleViewNavigationSelect }: 
 }
 
 
-
-const AddButton = tw.button`
-  w-full
-  bg-gray-400
-  rounded
-  p-4
-  text-gray-900
-  dark:text-gray-500
-  dark:bg-gray-700
-  hover:bg-gray-500
-  hover:dark:text-gray-300
-`
-
 const AddTemplateButton = ({ onClick }: any) => {
-  return <AddButton className="w-full" onClick={onClick}>
-    <FlexColCentered>
-      <FaPlus />
-    </FlexColCentered>
-  </AddButton>
+  return <FlexRowContainer className="justify-end w-full">
+    <AddButton onClick={onClick}>
+      <FlexColCentered>
+        <FaPlus />
+      </FlexColCentered>
+    </AddButton>
+  </FlexRowContainer>
 }
 
 const AddTemplateButtonEmpty = ({ onClick }: any) => {

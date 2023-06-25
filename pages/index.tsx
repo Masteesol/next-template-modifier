@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import Link from "next/link";
 import React, { useState } from "react";
 import PageLayout from "../components/PageLayout";
-import { CardBaseLightHover, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, H2 } from "../components/styled-global-components";
+import { CardBaseLightHover, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCentered, FlexRowCenteredY, H1, H2 } from "../components/styled-global-components";
 //import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
@@ -47,20 +47,49 @@ const Page: NextPage<PageProps> = ({ authenticated }) => {
 
           </FlexRowCenteredY>
         }
-        <FlexColCenteredX className="w-full min-h-full p-4 my-8">
-          <Link href={authenticated ? "/templates" : "/sign-in"} className="mb-[5rem]">
-            <CardBaseLightHover className="p-4 text-xl rounded bg-green-200">
-              <h4>Start Modifying Templates!</h4>
-            </CardBaseLightHover>
-          </Link>
-          <FlexColCentered className="gap-8 max-w-[800px] h-full">
-            <StepsComponent activeStep={activeStep} setActiveStep={setActiveStep} />
-            <FlexColCenteredX className="gap-8 h-full mt-10">
-              <h2 className="text-4xl">{steps[activeStep].title}</h2>
-              <p className="text-center">{steps[activeStep].details}</p>
-              <TemplateCardStandAlone steps={steps} activeStep={activeStep} />
-            </FlexColCenteredX>
-          </FlexColCentered>
+        <FlexColCenteredX className="w-full min-h-full p-4 my-8 gap-8">
+          {!authenticated
+            ? <FlexColCentered className="gap-2">
+              <FlexRowCenteredY className="gap-4">
+                <Link href={"/sign-in"}>
+                  <CardBaseLightHover className="p-4 text-xl rounded bg-green-300">
+                    <h4>Sign In</h4>
+                  </CardBaseLightHover>
+                </Link>
+                <Link href={authenticated ? "/templates" : "/sign-up"}>
+                  <FlexRowCentered className="p-4 text-green-500 text-xl rounded bg-transparent border-[1px] border-green-400 hover:opacity-70">
+                    <h4>Sign Up</h4>
+                  </FlexRowCentered>
+                </Link>
+              </FlexRowCenteredY>
+            </FlexColCentered>
+            : <H1 className="mb-8">How to use the app</H1>
+          }
+
+
+          {authenticated ?
+            <FlexColCentered className="gap-8 max-w-[800px] h-full">
+              <StepsComponent activeStep={activeStep} setActiveStep={setActiveStep} />
+              <FlexColCenteredX className="gap-8 h-full mt-10">
+                <h2 className="text-4xl">{steps[activeStep].title}</h2>
+                <p className="text-center">{steps[activeStep].details}</p>
+                <TemplateCardStandAlone steps={steps} activeStep={activeStep} />
+              </FlexColCenteredX>
+            </FlexColCentered>
+            :
+            <div className="max-w-[1440px] shadow rounded w-full">
+              <video
+                controls
+                preload="none"
+                width="100%"
+                poster="https://res.cloudinary.com/dedym3sfv/image/upload/v1687692796/poster-templify-video_p3rgrm.jpg"
+                src="https://res.cloudinary.com/dedym3sfv/video/upload/v1687693768/using_template_modifier_app_jnznvr.mp4"
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          }
+
         </FlexColCenteredX>
       </PageLayout >
     </>

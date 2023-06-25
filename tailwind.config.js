@@ -14,6 +14,7 @@ module.exports = {
     extend: {
       colors: {
         "overlay-dark": "rgba(0, 0, 0, 0.5)",
+        primary: "#8EF3E3",
       },
     },
   },

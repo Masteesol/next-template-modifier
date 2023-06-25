@@ -1,7 +1,6 @@
-import { FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY } from "@/components/styled-global-components";
+import { FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, AddButton, FlexRowContainer } from "@/components/styled-global-components";
 import CategoryCard from "@/components/TemplateEditor/CategoryCard";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
-import tw from "tailwind-styled-components";
 import GuidingDescriptionText from "./GuidingDescription";
 
 export const CategoryHeaderButton = ({ viewCategories, handleViewCategorySelect }: any) => {
@@ -13,25 +12,14 @@ export const CategoryHeaderButton = ({ viewCategories, handleViewCategorySelect 
     </FlexRowCenteredY>
 }
 
-
-const AddButton = tw.button`
-  w-full
-  bg-gray-400
-  rounded
-  p-4
-  text-gray-900
-  dark:text-gray-500
-  dark:bg-gray-700
-  hover:bg-gray-500
-  hover:dark:text-gray-300
-`
-
 const AddCategoryButton = ({ onClick }: any) => {
-    return <AddButton onClick={onClick}>
-        <FlexColCentered>
-            <FaPlus />
-        </FlexColCentered>
-    </AddButton>
+    return <FlexRowContainer className="justify-end w-full">
+        <AddButton onClick={onClick}>
+            <FlexColCentered>
+                <FaPlus />
+            </FlexColCentered>
+        </AddButton>
+    </FlexRowContainer>
 }
 
 

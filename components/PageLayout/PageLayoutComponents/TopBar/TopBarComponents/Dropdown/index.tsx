@@ -21,7 +21,7 @@ const IconBackground = tw.button`
   dark:bg-gray-700
   text-base
   p-2
-  rounded
+  rounded-full
   focus:outline-none
   focus:ring-4
   focus:ring-gray-300

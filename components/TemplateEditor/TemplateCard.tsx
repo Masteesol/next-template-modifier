@@ -134,7 +134,7 @@ const TemplateCard = (props: any, ref: any) => {
     });
     return (
         <CardBaseLight className="w-full" ref={ref} key={template.template_id}>
-            <FlexColContainer className="min-h-[15rem] w-full p-4 gap-4">
+            <FlexColContainer className="min-h-[15rem] w-full p-4 gap-4 md:min-w-[30rem]">
                 <FlexRowCenteredY className="justify-between gap-4">
                     <InputBase
                         type="text"

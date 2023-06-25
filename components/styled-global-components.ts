@@ -60,6 +60,18 @@ export const HollowButton = tw(GenericButton)`
     rounded
 `
 
+export const AddButton = tw.button`
+  bg-green-100
+  rounded-full
+  shadow-md
+  p-4
+  text-gray-900
+  dark:text-white
+  dark:bg-slate-700
+  hover:bg-green-200
+  hover:dark:opacity-50
+`
+
 //Card styles-----------------------------------------------------------------
 //_Color base
 export const CardBaseLight = tw.div`

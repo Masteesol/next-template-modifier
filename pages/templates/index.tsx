@@ -65,6 +65,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
   const [viewCategories, setViewCategories] = useState(true)
   const [viewNavigation, setViewNavigation] = useState(true)
   const { setIsLoading } = useContext(LoadingContext);
+
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const fetchTemplatesForUser = async (userId: string | undefined | null) => {

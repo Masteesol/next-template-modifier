@@ -46,12 +46,11 @@ const ToggleButton = tw.button`
     border-none 
     shadow 
     p-2
-    bg-green-500
+    bg-green-400
     rounded-r-md
     hover:bg-slate-400
     absolute 
     bottom-20
-    opacity-50
     text-white
     z-[7000]
 `;
@@ -138,7 +137,7 @@ const SidebarElement = () => {
       {
         isMobile && isOpen && (
           <div
-            className="fixed top-0 left-0 w-screen h-screen z-10 bg-overlay-dark"
+            className="fixed top-0 left-0 w-screen h-screen z-[7000] bg-overlay-dark"
             onClick={closeSidebar}
           />
         )

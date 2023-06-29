@@ -58,7 +58,7 @@ const CategoryList = ({ viewCategories, handleViewCategorySelect, textTemplates,
             }
 
         </FlexColCenteredX>
-        <FlexColCentered className="mt-auto w-full mb-4 gap-4">
+        <FlexColCentered className="mt-auto w-full mb-10 gap-4">
             {textTemplates.length === 0 && <GuidingDescriptionText>Add a new category to begin</GuidingDescriptionText>}
             <AddCategoryButton onClick={addCategory} />
         </FlexColCentered>

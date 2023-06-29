@@ -42,7 +42,7 @@ const IdComponent = forwardRef<HTMLDivElement>((props, ref) => {
   const breadcrumbs = createBreadcrumbs();
 
   return (
-    <div ref={ref} className="bg-slate-50 p-3 dark:bg-gray-800">
+    <div ref={ref} className="bg-slate-50 p-3 dark:bg-gray-800 hidden md:block">
       <Breadcrumbs paths={breadcrumbs} />
     </div>
   );

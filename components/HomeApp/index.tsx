@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FlexColCentered, FlexColCenteredX, H1 } from "@/components/styled-global-components";
+import { FlexColCentered, FlexColCenteredX, FlexColContainer, H1 } from "@/components/styled-global-components";
 //import { useTranslation } from "next-i18next";
 
 //import { translateOrDefault } from "@/utils/i18nUtils";
@@ -18,9 +18,9 @@ const HomeAppContent = () => {
     const [activeStep, setActiveStep] = useState(0);
     return (
         <>
-            <FlexColCentered>
+            <FlexColCentered className="h-full">
                 <H1 className="mb-8">How to use the app</H1>
-                <FlexColCentered className="gap-8 max-w-[800px] h-full">
+                <FlexColCentered className="gap-8 max-w-[800px] h-full hidden md:flex">
                     <StepsComponent activeStep={activeStep} setActiveStep={setActiveStep} />
                     <FlexColCenteredX className="gap-8 h-full mt-10">
                         <h2 className="text-4xl">{steps[activeStep].title}</h2>
@@ -28,6 +28,20 @@ const HomeAppContent = () => {
                         <TemplateCardStandAlone steps={steps} activeStep={activeStep} />
                     </FlexColCenteredX>
                 </FlexColCentered>
+                <FlexColContainer className="w-full md:hidden px-4 mb-[4rem]">
+                    <div className="shadow rounded">
+                        <video
+                            controls
+                            preload="none"
+                            width="100%"
+                            poster="https://res.cloudinary.com/dedym3sfv/image/upload/v1687692796/poster-templify-video_p3rgrm.jpg"
+                            src="https://res.cloudinary.com/dedym3sfv/video/upload/v1687693768/using_template_modifier_app_jnznvr.mp4"
+                        >
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <h3 className="text-right">Using the template modifier app</h3>
+                </FlexColContainer>
             </FlexColCentered>
         </>
     );

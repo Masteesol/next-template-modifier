@@ -65,7 +65,7 @@ const checkLocalStorage = (key: string) => {
       return JSON.parse(saved);
     }
   }
-  return true;
+  return null;
 }
 
 const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
@@ -100,17 +100,26 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
     });
   }, [userID]);
 
+
   useEffect(() => {
+
     const getViewCategories = () => {
       const savedValue = checkLocalStorage("viewCategories")
       if (savedValue === true || savedValue === false) {
         setViewCategories(savedValue)
+      } else {
+        //If the user has never used the the app
+        setViewCategories(window.innerWidth > 900);
       }
     }
     const getViewTemplates = () => {
       const savedValue = checkLocalStorage("viewNavigation")
+      console.log(savedValue)
       if (savedValue === true || savedValue === false) {
         setViewNavigation(savedValue)
+      } else {
+        //If the user has never used the the app
+        setViewNavigation(window.innerWidth > 900);
       }
     }
     getViewCategories()
@@ -262,8 +271,6 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
     const updatedCategories = textTemplates.filter((_, i) => i !== index);
     setTextTemplates(updatedCategories);
 
-    // You might want to handle the case where the currently selected category is deleted.
-    // For example, you could default to the first category (if there is one).
     if (index === selectedCategory) {
       setSelectedCategory(updatedCategories.length > 0 ? 0 : -1);
     }
@@ -277,8 +284,9 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout authenticated={authenticated}>
-        <FlexRowContainer className="h-full gap-2 overflow-x-auto">
-          <FlexColContainer className="absolute  bottom-[5vh] gap-4 right-0 z-50 ">
+        <FlexRowContainer className="h-full gap-2 p-2 overflow-x-auto relative">
+          {/**Toggle View */}
+          <FlexColContainer className="absolute bottom-[5vh] gap-4 right-0 z-50 ">
             {!viewCategories &&
               <FlexRowCentered className="relative bg-slate-100 dark:bg-slate-700 rounded shadow">
                 <div className="absolute right-[10rem]">
@@ -297,7 +305,8 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
               </FlexRowCentered>
             }
           </FlexColContainer>
-          <FlexRowContainer className=" gap-2 h-full">
+          {/**Categories List */}
+          <FlexRowContainer className="absolute bg-gray-50 z-[500] xl:static gap-2 h-full">
             <FlexRowContainer className="h-full">
               {viewCategories &&
                 <CategoryList
@@ -312,6 +321,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
                 />
               }
             </FlexRowContainer>
+            {/**Template Navigation List */}
             {viewCategories && <DividerPipe />}
             {
               textTemplates.length > 0 &&
@@ -320,7 +330,6 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
               <FlexColContainer className="p-2">
                 <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
                 <FlexColCenteredX className="w-full gap-4 min-w-[18rem] max-w-[18rem] max-h-[90%] overflow-y-auto">
-
                   {textTemplates[selectedCategory].templates.map((template, templateIndex) => (
                     <TemplateNavButton
                       template={template}
@@ -331,7 +340,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
                     />
                   ))}
                 </FlexColCenteredX>
-                <FlexColCentered className="mt-auto w-full mb-2 gap-4">
+                <FlexColCentered className="mt-auto w-full mb-8 gap-4">
                   <AddTemplateButton onClick={handleCreateTemplate} />
                 </FlexColCentered>
               </FlexColContainer>
@@ -340,6 +349,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
               textTemplates[selectedCategory].templates.length > 0 &&
               viewNavigation && <DividerPipe />}
           </FlexRowContainer>
+          {/**Templates Cards */}
           <FlexRowContainer className="gap-4 w-full justify-center overflow-y-auto h-full" id="templates-container">
             <FlexColContainer className="w-full max-w-[900px] gap-4 relative h-full">
               {textTemplates.length > 0 && textTemplates[0].category_name !== undefined ?
@@ -360,6 +370,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
                           />
                         )
                       }
+                      {/**If no templates have been created */}
                       {textTemplates[selectedCategory].templates.length === 0 &&
                         <FlexColCentered className="h-full">
                           <FlexColCentered className="max-w-[400px] p-8 w-full gap-8 justify-center border-[1px] rounded border-gray-200">
@@ -377,7 +388,10 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
                     </FlexColContainer>
                   </FlexColContainer>
                 </FlexColContainer>
-                : <FlexColContainer className="w-full max-w-[800px]"><GuidingDescriptionText>Your templates will show up here, but first add a template category.</GuidingDescriptionText></FlexColContainer>
+                :
+                <FlexColContainer className="w-full max-w-[800px]">
+                  <GuidingDescriptionText>Your templates will show up here, but first add a template category.</GuidingDescriptionText>
+                </FlexColContainer>
               }
             </FlexColContainer>
           </FlexRowContainer>
@@ -398,7 +412,7 @@ const NavigationHeaderButton = ({ viewNavigation, handleViewNavigationSelect }: 
 
 
 const AddTemplateButton = ({ onClick }: any) => {
-  return <FlexRowContainer className="justify-end w-full">
+  return <FlexRowContainer className="justify-end w-full ">
     <AddButton onClick={onClick}>
       <FlexColCentered>
         <FaPlus />

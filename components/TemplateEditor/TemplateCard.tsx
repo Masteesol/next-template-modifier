@@ -16,8 +16,6 @@ const InputBase = tw.input`
 
 const CardInput = tw(InputBase)`
   bg-slate-50
-  col-span-full 
-  sm:col-span-1
   dark:bg-gray-800
 `
 
@@ -143,13 +141,12 @@ const TemplateCard = (props: any, ref: any) => {
                         onChange={handleTitleChange}
                         placeholder="Template Title..."
                     />
-
                     <IconContainer>
                         <BsXLg onClick={() => handleRemoveTemplate(index, template.template_id)} />
                     </IconContainer>
                 </FlexRowCenteredY>
                 <DividerHorizontal />
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {placeholders}
                 </div>
                 {placeholderCount > 0 && <DividerHorizontal />}

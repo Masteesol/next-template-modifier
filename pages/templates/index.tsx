@@ -30,6 +30,7 @@ import { createCategory, removeCategory, updateCategory } from '@/requests/categ
 import { createTemplate, removeTemplate, updateTemplate } from '@/requests/templates';
 import { LoadingContext } from '@/context/LoadingContext';
 
+
 interface Templates {
   title: string;
   text: string;
@@ -57,13 +58,23 @@ const delayedUpdateTemplateText = debounce((template_id, userID, newText, newTit
   console.log("updated template")
 }, 2000);
 
+const checkLocalStorage = (key: string) => {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem(key);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  }
+  return true;
+}
+
 const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
   //const { t } = useTranslation("common");
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [textTemplates, setTextTemplates] = useState<TemplatesContainer[]>([]);
   const [templateRefs, setTemplateRefs] = useState<React.RefObject<HTMLDivElement>[]>([]);
-  const [viewCategories, setViewCategories] = useState(true)
-  const [viewNavigation, setViewNavigation] = useState(true)
+  const [viewCategories, setViewCategories] = useState(true);
+  const [viewNavigation, setViewNavigation] = useState(true);
   const { setIsLoading } = useContext(LoadingContext);
 
   /* eslint-disable react-hooks/exhaustive-deps */
@@ -88,17 +99,46 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
       }
     });
   }, [userID]);
+
+  useEffect(() => {
+    const getViewCategories = () => {
+      const savedValue = checkLocalStorage("viewCategories")
+      if (savedValue === true || savedValue === false) {
+        setViewCategories(savedValue)
+      }
+    }
+    const getViewTemplates = () => {
+      const savedValue = checkLocalStorage("viewNavigation")
+      if (savedValue === true || savedValue === false) {
+        setViewNavigation(savedValue)
+      }
+    }
+    getViewCategories()
+    getViewTemplates()
+  }, [])
+
   /* eslint-disable react-hooks/exhaustive-deps */
   const handleSelectCategory = (index: number) => {
     setSelectedCategory(index);
   }
   const handleViewCategorySelect = () => {
-    setViewCategories(!viewCategories)
+    setViewCategories(prevViewCategories => {
+      if (typeof window !== "undefined") {
+        localStorage.setItem('viewCategories', JSON.stringify(!prevViewCategories));
+      }
+      return !prevViewCategories;
+    });
   }
 
   const handleViewNavigationSelect = () => {
-    setViewNavigation(!viewNavigation)
+    setViewNavigation(prevViewNavigation => {
+      if (typeof window !== "undefined") {
+        localStorage.setItem('viewNavigation', JSON.stringify(!prevViewNavigation));
+      }
+      return !prevViewNavigation;
+    });
   }
+
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (textTemplates.length > 0 && selectedCategory < textTemplates.length) {
@@ -238,13 +278,23 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
       </Head>
       <PageLayout authenticated={authenticated}>
         <FlexRowContainer className="h-full gap-2 overflow-x-auto">
-          <FlexColContainer className="absolute rounded shadow bottom-[5vh] right-0 z-50 bg-slate-100">
+          <FlexColContainer className="absolute  bottom-[5vh] gap-4 right-0 z-50 ">
             {!viewCategories &&
-              <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
+              <FlexRowCentered className="relative bg-slate-100 rounded shadow">
+                <div className="absolute right-[10rem]">
+                  <AddTemplateButton onClick={handleCreateCategory} />
+                </div>
+                <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
+              </FlexRowCentered>
             }
             {textTemplates?.length > 0 &&
               textTemplates[selectedCategory].templates.length > 0 && !viewNavigation &&
-              <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
+              <FlexRowCentered className="relative bg-slate-100 rounded shadow">
+                <div className="absolute right-[10rem]">
+                  <AddTemplateButton onClick={handleCreateTemplate} />
+                </div>
+                <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
+              </FlexRowCentered>
             }
           </FlexColContainer>
           <FlexRowContainer className=" gap-2 h-full">
@@ -268,8 +318,9 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
               textTemplates[selectedCategory].templates.length > 0 &&
               viewNavigation &&
               <FlexColContainer className="p-2">
+                <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
                 <FlexColCenteredX className="w-full gap-4 min-w-[18rem] max-w-[18rem] max-h-[90%] overflow-y-auto">
-                  <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
+
                   {textTemplates[selectedCategory].templates.map((template, templateIndex) => (
                     <TemplateNavButton
                       template={template}

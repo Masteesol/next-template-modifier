@@ -21,7 +21,7 @@ import logo from "@/public/logo.png"
 
 const Sidebar = tw.aside`
   md:w-[3.5rem]
-  min-h-[100vh]
+  h-full
   flex
   bg-white
   text-base
@@ -85,7 +85,7 @@ const SidebarElement = () => {
   }, [handleResize]);
 
   return (
-    <div className="relative">
+    <div className="relative h-full">
       <Sidebar className={isOpen ? "" : "hidden md:block"}>
         <FlexColContainer className="w-full md:items-center pe-2 md:pe-0">
           <Link href="/" className="flex flex-col items-center relative p-2">

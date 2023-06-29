@@ -1,44 +1,49 @@
 import Link from "next/link";
 import PageLayout from "@/components/LandingPage/PageLayout";
-import { CardBaseLightHover, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCentered, FlexRowCenteredY } from "@/components/styled-global-components";
+import { FlexColCenteredX, FlexColCenteredY, FlexColContainer, FlexColRowContainer, FlexRowCentered, FlexRowCenteredY, FlexRowContainer, H2 } from "@/components/styled-global-components";
 //import { useTranslation } from "next-i18next";
 //import { translateOrDefault } from "@/utils/i18nUtils";
 import Image from "next/image";
 import logo from "@/public/logo.png"
-import { FlexRowCenteredX, H2 } from "../styled-global-components";
 
 const LandingPageContent = () => {
     //const { t } = useTranslation("common");
     return (
         <>
             <PageLayout>
-                <FlexColCenteredX className="p-4 h-full">
-                    <FlexColContainer className="gap-8  w-full max-w-[1240px]">
-                        <FlexRowCenteredX className="w-full">
-                            <FlexRowCenteredY className="w-full gap-4 items-center">
-                                <Image src={logo} alt="logo" height={100} width={100} />
-                                <FlexColContainer>
-                                    <h1>Template Modifier App</h1>
-                                    <H2>Simplify your workflow</H2>
-                                </FlexColContainer>
-                            </FlexRowCenteredY>
-                        </FlexRowCenteredX>
-                        <FlexColCentered className="gap-2">
-                            <FlexRowCenteredY className="gap-4">
-                                <Link href={"/sign-in"}>
-                                    <CardBaseLightHover className="p-4 text-xl rounded bg-green-300">
+                <FlexRowCentered className="w-full h-[80vh] bg-gradient-to-r from-green-400 to-blue-200 text-white">
+                    <FlexColRowContainer className="w-full gap-12 max-w-[1240px]">
+                        <FlexRowCenteredY className="flex-1 gap-4 items-end md:items-center justify-center md:justify-start">
+                            <Image src={logo} alt="logo" height={100} width={100} />
+                            <FlexColContainer>
+                                <h1 className="text-lg md:text-2xl">Template Modifier App</h1>
+                                <h2 className="text-3xl md:text-4xl">Simplify your workflow</h2>
+                            </FlexColContainer>
+                        </FlexRowCenteredY>
+                        <FlexRowContainer className="gap-4 flex-1 text-white justify-center md:justify-end">
+                            <FlexRowCentered className="gap-4">
+                                <FlexRowCentered>
+                                    <Link href={"/sign-in"} className="p-4 text-base rounded bg-green-400 border-[1px] border-transparent hover:opacity-70">
                                         <h4>Sign In</h4>
-                                    </CardBaseLightHover>
-                                </Link>
-                                <Link href="/sign-up">
-                                    <FlexRowCentered className="p-4 text-green-500 text-xl rounded bg-transparent border-[1px] border-green-400 hover:opacity-70">
+                                    </Link>
+                                </FlexRowCentered>
+                                <FlexRowCentered >
+                                    <Link href="/sign-up" className="p-4 text-base rounded bg-transparent border-[1px] border-white hover:opacity-70">
                                         <h4>Sign Up</h4>
-                                    </FlexRowCentered>
-                                </Link>
-                            </FlexRowCenteredY>
-                        </FlexColCentered>
-                        <FlexColContainer className="w-full gap-4">
-                            <div className="shadow rounded">
+                                    </Link>
+                                </FlexRowCentered>
+                            </FlexRowCentered>
+                        </FlexRowContainer>
+                    </FlexColRowContainer>
+                </FlexRowCentered>
+                <FlexColCenteredX className="p-4 pt-12 min-h-[50vh]">
+                    <FlexColContainer className="w-full max-w-[1240px] gap-12">
+                        <FlexColRowContainer className="w-full gap-8">
+                            <FlexColCenteredY className="flex-1 gap-4">
+                                <H2 className="text-green-500">An Efficient workflow</H2>
+                                <p className="text-gray-700">The Template Modifier App from <span className="text-green-500">Templify</span> is created to simplify the job of creating and modifying text templates, and the copying them to the clipboard.</p>
+                            </FlexColCenteredY>
+                            <div className="shadow rounded flex-1">
                                 <video
                                     controls
                                     preload="none"
@@ -49,8 +54,7 @@ const LandingPageContent = () => {
                                     Your browser does not support the video tag.
                                 </video>
                             </div>
-                            <h3 className="text-right">Using the template modifier app</h3>
-                        </FlexColContainer>
+                        </FlexColRowContainer>
                     </FlexColContainer>
                 </FlexColCenteredX>
             </PageLayout >

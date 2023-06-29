@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import {
     FlexColCentered,
     FlexColContainer,
@@ -14,10 +14,6 @@ interface PageLayoutProps {
 const PageLayout = ({ children }: PageLayoutProps) => {
     const { isLoading } = useContext(LoadingContext);
     //console.log(authenticated)
-    useEffect(() => {
-        const main = document.querySelector<HTMLDivElement>("#main");
-        if (main) main.style.height = `calc(100vh - 41px)`;
-    }, []);
 
     return (
         <div>
@@ -26,6 +22,7 @@ const PageLayout = ({ children }: PageLayoutProps) => {
                     <TopBar />
                     <FlexColContainer
                         id="main"
+                        style={{ height: `calc(100vh - 41px)` }}
                         className="w-full overflow-auto bg-slate-50 dark:bg-gray-800 box-border"
                     >
                         {

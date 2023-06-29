@@ -89,7 +89,7 @@ const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
             setIsLoading(true)
             await logOut();
             // redirect to sign in page with a full page reload
-            window.location.href = '/sign-in';
+            window.location.href = '/';
         } catch (error) {
             setIsLoading(false)
             console.error('Failed to sign out:', error);

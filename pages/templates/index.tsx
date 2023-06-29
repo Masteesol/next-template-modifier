@@ -306,7 +306,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
             }
           </FlexColContainer>
           {/**Categories List */}
-          <FlexRowContainer className="absolute bg-gray-50 z-[500] xl:static gap-2 h-full">
+          <FlexRowContainer className="absolute bg-gray-50 dark:bg-gray-800 z-[500] xl:static gap-2 h-full">
             <FlexRowContainer className="h-full">
               {viewCategories &&
                 <CategoryList

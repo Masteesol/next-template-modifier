@@ -35,9 +35,9 @@ const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
   };
   return (
     <div className={`${darkMode ? "dark" : ""}`}>
-      <FlexRowContainer className="text-black dark:text-white w-full">
+      <FlexRowContainer className="text-black dark:text-white w-full h-[100vh]">
         {authenticated && <Sidebar />}
-        <FlexColContainer className="w-full ">
+        <FlexColContainer className="w-full h-full">
           <TopBar
             ref={navRef}
             darkMode={darkMode}

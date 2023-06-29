@@ -24,7 +24,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ paths }) => {
             ) : (
               <span>{path.name}</span>
             )}
-            {index < paths.length - 1 && <span><FaChevronRight/></span>}
+            {index < paths.length - 1 && <span className="text-gray-500"><FaChevronRight /></span>}
           </li>
         ))}
       </ul>

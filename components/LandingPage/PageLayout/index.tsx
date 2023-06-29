@@ -16,8 +16,8 @@ const PageLayout = ({ children }: PageLayoutProps) => {
     //console.log(authenticated)
 
     return (
-        <div>
-            <FlexRowContainer className="text-black dark:text-white">
+        <div className="h-[100vh]">
+            <FlexRowContainer className="text-black dark:text-white ">
                 <FlexColContainer className="w-full ">
                     <TopBar />
                     <FlexColContainer

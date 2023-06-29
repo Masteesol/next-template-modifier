@@ -11,7 +11,7 @@ const LandingPageContent = () => {
     return (
         <>
             <PageLayout>
-                <FlexRowCentered className="w-full h-[80vh] bg-gradient-to-r from-green-400 to-blue-200 text-white">
+                <FlexRowCentered className="w-full min-h-[35rem] bg-gradient-to-r from-green-400 to-blue-200 text-white p-4">
                     <FlexColRowContainer className="w-full gap-12 max-w-[1240px]">
                         <FlexRowCenteredY className="flex-1 gap-4 items-end md:items-center justify-center md:justify-start">
                             <Image src={logo} alt="logo" height={100} width={100} />
@@ -57,6 +57,7 @@ const LandingPageContent = () => {
                         </FlexColRowContainer>
                     </FlexColContainer>
                 </FlexColCenteredX>
+                <div className="spacer h-[10rem] w-full"></div>
             </PageLayout >
         </>
     );

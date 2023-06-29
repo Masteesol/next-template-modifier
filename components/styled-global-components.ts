@@ -72,6 +72,16 @@ export const AddButton = tw.button`
   hover:dark:opacity-50
 `
 
+export const InputBase = tw.input`
+  border-1 
+  border-transparent
+  rounded 
+  bg-transparent 
+  focus:border-1 
+  focus:border-green-200 
+  focus:ring-green-200
+`
+
 //Card styles-----------------------------------------------------------------
 //_Color base
 export const CardBaseLight = tw.div`

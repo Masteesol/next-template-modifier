@@ -11,7 +11,7 @@ import { translateOrDefault } from "@/utils/i18nUtils";
 import { useState, useContext } from "react"
 import React from "react";
 import { registerUser } from "@/requests/auth";
-import PageLayout from "@/components/PageLayout";
+import PageLayout from "@/components/LandingPage/PageLayout";
 import Link from "next/link";
 import { LoadingContext } from '@/context/LoadingContext';
 
@@ -133,7 +133,7 @@ type PageProps = {
     userID: string | null,
 }
 
-const Page: NextPage<PageProps> = ({ authenticated }) => {
+const Page: NextPage<PageProps> = () => {
     const { t } = useTranslation("common");
     const { setIsLoading } = useContext(LoadingContext);
     return (
@@ -144,7 +144,7 @@ const Page: NextPage<PageProps> = ({ authenticated }) => {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <PageLayout authenticated={authenticated}>
+            <PageLayout>
                 <FlexColCentered className="min-h-[100vh] min-w-full relative gap-8">
                     <H1>{translateOrDefault(t, "pages.signUp.heading", "Sign Up")}</H1>
                     <FormLogin setIsLoading={setIsLoading} />

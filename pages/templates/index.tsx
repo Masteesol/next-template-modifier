@@ -3,7 +3,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { NextPage } from 'next';
 import PageLayout from "@/components/PageLayout";
 import {
-  CardBaseLightHover,
   DividerPipe,
   FlexColCentered,
   FlexColCenteredX,
@@ -12,6 +11,7 @@ import {
   FlexRowCenteredY,
   FlexRowContainer,
   AddButton,
+  InputBase,
 } from "@/components/styled-global-components";
 
 import { GetServerSideProps } from 'next';
@@ -280,7 +280,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
         <FlexRowContainer className="h-full gap-2 overflow-x-auto">
           <FlexColContainer className="absolute  bottom-[5vh] gap-4 right-0 z-50 ">
             {!viewCategories &&
-              <FlexRowCentered className="relative bg-slate-100 rounded shadow">
+              <FlexRowCentered className="relative bg-slate-100 dark:bg-slate-700 rounded shadow">
                 <div className="absolute right-[10rem]">
                   <AddTemplateButton onClick={handleCreateCategory} />
                 </div>
@@ -289,7 +289,7 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
             }
             {textTemplates?.length > 0 &&
               textTemplates[selectedCategory].templates.length > 0 && !viewNavigation &&
-              <FlexRowCentered className="relative bg-slate-100 rounded shadow">
+              <FlexRowCentered className="relative bg-slate-100 dark:bg-slate-700 rounded shadow">
                 <div className="absolute right-[10rem]">
                   <AddTemplateButton onClick={handleCreateTemplate} />
                 </div>
@@ -361,22 +361,21 @@ const Page: NextPage<PageProps> = ({ authenticated, userID }) => {
                         )
                       }
                       {textTemplates[selectedCategory].templates.length === 0 &&
-                        <FlexColCentered className="h-full ">
-                          <FlexColContainer className="max-w-[400px] w-full gap-4">
-                            <GuidingDescriptionText>Click the &quot;+&quot; button to create new template</GuidingDescriptionText>
-                            {/**  <FlexColCentered className="bg-green-200 dark:bg-green-800 w-full p-4 rounded">
-                              <h2>Add Template</h2>
-                            </FlexColCentered>*/}
-
-                            <FlexColCentered className="w-full" >
+                        <FlexColCentered className="h-full">
+                          <FlexColCentered className="max-w-[400px] p-8 w-full gap-8 justify-center border-[1px] rounded border-gray-200">
+                            <InputBase type="text"
+                              value={textTemplates[selectedCategory].category_name}
+                              className="text-center text-lg bg-white dark:bg-gray-800 w-full"
+                              onChange={(e) => handleInputCatTitleChange(e, selectedCategory, textTemplates[selectedCategory].category_id)} />
+                            <FlexRowCenteredY className="gap-4 w-full">
+                              <i className="w-full text-right text-gray-500">Add Template</i>
                               <AddTemplateButtonEmpty onClick={handleCreateTemplate} />
-                            </FlexColCentered>
-                          </FlexColContainer>
+                            </FlexRowCenteredY>
+                          </FlexColCentered>
                         </FlexColCentered>
                       }
                     </FlexColContainer>
                   </FlexColContainer>
-
                 </FlexColContainer>
                 : <FlexColContainer className="w-full max-w-[800px]"><GuidingDescriptionText>Your templates will show up here, but first add a template category.</GuidingDescriptionText></FlexColContainer>
               }
@@ -409,11 +408,11 @@ const AddTemplateButton = ({ onClick }: any) => {
 }
 
 const AddTemplateButtonEmpty = ({ onClick }: any) => {
-  return <CardBaseLightHover className="w-full bg-green-300 p-4 hover:bg-green-200 cursor-pointer" onClick={onClick}>
+  return <AddButton onClick={onClick}>
     <FlexColCentered>
       <FaPlus />
     </FlexColCentered>
-  </CardBaseLightHover>
+  </AddButton>
 }
 
 

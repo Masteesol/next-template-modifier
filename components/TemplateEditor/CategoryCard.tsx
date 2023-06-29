@@ -1,17 +1,8 @@
-import tw from "tailwind-styled-components";
-import { CardBaseLightHover, FlexRowCenteredY } from "@/components/styled-global-components";
+import { CardBaseLightHover, FlexRowCenteredY, InputBase } from "@/components/styled-global-components";
 import { FaArrowRight, FaCheck, FaTrash } from "react-icons/fa";
 import { BsXLg } from "react-icons/bs";
 import { useState } from "react"
-const InputBase = tw.input`
-  border-1 
-  border-transparent
-  rounded 
-  bg-transparent 
-  focus:border-1 
-  focus:border-green-200 
-  focus:ring-green-200
-`
+
 
 
 interface CatType {

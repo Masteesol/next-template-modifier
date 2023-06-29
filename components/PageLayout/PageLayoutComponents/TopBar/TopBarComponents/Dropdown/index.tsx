@@ -2,10 +2,11 @@ import { FaSun, FaMoon, FaCog, FaSignOutAlt, FaUser } from "react-icons/fa";
 import tw from "tailwind-styled-components";
 import { useState, useEffect, useRef, useContext } from "react";
 import { FlexRowCenteredY } from "@/components/styled-global-components";
-import LanguageSwitcher from "../LanguageSwitcher";
+//import LanguageSwitcher from "../LanguageSwitcher";
 import JSCookies from "js-cookie"
 import { logOut } from "@/requests/auth";
 import { LoadingContext } from "@/context/LoadingContext";
+import Link from "next/link";
 
 const NavItemContainer = tw.div`
   flex
@@ -18,7 +19,7 @@ const IconBackground = tw.button`
   flex
   items-center
   justify-center
-  bg-slate-200 
+  bg-green-100
   dark:bg-gray-700
   text-base
   p-2
@@ -120,13 +121,14 @@ const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
                         </ListItem>
                         <ListItem>
                             <FaCog />
-                            <a href="#" className="w-full">
+                            <Link href="/settings" className="w-full">
                                 Settings
-                            </a>
+                            </Link>
                         </ListItem>
-                        <li className="p-2">
+                        {/**  <li className="p-2">
                             <LanguageSwitcher />
-                        </li>
+                        </li>*/}
+
                     </ListContainer>
                     <FlexRowCenteredY
                         className="p-2 gap-2 cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-600 rounded"

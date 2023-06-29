@@ -16,6 +16,7 @@ const NavElement = tw.nav`
   w-full
   flex
   items-center
+  p-2
 `;
 
 interface NavProps {
@@ -31,20 +32,15 @@ const Nav = forwardRef<HTMLDivElement, NavProps>((props, ref) => {
   return (
     <div ref={ref}>
       <NavElement className="bg-white shadow dark:bg-gray-800">
-        {!props.authenticated &&
-          <Link href="/" className="">
-            <FlexRowCenteredY className="gap-2 px-2 md:px-8 py-2 font-bold text-green-500">
-              <Image src={logo} alt="logo" height={25} width={25} />
-              <span>Templify</span>
-            </FlexRowCenteredY>
-          </Link>
-        }
-        {props.authenticated &&
-          <FlexRowCenteredY className="p-2 w-full">
-            <div className="ml-auto">
-              <NavDropdown onDarkModeToggle={props.onDarkModeToggle} darkMode={props.darkMode} /></div>
-          </FlexRowCenteredY>}
-
+        <Link href="/" className="md:hidden">
+          <FlexRowCenteredY className="gap-2 px-2 font-bold text-green-500 justify-between w-full">
+            <Image src={logo} alt="logo" height={25} width={25} />
+            <span>Templify</span>
+          </FlexRowCenteredY>
+        </Link>
+        <div className="ml-auto">
+          <NavDropdown onDarkModeToggle={props.onDarkModeToggle} darkMode={props.darkMode} />
+        </div>
       </NavElement>
     </div>
   );

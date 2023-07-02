@@ -29,6 +29,7 @@ export const GenericButton = tw.button`
     transition
     duration-150
     ease-in-out
+    ${(props) => (props.disabled && `opacity-50 cursor-not-allowed`)}
 `
 
 export const SubmitButton = tw(GenericButton)`
@@ -46,8 +47,8 @@ export const LinkButton = tw(GenericButton)`
 `
 
 export const CTAButton = tw(GenericButton)`
-    bg-slate-700
-    dark:bg-slate-400
+    bg-green-700
+    dark:bg-green-400
     text-white
     dark:text-slate-900
 `

@@ -23,44 +23,49 @@ const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
   const [darkMode, toggleDarkMode] = useDarkMode();
   //console.log(authenticated)
   useEffect(() => {
-    const navHeight = navRef.current?.offsetHeight ?? 0;
-    const breadcrumbsHeight = breadcrumbsRef.current?.offsetHeight ?? 0;
-    const totalHeight = navHeight + breadcrumbsHeight;
-    const main = document.querySelector<HTMLDivElement>("#main");
-    if (main) main.style.height = `calc(100vh - ${totalHeight}px)`;
-  }, []);
-
+    if (authenticated) {
+      console.log("useEffect is running");
+      const navHeight = navRef.current?.offsetHeight ?? 0;
+      const breadcrumbsHeight = breadcrumbsRef.current?.offsetHeight ?? 0;
+      const totalHeight = navHeight + breadcrumbsHeight;
+      const main = document.querySelector<HTMLDivElement>("#main");
+      if (main) main.style.height = `calc(100vh - ${totalHeight}px)`;
+    }
+  }, [authenticated]);
   const handleDarkModeToggle = () => {
     toggleDarkMode();
   };
   return (
     <div className={`${darkMode ? "dark" : ""}`}>
-      <FlexRowContainer className="text-black dark:text-white w-full h-[100vh]">
-        {authenticated && <Sidebar />}
-        <FlexColContainer className="w-full h-full">
-          <TopBar
-            ref={navRef}
-            darkMode={darkMode}
-            onDarkModeToggle={handleDarkModeToggle}
-            authenticated={authenticated}
-          />
-          {authenticated && <IdComponent ref={breadcrumbsRef} />}
-          <FlexColContainer
-            id="main"
-            className="w-full overflow-auto bg-slate-50 dark:bg-gray-800 box-border"
-          >
-            {
-              isLoading
-                ?
-                <FlexColCentered className="w-full h-full ">
-                  <div className="loader text-green-400"></div>
-                </FlexColCentered>
-                :
-                children
-            }
+      {authenticated &&
+        <FlexRowContainer className="text-black dark:text-white w-full h-[100vh]">
+          <Sidebar />
+          <FlexColContainer className="w-full h-full">
+            <TopBar
+              ref={navRef}
+              darkMode={darkMode}
+              onDarkModeToggle={handleDarkModeToggle}
+              authenticated={authenticated}
+            />
+            <IdComponent ref={breadcrumbsRef} />
+            <FlexColContainer
+              id="main"
+              className="w-full overflow-auto bg-slate-50 dark:bg-gray-800 box-border"
+            >
+              {
+                isLoading
+                  ?
+                  <FlexColCentered className="w-full h-full ">
+                    <div className="loader text-green-400"></div>
+                  </FlexColCentered>
+                  :
+                  children
+              }
+            </FlexColContainer>
           </FlexColContainer>
-        </FlexColContainer>
-      </FlexRowContainer>
+        </FlexRowContainer>
+      }
+
     </div>
   );
 };

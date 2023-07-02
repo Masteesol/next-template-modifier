@@ -1,6 +1,4 @@
 import Head from "next/head";
-import { NextPage } from 'next';
-import cookie from 'cookie'
 import { useTranslation } from "next-i18next";
 import { GetServerSideProps } from 'next';
 import { Badge, Label, TextInput } from "flowbite-react";
@@ -9,12 +7,12 @@ import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer,
 import { translateOrDefault } from "@/utils/i18nUtils";
 import { useState, useContext } from "react"
 import React from "react";
-import { login } from "@/requests/auth";
 import PageLayout from "@/components/LandingPage/PageLayout";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { LoadingContext } from '@/context/LoadingContext';
 
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useRouter } from 'next/navigation'
 
 const FormLogin = ({ setIsLoading }: any) => {
   const { t } = useTranslation("common");
@@ -25,21 +23,30 @@ const FormLogin = ({ setIsLoading }: any) => {
   const [passwordEmpty, setPasswordEmpty] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-
   // Client-side function
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    const supabase = createClientComponentClient()
     try {
-      setIsLoading(true)
-      const response = await login(email, password)
-      console.log("response", response)
-      router.push("/templates")
+      const { error, data } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (data.session && !error) { // check for a session instead of no error
+        setIsLoading(true)
+        router.push("/templates")
+      } else {
+        setErrorMessage("Either password or email is wrong");
+      }
+
     } catch (error) {
       console.error("Error during form submission", error);
-      setIsLoading(false)
       setErrorMessage("Either password or email is wrong");
+      setIsLoading(false)
     }
-  };
+  }
+
 
   const handleEmailChange = (e: any) => {
     setEmail(e.target.value);
@@ -90,11 +97,7 @@ const FormLogin = ({ setIsLoading }: any) => {
   );
 };
 
-type PageProps = {
-  authenticated: boolean,
-  userID: string | null,
-}
-const Page: NextPage<PageProps> = () => {
+const Page = () => {
   const { t } = useTranslation("common");
   const { setIsLoading } = useContext(LoadingContext);
   return (
@@ -120,11 +123,8 @@ const Page: NextPage<PageProps> = () => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const cookies = context.req ? cookie.parse(context.req.headers.cookie || '') : undefined
-  const token = cookies && cookies.supabaseToken
   return {
     props: {
-      authenticated: Boolean(token),
       ...(await serverSideTranslations(context.locale as string, ["common"]))
     }
   }

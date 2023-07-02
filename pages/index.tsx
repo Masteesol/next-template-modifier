@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { NextPage } from 'next';
+import { useContext, useEffect, useState } from "react"
 import React from "react";
 import PageLayout from "../components/PageLayout";
 //import { useTranslation } from "next-i18next";
@@ -9,13 +9,50 @@ import { GetServerSideProps } from 'next';
 import cookie from 'cookie'
 import HomeAppContent from "@/components/HomeApp";
 import LandingPageContent from "@/components/LandingPage";
+import { useRouter } from "next/router"
+import checkSession from "@/utils/checkAuth";
+import { LoadingContext } from "@/context/LoadingContext";
 
-type PageProps = {
-  authenticated: boolean,
-}
-
-const Page: NextPage<PageProps> = ({ authenticated }) => {
+const Page = () => {
   //const { t } = useTranslation("common");
+
+  const { setIsLoading } = useContext(LoadingContext);
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const router = useRouter();
+
+  useEffect(() => {
+    const authenticate = async () => {
+      setIsLoading(true)
+      const auth = await checkSession()
+      console.log(auth)
+      setIsLoading(false)
+      if (auth) {
+        setIsAuthenticated(true)
+      }
+    };
+    authenticate();
+  }, [setIsLoading])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const { hash } = window.location;
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (hash) {
+        const token = hash.split('=')[1];
+        console.log(token); // should print your access token
+        if (token) {
+          router.push("/confirm-email?access_token=" + token);
+        }
+      }
+      if (code) {
+        router.push("/confirm-email?access_token=" + code);
+      }
+    }
+  }, [router]);
+
+
   return (
     <>
       <Head>
@@ -24,8 +61,8 @@ const Page: NextPage<PageProps> = ({ authenticated }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {authenticated ?
-        <PageLayout authenticated={authenticated}>
+      {isAuthenticated ?
+        <PageLayout authenticated={isAuthenticated}>
           <HomeAppContent />
         </PageLayout >
         : <LandingPageContent />
@@ -37,11 +74,9 @@ const Page: NextPage<PageProps> = ({ authenticated }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = context.req ? cookie.parse(context.req.headers.cookie || '') : undefined
-  const token = cookies && cookies.supabaseToken
   const userID = cookies && cookies.userID
   return {
     props: {
-      authenticated: Boolean(token),
       userID: userID || null,
       ...(await serverSideTranslations(context.locale as string, ["common"]))
     }

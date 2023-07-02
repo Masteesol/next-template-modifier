@@ -3,11 +3,12 @@ import tw from "tailwind-styled-components";
 import { useState, useEffect, useRef, useContext } from "react";
 import { FlexRowCenteredY } from "@/components/styled-global-components";
 //import LanguageSwitcher from "../LanguageSwitcher";
+import { useRouter } from 'next/navigation'
 import JSCookies from "js-cookie"
-import { logOut } from "@/requests/auth";
+//import { logOut } from "@/requests/auth";
 import { LoadingContext } from "@/context/LoadingContext";
 import Link from "next/link";
-
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 const NavItemContainer = tw.div`
   flex
   items-center
@@ -66,10 +67,11 @@ interface DropDownProps {
 }
 
 const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
+    const router = useRouter()
     const { setIsLoading } = useContext(LoadingContext);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null); // Specify the type for the ref
-
+    const supabase = createClientComponentClient()
     useEffect(() => {
         const handleClickOutside = (event: any) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -87,9 +89,8 @@ const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
     const handleSignOut = async () => {
         try {
             setIsLoading(true)
-            await logOut();
-            // redirect to sign in page with a full page reload
-            window.location.href = '/';
+            await supabase.auth.signOut();
+            router.push("/")
         } catch (error) {
             setIsLoading(false)
             console.error('Failed to sign out:', error);

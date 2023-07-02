@@ -10,13 +10,13 @@ import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer,
 import { translateOrDefault } from "@/utils/i18nUtils";
 import { useState, useContext } from "react"
 import React from "react";
-import { registerUser } from "@/requests/auth";
 import PageLayout from "@/components/LandingPage/PageLayout";
 import Link from "next/link";
 import { LoadingContext } from '@/context/LoadingContext';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-
-const FormLogin = ({ setIsLoading }: any) => {
+const FormSignUp = ({ setIsLoading }: any) => {
+    const supabase = createClientComponentClient()
     const { t } = useTranslation("common");
     const router = useRouter()
     const [email, setEmail] = useState("");
@@ -55,10 +55,28 @@ const FormLogin = ({ setIsLoading }: any) => {
         } else {
             try {
                 setIsLoading(true)
-                const response = await registerUser(email, newPassword, firstName, lastName)
-                console.log("response", response)
-                router.push("/sign-in")
-                console.log("Logged in")
+                const { data, error } = await supabase.auth.signUp({ email: email, password: newPassword });
+                console.log(data)
+                if (data) {
+                    const { error: userError } = await supabase
+                        .from('users')
+                        .insert([
+                            {
+                                id: data.user?.id,
+                                first_name: firstName,
+                                last_name: lastName,
+                            },
+                        ]);
+                    if (userError) {
+                        console.log("error creating user table", userError)
+                    } else {
+                        console.log("Created new account")
+                        router.push("/")
+                    }
+                }
+                if (error) {
+                    console.log("Error creating user")
+                }
             } catch (error) {
                 setIsLoading(false)
                 console.error("Error during form submission", error);
@@ -147,7 +165,7 @@ const Page: NextPage<PageProps> = () => {
             <PageLayout>
                 <FlexColCentered className="min-h-[100vh] min-w-full relative gap-8">
                     <H1>{translateOrDefault(t, "pages.signUp.heading", "Sign Up")}</H1>
-                    <FormLogin setIsLoading={setIsLoading} />
+                    <FormSignUp setIsLoading={setIsLoading} />
                     <FlexRowCentered className="gap-2">
                         <p>Existing user?</p>
                         <Link className="text-green-500" href="/sign-in">Sign In</Link>

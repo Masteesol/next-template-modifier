@@ -1,41 +1,45 @@
-import checkEnv from "@/utils/checkEnv";
 
-export const getUserInfo = async (user_id: string) => {
-    const baseUrl = checkEnv()
-    const response = await fetch(baseUrl + `/api/profile/user?user_id=${user_id}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-    });
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+const supabase = createClientComponentClient()
 
-    if (response.ok) {
-        const data = await response.json();
-        console.log("Retreived user info", data)
-        return data[0];
-    } else {
-        throw new Error("Error retrieving user info");
+export const getSubTiers = async () => {
+    //console.log(subscription_tier_id)
+    try {
+        const { data, error } = await supabase
+            .from('subscription_tier')
+            .select(`
+            *
+          `)
+        if (data) {
+            console.log(data)
+            return data
+        }
+        if (error) {
+            console.log(error)
+        }
+    } catch (error) {
+        console.log("Erro fetching info", error)
     }
 }
 
-export const updateUserInfo = async (user_id: string, first_name: string, last_name: string) => {
-    console.log("user_id", user_id)
-    const baseUrl = checkEnv()
-    const res = await fetch(baseUrl + `/api/profile/user?user_id=${user_id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ first_name: first_name, last_name: last_name })
-    });
-
-    if (!res.ok) {
-        throw new Error(res.statusText);
+export const getUserInfo = async (userID: string) => {
+    try {
+        const { data, error } = await supabase
+            .from('users')
+            .select(`
+          first_name,
+          last_name,
+          subscription_tier_id
+        `)
+            .eq('id', userID)
+        if (data) {
+            console.log(data)
+            return data[0]
+        }
+        if (error) {
+            console.log(error)
+        }
+    } catch (error) {
+        console.log("Erro fetching info", error)
     }
-
-    const { error } = await res.json();
-    if (error) {
-        throw new Error(error);
-    }
-    return res.ok;
 }

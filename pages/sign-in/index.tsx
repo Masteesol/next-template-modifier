@@ -3,16 +3,25 @@ import { useTranslation } from "next-i18next";
 import { GetServerSideProps } from 'next';
 import { Badge, Label, TextInput } from "flowbite-react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer, FlexRowCentered } from "@/components/styled-global-components";
+import {
+  FlexColCentered,
+  H1,
+  FormWrapper,
+  Form,
+  SubmitButton,
+  FlexRowContainer,
+  FlexRowCentered
+} from "@/components/shared/styled-global-components";
 import { translateOrDefault } from "@/utils/i18nUtils";
 import { useState, useContext } from "react"
 import React from "react";
-import PageLayout from "@/components/LandingPage/PageLayout";
+import PageLayout from "@/components/landing/PageLayout";
 import Link from "next/link";
 import { LoadingContext } from '@/context/LoadingContext';
 
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
+import { AuthContext } from "@/context/AuthContext";
 
 const FormLogin = ({ setIsLoading }: any) => {
   const { t } = useTranslation("common");
@@ -22,8 +31,10 @@ const FormLogin = ({ setIsLoading }: any) => {
   const [password, setPassword] = useState("");
   const [passwordEmpty, setPasswordEmpty] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-  // Client-side function
+  const { isAuthenticated } = useContext(AuthContext)
+  if (isAuthenticated) {
+    router.push("/app/templates")
+  }
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const supabase = createClientComponentClient()
@@ -32,10 +43,9 @@ const FormLogin = ({ setIsLoading }: any) => {
         email,
         password,
       })
-
       if (data.session && !error) { // check for a session instead of no error
         setIsLoading(true)
-        router.push("/templates")
+        window.location.href = "/app/templates"
       } else {
         setErrorMessage("Either password or email is wrong");
       }

@@ -1,35 +1,55 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { NextPage } from 'next';
-import cookie from 'cookie'
+import { initialState, reducer } from "@/hooks/useCredentialsStates";
 import { useTranslation } from "next-i18next";
 import { GetServerSideProps } from 'next';
 import { Badge, Label, TextInput } from "flowbite-react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { FlexColCentered, H1, FormWrapper, Form, SubmitButton, FlexRowContainer, FlexColContainer, FlexRowCentered } from "@/components/styled-global-components";
+import {
+    FlexColCentered,
+    H1,
+    FormWrapper,
+    Form,
+    SubmitButton,
+    FlexRowContainer,
+    FlexColContainer,
+    FlexRowCentered
+} from "@/components/shared/styled-global-components";
 import { translateOrDefault } from "@/utils/i18nUtils";
-import { useState, useContext } from "react"
+import { useState, useContext, useReducer } from "react"
 import React from "react";
-import PageLayout from "@/components/LandingPage/PageLayout";
+import PageLayout from "@/components/landing/PageLayout";
 import Link from "next/link";
 import { LoadingContext } from '@/context/LoadingContext';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { AuthContext } from "@/context/AuthContext";
 
 const FormSignUp = ({ setIsLoading }: any) => {
     const supabase = createClientComponentClient()
+    const [state, dispatch] = useReducer(reducer, initialState);
     const { t } = useTranslation("common");
     const router = useRouter()
+    const { isAuthenticated } = useContext(AuthContext)
+    if (isAuthenticated) {
+        router.push("/")
+    }
+    const {
+        newPassword,
+        repeatNewPassword,
+        passwordMismatch,
+        passwordEmpty,
+        passwordSaved,
+        passwordNotStrongEnough,
+    } = state
+
+    const setReducerState = (type: string, state: any) => {
+        dispatch({ type: type, payload: state })
+    }
     const [email, setEmail] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
 
-    const [passwordEmpty, setPasswordEmpty] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [newPassword, setNewPassword] = useState('');
-    const [repeatNewPassword, setRepeatNewPassword] = useState('');
-    const [passwordMismatch, setPasswordMismatch] = useState(false);
-    const [passwordSaved, setPasswordSaved] = useState(false);
-    const [passwordNotStrongEnough, setPasswordNotStrongEnough] = useState(false);
 
     const passwordCheck = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&+])[A-Za-z\d@$!%*?&+]{12,}$/;
     // Client-side function
@@ -38,25 +58,24 @@ const FormSignUp = ({ setIsLoading }: any) => {
 
         console.log(newPassword)
         console.log(email);
-        setPasswordMismatch(false);
-        setPasswordEmpty(false);
-        setPasswordNotStrongEnough(false);
-        setPasswordSaved(false);
+        setReducerState("setPasswordMismatch", false)
+        setReducerState("setPasswordEmpty", false)
+        setReducerState("setPasswordNotStrongEnough", false)
+        setReducerState("setPasswordSaved", false)
         // Now perform checks and set respective state to true if check fails
         if (newPassword !== repeatNewPassword) {
-            setPasswordMismatch(true);
+            setReducerState("setPasswordMismatch", true)
             return;
         } else if (newPassword === '' || repeatNewPassword === '') {
-            setPasswordEmpty(true);
+            setReducerState("setPasswordEmpty", true)
             return;
         } else if (!passwordCheck.test(newPassword)) {
-            setPasswordNotStrongEnough(true);
+            setReducerState("setPasswordNotStrongEnough", true)
             return;
         } else {
             try {
                 setIsLoading(true)
                 const { data, error } = await supabase.auth.signUp({ email: email, password: newPassword });
-                console.log(data)
                 if (data) {
                     const { error: userError } = await supabase
                         .from('users')
@@ -71,7 +90,7 @@ const FormSignUp = ({ setIsLoading }: any) => {
                         console.log("error creating user table", userError)
                     } else {
                         console.log("Created new account")
-                        router.push("/")
+                        window.location.href = "/sign-up/confirm"
                     }
                 }
                 if (error) {
@@ -127,9 +146,9 @@ const FormSignUp = ({ setIsLoading }: any) => {
                 </div>
                 <FlexColContainer className="gap-4">
                     <Label htmlFor="new-password">New Password</Label>
-                    <TextInput type="password" id="new-password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="New Password" />
+                    <TextInput type="password" id="new-password" value={newPassword} onChange={(e) => setReducerState("setNewPassword", (e.target.value))} placeholder="New Password" />
                     <Label htmlFor="new-password-repeat">Repeat Password</Label>
-                    <TextInput type="password" id="new-password-repeat" value={repeatNewPassword} onChange={(e) => setRepeatNewPassword(e.target.value)} placeholder="Repeat Password" />
+                    <TextInput type="password" id="new-password-repeat" value={repeatNewPassword} onChange={(e) => setReducerState("setRepeatNewPassword", (e.target.value))} placeholder="Repeat Password" />
                     {passwordMismatch && <Badge color={"warning"}>Password not matching</Badge>}
                     {passwordEmpty && <Badge color={"warning"}>Password cannot be empty</Badge>}
                     {passwordSaved && <Badge color={"success"}>Password has been reset</Badge>}
@@ -146,12 +165,8 @@ const FormSignUp = ({ setIsLoading }: any) => {
     );
 };
 
-type PageProps = {
-    authenticated: boolean,
-    userID: string | null,
-}
 
-const Page: NextPage<PageProps> = () => {
+const Page = () => {
     const { t } = useTranslation("common");
     const { setIsLoading } = useContext(LoadingContext);
     return (
@@ -177,11 +192,8 @@ const Page: NextPage<PageProps> = () => {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const cookies = context.req ? cookie.parse(context.req.headers.cookie || '') : undefined
-    const token = cookies && cookies.supabaseToken
     return {
         props: {
-            authenticated: Boolean(token),
             ...(await serverSideTranslations(context.locale as string, ["common"]))
         }
     }

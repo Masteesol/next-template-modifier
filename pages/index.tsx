@@ -1,38 +1,19 @@
 import Head from "next/head";
-import { useContext, useEffect, useState } from "react"
+import { useEffect } from "react"
 import React from "react";
-import PageLayout from "../components/PageLayout";
+import PageLayout from "@/components/landing/PageLayout";
+import PageContent from "@/components/landing/";
 //import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
-import cookie from 'cookie'
-import HomeAppContent from "@/components/HomeApp";
-import LandingPageContent from "@/components/LandingPage";
 import { useRouter } from "next/router"
-import checkSession from "@/utils/checkAuth";
-import { LoadingContext } from "@/context/LoadingContext";
 
 const Page = () => {
   //const { t } = useTranslation("common");
 
-  const { setIsLoading } = useContext(LoadingContext);
-
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const router = useRouter();
 
-  useEffect(() => {
-    const authenticate = async () => {
-      setIsLoading(true)
-      const auth = await checkSession()
-      console.log(auth)
-      setIsLoading(false)
-      if (auth) {
-        setIsAuthenticated(true)
-      }
-    };
-    authenticate();
-  }, [setIsLoading])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -61,23 +42,16 @@ const Page = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {isAuthenticated ?
-        <PageLayout authenticated={isAuthenticated}>
-          <HomeAppContent />
-        </PageLayout >
-        : <LandingPageContent />
-      }
-
+      <PageLayout>
+        <PageContent />
+      </PageLayout>
     </>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const cookies = context.req ? cookie.parse(context.req.headers.cookie || '') : undefined
-  const userID = cookies && cookies.userID
   return {
     props: {
-      userID: userID || null,
       ...(await serverSideTranslations(context.locale as string, ["common"]))
     }
   }

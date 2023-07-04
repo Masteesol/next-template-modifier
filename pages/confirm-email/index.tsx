@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import PageLayout from '@/components/LandingPage/PageLayout';
-import { FlexColCentered, H1, H2 } from '@/components/styled-global-components';
+import PageLayout from '@/components/landing/PageLayout';
+import { FlexColCentered, H1, H2 } from "@/components/shared/styled-global-components";
 import { Badge } from 'flowbite-react';
-import { CheckIcon } from '@/components/CustomIcons';
+import { CheckIcon } from '@/components/shared/CustomIcons';
 
 const ConfirmEmail = () => {
 

@@ -54,11 +54,10 @@ const LandingPageContent = () => {
                                     </Link>
                                 </FlexRowCentered>
                             }
-
                         </FlexRowContainer>
                     </FlexColRowContainer>
                 </FlexRowCentered>
-                <FlexColCenteredX className="p-4 pt-12 min-h-[50vh]">
+                <FlexColCenteredX className="p-4 min-h-[50vh] mt-12">
                     <FlexColContainer className="w-full max-w-[1240px] gap-12">
                         <FlexColRowContainer className="w-full gap-8">
                             <FlexColCenteredY className="flex-1 gap-4">
@@ -78,10 +77,9 @@ const LandingPageContent = () => {
                             </div>
                         </FlexColRowContainer>
                     </FlexColContainer>
-
                 </FlexColCenteredX>
             </FlexColContainer>
-            <FlexColCentered className="spacer min-h-[10rem] w-full bg-green-200">
+            <FlexColCentered className="spacer min-h-[10rem] w-full bg-green-200 mt-12">
                 <h2>Created by Marius Solheim</h2>
             </FlexColCentered>
         </FlexColContainer>

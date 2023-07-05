@@ -5,7 +5,7 @@ import { CheckIcon } from '@/components/shared/CustomIcons';
 const ConfirmEmail = () => {
     return (
         <PageLayout>
-            <FlexColCentered className="h-full gap-8">
+            <FlexColCentered className="h-full gap-8 text-center">
                 <H1>Thank you for confirming your email!</H1>
                 <FlexColCentered className="gap-4">
                     <CheckIcon />

@@ -293,6 +293,12 @@ const Page = () => {
                   })
                 }
               </FlexRowCentered>
+              <FlexColCentered>
+                <HollowButton className="border-red-600 text-red-600">
+                  Delete User
+                </HollowButton>
+              </FlexColCentered>
+
             </FlexColCenteredX>
           </FlexColContainer>
         </FlexColContainer>

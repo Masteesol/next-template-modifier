@@ -109,7 +109,7 @@ const SidebarElement = () => {
             <FlexRowCenteredY>
               <SideBarItemContainer>
                 <div className="flex flex-col items-center relative p-2">
-                  {router.pathname.startsWith("/templates")
+                  {router.pathname.startsWith("/app/templates")
                     ? <BsFileEarmarkTextFill size={28} />
                     : <BsFileEarmarkText size={28} />
                   }
@@ -123,7 +123,7 @@ const SidebarElement = () => {
 
               <SideBarItemContainer>
                 <div className="flex flex-col items-center relative p-2">
-                  {router.pathname.startsWith("/settings")
+                  {router.pathname.startsWith("/app/settings")
                     ? <BsPersonFill size={25} />
                     : <BsPerson size={25} />
                   }

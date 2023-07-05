@@ -16,9 +16,9 @@ import Image from "next/image";
 import logo from "@/public/logo.png"
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
-
+import textContent from "@/text/textContent.json"
 const LandingPageContent = () => {
-
+    const text = textContent.landingPage
     //const { t } = useTranslation("common");
     const { isAuthenticated } = useContext(AuthContext)
 
@@ -30,8 +30,8 @@ const LandingPageContent = () => {
                         <FlexRowCenteredY className="flex-1 gap-4 items-end md:items-center justify-center md:justify-start">
                             <Image src={logo} alt="logo" height={100} width={100} />
                             <FlexColContainer>
-                                <h1 className="text-lg md:text-2xl">Template Modifier App</h1>
-                                <h2 className="text-3xl md:text-4xl">Simplify your workflow</h2>
+                                <h1 className="text-lg md:text-2xl">{text.header.title}</h1>
+                                <h2 className="text-3xl md:text-4xl">{text.header.tagline}</h2>
                             </FlexColContainer>
                         </FlexRowCenteredY>
                         <FlexRowContainer className="gap-4 flex-1 text-white justify-center md:justify-end">
@@ -57,12 +57,12 @@ const LandingPageContent = () => {
                         </FlexRowContainer>
                     </FlexColRowContainer>
                 </FlexRowCentered>
-                <FlexColCenteredX className="p-4 min-h-[50vh] mt-12">
+                <FlexColCenteredX className="p-4 mt-12">
                     <FlexColContainer className="w-full max-w-[1240px] gap-12">
-                        <FlexColRowContainer className="w-full gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <FlexColCenteredY className="flex-1 gap-4">
-                                <H2 className="text-green-500">An Efficient workflow</H2>
-                                <p className="text-gray-700">The Template Modifier App from <span className="text-green-500">Templify</span> is created to simplify the job of creating and modifying text templates, and the copying them to the clipboard.</p>
+                                <H2 className="text-green-500">{text.gridContainers[0].title}</H2>
+                                <p className="text-gray-700">{text.gridContainers[0].content}</p>
                             </FlexColCenteredY>
                             <div className="shadow rounded flex-1">
                                 <video
@@ -75,10 +75,39 @@ const LandingPageContent = () => {
                                     Your browser does not support the video tag.
                                 </video>
                             </div>
-                        </FlexColRowContainer>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <FlexColCentered>
+                                <Image src={text.gridContainers[2].media.link} alt={`${text.gridContainers[2].media.alt}`} width={400} height={400} />
+                            </FlexColCentered>
+                            <FlexColCenteredY className="gap-4">
+                                <H2 className="text-green-500">{text.gridContainers[2].title}</H2>
+                                <p>{text.gridContainers[2].content}</p>
+                            </FlexColCenteredY>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                            <FlexColCenteredY className="gap-4">
+                                <H2 className="text-green-500">{text.gridContainers[1].title}</H2>
+                                <p>{text.gridContainers[1].content}</p>
+                            </FlexColCenteredY>
+                            <FlexColCentered className="shadow">
+                                <Image src={text.gridContainers[1].media.link} alt={`${text.gridContainers[1].media.alt}`} width={600} height={600} />
+                            </FlexColCentered>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <FlexColCentered>
+                                <Image src={text.gridContainers[3].media.link} alt={`${text.gridContainers[3].media.alt}`} width={400} height={400} />
+                            </FlexColCentered>
+                            <FlexColCenteredY className="gap-4">
+                                <H2 className="text-green-500">{text.gridContainers[3].title}</H2>
+                                <p>{text.gridContainers[3].content}</p>
+                            </FlexColCenteredY>
+                        </div>
                     </FlexColContainer>
                 </FlexColCenteredX>
             </FlexColContainer>
+
             <FlexColCentered className="spacer min-h-[10rem] w-full bg-green-200 mt-12">
                 <h2>Created by Marius Solheim</h2>
             </FlexColCentered>

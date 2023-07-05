@@ -1,0 +1,58 @@
+{
+    "landingPage": {
+        "header": {
+            "title": "Template Modifier App",
+            "tagline": "Simplify your workflow"
+        },
+        "gridContainers": [
+            {
+                "title": "Streamline Your Process",
+                "content": "Enhance your productivity with our Template Modifier App. Save time on drafting repetitive texts and focus more on the tasks that matter.",
+                "media": {
+                    "type": "video",
+                    "link": "https://res.cloudinary.com/dedym3sfv/video/upload/v1687693768/using_template_modifier_app_jnznvr.mp4",
+                    "banner": "https://res.cloudinary.com/dedym3sfv/image/upload/v1687692796/poster-templify-video_p3rgrm.jpg"
+                }
+            },
+            {
+                "title": "Optimize Your Workflow",
+                "content": "The Template Modifier App is designed for professionals who regularly deal with structured text formats. It's a tool to simplify and optimize your workflow.",
+                "media": {
+                    "type": "image",
+                    "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1688588773/template-modifier/use-case_zi1v6z.jpg",
+                    "alt": "customer using the app"
+                }
+            },
+            {
+                "title": "Effortless Template Management",
+                "content": "Manage your text templates efficiently. Create, modify, and copy them to your clipboard with a single click.",
+                "media": {
+                    "type": "image",
+                    "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1688587646/template-modifier/customer-support_nlszzf.png",
+                    "alt": "customer using the app"
+                }
+            },
+            {
+                "title": "From Support to Sales, We've Got You Covered",
+                "content": "Our app isn't just for customer support. Whether you're in sales, marketing, HR, or any field requiring structured text templates, our app can simplify your work.",
+                "media": {
+                    "type": "image",
+                    "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1688589794/template-modifier/sales_support_n8fnnx.png",
+                    "alt": "sales to support"
+                }
+            }
+        ],
+        "subscriptionPlans": {
+            "title": "Subscription Plans",
+            "content": "From basic to premium, choose a plan that suits your needs best."
+        },
+        "testimonials": {
+            "title": "Testimonials",
+            "content": "See what our satisfied customers have to say about us."
+        },
+        "faq": {
+            "title": "FAQs",
+            "content": "Got questions? We have answers."
+        }
+    }
+}

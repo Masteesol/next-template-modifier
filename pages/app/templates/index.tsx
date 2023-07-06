@@ -18,7 +18,6 @@ import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 //import { useTranslation } from "next-i18next";
-import { v4 as uuidv4 } from 'uuid';
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import { debounce } from 'lodash';
 import ForwardedRefTemplateCard from "@/components/app/TemplateEditor/TemplateCard";
@@ -27,10 +26,9 @@ import CategoryList, { CategoryHeaderButton } from "@/components/app/TemplateEdi
 import GuidingDescriptionText from "@/components/app/TemplateEditor/GuidingDescription";
 import cookie from 'cookie'
 import { LoadingContext } from '@/context/LoadingContext';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { AuthContext } from "@/context/AuthContext";
 import Cookies from "js-cookie";
-
+import { createCategory, createTemplate, deletedCategory, deletedTemplate, fetchTemplatesForUser, updateCategory, updateTemplate } from "@/requests/templates";
 interface Templates {
   title: string;
   text: string;
@@ -49,51 +47,23 @@ type PageProps = {
 }
 
 const delayedUpdateCategory = debounce((category_id, userID, newCatTitle) => {
-  const supabase = createClientComponentClient()
-  const updateTemplate = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("categories")
-        .update({ category_name: newCatTitle })
-        .eq("category_id", category_id)
-        .match({ user_id: userID })
-        .select()
-      if (error) {
-        return error
-      }
-      if (data) {
-        return data
-      }
-    } catch (error) {
-      console.log(error)
+  const update = async () => {
+    const response = await updateCategory(newCatTitle, category_id, userID)
+    if (response) {
+      console.log("updated category")
     }
   }
-  updateTemplate()
-  console.log("updated category")
+  update()
 }, 2000);
 
 const delayedUpdateTemplateText = debounce((template_id, userID, newText, newTitle) => {
-  const supabase = createClientComponentClient()
-  const updateTemplate = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("templates")
-        .update({ title: newTitle, text: newText })
-        .eq("template_id", template_id)
-        .match({ user_id: userID })
-        .select()
-      if (error) {
-        return error
-      }
-      if (data) {
-        return data
-      }
-    } catch (error) {
-      console.log(error)
+  const update = async () => {
+    const response = await updateTemplate(newTitle, newText, userID, template_id)
+    if (response) {
+      console.log("updated template")
     }
   }
-  updateTemplate()
-  console.log("updated template")
+  update()
 }, 2000);
 
 const checkLocalStorage = (key: string) => {
@@ -114,49 +84,23 @@ const Page: NextPage<PageProps> = () => {
   const [viewCategories, setViewCategories] = useState(true);
   const [viewNavigation, setViewNavigation] = useState(true);
   const { setIsLoading } = useContext(LoadingContext);
-  const supabase = createClientComponentClient()
 
   const { isAuthenticated } = useContext(AuthContext)
   const userID = Cookies.get("user_id")
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    const fetchTemplatesForUser = async (userId: string | undefined | null) => {
-
-      if (!userId) {
-        return Promise.resolve(null); // or some other default value
-      }
-      console.log("userId", userId)
-      setIsLoading(true)
-      try {
-        const { data, error } = await supabase
-          .from('categories')
-          .select(`
-              category_id,
-              category_name,
-              templates (template_id, title, text)
-            `)
-          .eq('user_id', userId)
-        setIsLoading(false)
-        if (error) {
-          console.log("Fetch templates error", error)
-        }
-        return data;
-      } catch (error) {
-        console.log("error", error)
-      }
-    };
-
-    // Call the async function and handle the response
+    setIsLoading(true)
     fetchTemplatesForUser(userID).then((data) => {
       if (data) {
-        // The response data should be mapped to your TemplatesContainer structure
         const templatesContainers: TemplatesContainer[] = data;
-        //console.log(templatesContainers, "templatesContainers")
         setTextTemplates(templatesContainers);
       }
+    }).catch((error) => {
+      setIsLoading(false)
+      console.error("Error fetching orders: ", error)
     });
+    setIsLoading(false)
   }, [userID]);
-
 
   useEffect(() => {
     const getViewCategories = () => {
@@ -254,35 +198,13 @@ const Page: NextPage<PageProps> = () => {
       console.error("User ID is null.");
       return;
     }
-    try {
-      const { data, error } = await supabase
-        .from('categories')
-        .insert([{
-          category_name: "New Category",
-          user_id: userID
-        }])
-        .select()
-      if (data) {
-        const newCategory = data[0]
-        console.log(newCategory)
-        const { category_id, category_name } = newCategory
-
-        const newCategoryWithTemplates: TemplatesContainer = {
-          category_id: category_id,
-          category_name: category_name,
-          templates: []
-        }
-        const updatedTextTemplates = [newCategoryWithTemplates, ...textTemplates];
-
-        setTextTemplates(updatedTextTemplates);
-        setSelectedCategory(0);
-      } else {
-        console.log("Error creating category", error)
-      }
-
-    } catch (error) {
-      console.error("Failed to create category:", error);
+    const create = async () => {
+      await createCategory(userID,
+        textTemplates,
+        setTextTemplates,
+        setSelectedCategory)
     }
+    create()
   }
 
   const handleCreateTemplate = async () => {
@@ -290,42 +212,14 @@ const Page: NextPage<PageProps> = () => {
       console.error("User ID is null.");
       return;
     }
-    try {
-      const newID = uuidv4()
-      const { data, error } = await supabase
-        .from('templates')
-        .insert([{
-          template_id: newID,
-          title: "New Template",
-          text: "Template text...",
-          category_id: textTemplates[selectedCategory].category_id,
-          user_id: userID
-        }])
-        .select()
-      console.log(data)
-      if (error) {
-        console.log("Error creating template", error)
-      }
-      if (data) {
-        const newTemplate = data[0]
-        const updatedTemplates = [newTemplate, ...textTemplates[selectedCategory].templates];
-        const updatedTextTemplates = textTemplates.map((item, index) => {
-          if (index === selectedCategory) {
-            return {
-              ...item,
-              templates: updatedTemplates,
-            };
-          }
-          return item;
-        });
-        setTextTemplates(updatedTextTemplates);
-      }
-
-
-      console.log("new text templates", textTemplates)
-    } catch (error) {
-      console.error("Failed to create template:", error);
+    const create = async () => {
+      await createTemplate(userID,
+        textTemplates,
+        setTextTemplates,
+        selectedCategory
+      )
     }
+    create()
   }
 
   const handleRemoveTemplate = async (index: number, template_id: string) => {
@@ -333,28 +227,16 @@ const Page: NextPage<PageProps> = () => {
       console.error("User ID is null.");
       return;
     }
-    //console.log("handleRemoveTemplate", template_id)
-    const { error } = await supabase
-      .from('templates')
-      .delete()
-      .eq("template_id", template_id)
-      .match({ user_id: userID })
-    if (error) {
-      console.log("Error deleting template", error)
-    } else {
-      const updatedTemplates = textTemplates[selectedCategory].templates.filter((_, i) => i !== index);
-      const updatedTextTemplates = textTemplates.map((item, index) => {
-        if (index === selectedCategory) {
-          return {
-            ...item,
-            templates: updatedTemplates,
-          };
-        }
-        return item;
-      });
-      setTextTemplates(updatedTextTemplates);
+    const deleteTemp = async () => {
+      await deletedTemplate(userID,
+        textTemplates,
+        setTextTemplates,
+        selectedCategory,
+        template_id,
+        index
+      )
     }
-
+    deleteTemp()
   };
 
   const handleRemoveCategory = async (index: number, category_id: string) => {
@@ -363,27 +245,17 @@ const Page: NextPage<PageProps> = () => {
       console.error("User ID is null.");
       return;
     }
-    const { error: deleteTempError } = await supabase
-      .from('templates')
-      .delete()
-      .match({ category_id });
-
-    const { error: deleteCatError } = await supabase
-      .from('categories')
-      .delete()
-      .eq("category_id", category_id)
-      .match({ user_id: userID })
-    if (deleteTempError) {
-      console.log("deleteTempError", deleteTempError)
-    } else if (deleteCatError) {
-      console.log("deleteCatError", deleteCatError)
-    } else {
-      const updatedCategories = textTemplates.filter((_, i) => i !== index);
-      setTextTemplates(updatedCategories);
-      if (index === selectedCategory) {
-        setSelectedCategory(updatedCategories.length > 0 ? 0 : -1);
-      }
+    const deleteCat = async () => {
+      await deletedCategory(userID,
+        textTemplates,
+        setTextTemplates,
+        setSelectedCategory,
+        selectedCategory,
+        category_id,
+        index
+      )
     }
+    deleteCat()
   };
   return (
     <>

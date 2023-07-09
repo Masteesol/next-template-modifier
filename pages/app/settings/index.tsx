@@ -31,7 +31,6 @@ import { AuthContext } from "@/context/AuthContext";
 import Cookies from "js-cookie";
 import checkEnv from "@/utils/checkEnv";
 import debounce from "lodash.debounce";
-import { set } from "immutable";
 
 interface SubscriptionTier {
   categories_limit: number;

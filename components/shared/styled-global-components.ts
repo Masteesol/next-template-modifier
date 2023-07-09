@@ -237,10 +237,15 @@ export const Select = {
 
 //Flex Containers-----------------------------------------------------------------
 
+
 export const FlexColContainer = tw.div`
     flex
     flex-col
 `;
+
+export const FlexColEnd = tw(FlexColContainer)`
+    items-end
+`
 
 export const FlexColRowContainer = tw(FlexColContainer)`
     md:flex-row
@@ -257,6 +262,10 @@ export const FlexColRowContainerXl = tw(FlexColContainer)`
 export const FlexRowContainer = tw.div`
     flex
     flex-row
+`;
+
+export const FlexRowEnd = tw(FlexRowContainer)`
+    justify-end
 `;
 
 export const FlexRowCentered = tw.div`
@@ -299,6 +308,7 @@ export const FlexRowCenteredY = tw.div`
     flex-row
     items-center
 `;
+
 
 //Form styling
 

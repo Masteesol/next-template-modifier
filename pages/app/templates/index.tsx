@@ -28,7 +28,16 @@ import cookie from 'cookie'
 import { LoadingContext } from '@/context/LoadingContext';
 import { AuthContext } from "@/context/AuthContext";
 import Cookies from "js-cookie";
-import { createCategory, createTemplate, deletedCategory, deletedTemplate, fetchTemplatesForUser, updateCategory, updateTemplate } from "@/requests/templates";
+import {
+  createCategory,
+  createTemplate,
+  deletedCategory,
+  deletedTemplate,
+  fetchTemplatesForUser,
+  updateCategory,
+  updateTemplate
+} from "@/requests/templates";
+
 interface Templates {
   title: string;
   text: string;
@@ -89,17 +98,14 @@ const Page: NextPage<PageProps> = () => {
   const userID = Cookies.get("user_id")
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    setIsLoading(true)
-    fetchTemplatesForUser(userID).then((data) => {
+    fetchTemplatesForUser(userID, setIsLoading).then((data) => {
       if (data) {
         const templatesContainers: TemplatesContainer[] = data;
         setTextTemplates(templatesContainers);
       }
     }).catch((error) => {
-      setIsLoading(false)
       console.error("Error fetching orders: ", error)
     });
-    setIsLoading(false)
   }, [userID]);
 
   useEffect(() => {
@@ -190,7 +196,6 @@ const Page: NextPage<PageProps> = () => {
       };
       return newTemplates;
     });
-    //console.log(textTemplates)
   };
 
   const handleCreateCategory = async () => {
@@ -198,28 +203,16 @@ const Page: NextPage<PageProps> = () => {
       console.error("User ID is null.");
       return;
     }
-    const create = async () => {
-      await createCategory(userID,
-        textTemplates,
-        setTextTemplates,
-        setSelectedCategory)
-    }
-    create()
+    createCategory(userID, textTemplates, setTextTemplates, setSelectedCategory)
   }
+
 
   const handleCreateTemplate = async () => {
     if (!userID) {
       console.error("User ID is null.");
       return;
     }
-    const create = async () => {
-      await createTemplate(userID,
-        textTemplates,
-        setTextTemplates,
-        selectedCategory
-      )
-    }
-    create()
+    createTemplate(userID, textTemplates, setTextTemplates, selectedCategory)
   }
 
   const handleRemoveTemplate = async (index: number, template_id: string) => {
@@ -227,35 +220,15 @@ const Page: NextPage<PageProps> = () => {
       console.error("User ID is null.");
       return;
     }
-    const deleteTemp = async () => {
-      await deletedTemplate(userID,
-        textTemplates,
-        setTextTemplates,
-        selectedCategory,
-        template_id,
-        index
-      )
-    }
-    deleteTemp()
+    deletedTemplate(userID, textTemplates, setTextTemplates, selectedCategory, template_id, index)
   };
 
   const handleRemoveCategory = async (index: number, category_id: string) => {
-    //console.log(categoryId)
     if (!userID) {
       console.error("User ID is null.");
       return;
     }
-    const deleteCat = async () => {
-      await deletedCategory(userID,
-        textTemplates,
-        setTextTemplates,
-        setSelectedCategory,
-        selectedCategory,
-        category_id,
-        index
-      )
-    }
-    deleteCat()
+    deletedCategory(userID, textTemplates, setTextTemplates, setSelectedCategory, selectedCategory, category_id, index)
   };
   return (
     <>

@@ -15,6 +15,8 @@ import {
   FlexColCenteredX,
   FlexColCentered,
   FlexRowCentered,
+  FlexRowEnd,
+  FlexRowCenteredY,
 } from "@/components/shared/styled-global-components";
 import { translateOrDefault } from "@/utils/i18nUtils";
 import { Label, TextInput, Badge } from "flowbite-react";
@@ -24,15 +26,11 @@ import { CheckIcon } from "@/components/shared/CustomIcons";
 import { LoadingContext } from "@/context/LoadingContext";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { TierCard } from "@/components/shared/Cards";
-import { getSubTiers, getUserInfo } from "@/requests/profile";
+import { getSubTiers, getUserInfo, updateUserInfo } from "@/requests/profile";
 import { AuthContext } from "@/context/AuthContext";
 import Cookies from "js-cookie";
-
-interface userInfoType {
-  first_name: string | readonly string[] | undefined | null;
-  last_name: string | readonly string[] | undefined | null;
-  subscription_tier_id: string | readonly string[] | undefined | null;
-}
+import checkEnv from "@/utils/checkEnv";
+import debounce from "lodash.debounce";
 
 interface SubscriptionTier {
   categories_limit: number;
@@ -43,12 +41,26 @@ interface SubscriptionTier {
   templates_limit: number;
 }
 
+const delayedUpdateUserInfo = debounce((userID, firstName, lastName) => {
+  const update = async () => {
+    const response = await updateUserInfo(userID, firstName, lastName)
+    if (response) {
+      console.log("updated user")
+    }
+  }
+  update()
+}, 2000);
+
+
 const Page = () => {
   const supabase = createClientComponentClient()
   const { t } = useTranslation("common");
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [userInfo, setUserInfo] = useState<userInfoType | null>(null)
+  const [firstNameInput, setFirstNameInput] = useState('');
+  const [lastNameInput, setLastNameInput] = useState('');
+  const [subTierId, setSubTierID] = useState('');
   const [subTiers, setSubTiers] = useState<SubscriptionTier[] | null>(null)
+  const [deleteClickedOnce, setDeleteClickedOnce] = useState(false)
   //const [email, setEmail] = useState("")
   const { setIsLoading } = useContext(LoadingContext);
 
@@ -62,7 +74,9 @@ const Page = () => {
       if (userID) {
         const user = await getUserInfo(userID)
         if (user) {
-          setUserInfo(user)
+          setFirstNameInput(user.first_name)
+          setLastNameInput(user.last_name)
+          setSubTierID(user.subscription_tier_id)
         }
       }
       if (tiers) {
@@ -73,7 +87,6 @@ const Page = () => {
       setStates()
     }
   }, [userID, setIsLoading])
-
 
   const {
     isPasswordActive,
@@ -187,6 +200,40 @@ const Page = () => {
 
     }
   }
+  const handleDeleteuser = () => {
+    if (!userID) {
+      return false
+    }
+    async function deleteUserFrontend() {
+      const response = await fetch(checkEnv() + '/api/auth/deleteUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userID })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log('User deleted:', data)
+        const res = await supabase.auth.signOut();
+        Cookies.set("email", "");
+        Cookies.set("user_id", "")
+        console.log(response)
+        if (!res.error) {
+          window.location.href = "/"
+        }
+
+      } else {
+        const error = await response.json()
+        console.error('Error deleting user:', error)
+      }
+    }
+    deleteUserFrontend()
+  }
+  const handleUpdatetNameInfo = () => {
+    delayedUpdateUserInfo(userID, firstNameInput, lastNameInput);
+  }
 
   return (
     <>
@@ -198,8 +245,8 @@ const Page = () => {
       </Head>
       <PageLayout authenticated={isAuthenticated}>
         <FlexColContainer className="min-h-full gap-8 w-full px-4">
-          <FlexColContainer className="gap-4">
-            <FlexColCenteredX className="gap-4">
+          <FlexColCenteredX>
+            <FlexColContainer className="gap-8 w-full max-w-[700px]">
               <h1 className="text-2xl">Edit User Information</h1>
               <FormWrapper className={`${(isPasswordActive || isEmailActive) && "bg-gray-200 dark:bg-gray-900"}`}>
                 <Form>
@@ -208,11 +255,17 @@ const Page = () => {
                     type="text"
                     disabled={(isPasswordActive || isEmailActive) ? true : false}
                     id="first_name"
-                    defaultValue={userInfo && userInfo.first_name ? userInfo.first_name : ''}
+                    defaultValue={firstNameInput && firstNameInput ? firstNameInput : ''}
+                    onChange={(e) => { setFirstNameInput(e.target.value); handleUpdatetNameInfo() }}
                   />
                   <Label htmlFor="last_name">Last Name</Label>
-                  <TextInput type="text" disabled={(isPasswordActive || isEmailActive) ? true : false} id="last_name" defaultValue={userInfo && userInfo.last_name ? userInfo.last_name : ''} />
-
+                  <TextInput
+                    type="text"
+                    disabled={(isPasswordActive || isEmailActive) ? true : false}
+                    id="last_name"
+                    defaultValue={lastNameInput && lastNameInput ? lastNameInput : ''}
+                    onChange={(e) => { setLastNameInput(e.target.value); handleUpdatetNameInfo() }}
+                  />
                   <FlexColContainer className="gap-4">
                     <FlexRowContainer className="justify-between">
                       <Label htmlFor="email">Email</Label>
@@ -231,6 +284,7 @@ const Page = () => {
                   </FlexColContainer>
                 </Form>
               </FormWrapper>
+
               {(!emailSaved && !passwordSaved) ?
                 <FlexColContainer className="w-full max-w-[700px]">
                   {
@@ -284,23 +338,44 @@ const Page = () => {
               {error &&
                 <Badge color="failure">An error has occured</Badge>
               }
+              <FlexRowEnd>
+                {!deleteClickedOnce ?
+                  <HollowButton
+                    className="border-red-600 text-red-600"
+                    onClick={() => setDeleteClickedOnce(true)}
+                  >
+                    Delete User
+                  </HollowButton>
+                  : <FlexRowCenteredY className="gap-2">
+                    <span>Are you sure?</span>
+                    <SubmitButton
+                      className="bg-red-600"
+                      onClick={() => userID ? handleDeleteuser() : console.error("UserID not provided")}
+                    >
+                      Yes
+                    </SubmitButton>
+                    <HollowButton
+                      onClick={() => setDeleteClickedOnce(false)}
+                    >
+                      Cancel
+                    </HollowButton>
+                  </FlexRowCenteredY>
+                }
+
+              </FlexRowEnd>
               <FlexRowCentered className="gap-4">
-                {subTiers && userInfo?.subscription_tier_id &&
+                {subTiers && subTierId &&
                   subTiers.map((tier) => {
                     return <div key={"card-" + tier.id}>
-                      <TierCard subTier={tier} userInfo={userInfo} />
+                      <TierCard subTier={tier} subTierId={subTierId} />
                     </div>
                   })
                 }
               </FlexRowCentered>
-              <FlexColCentered>
-                <HollowButton className="border-red-600 text-red-600">
-                  Delete User
-                </HollowButton>
-              </FlexColCentered>
 
-            </FlexColCenteredX>
-          </FlexColContainer>
+
+            </FlexColContainer>
+          </FlexColCenteredX>
         </FlexColContainer>
       </PageLayout>
     </>

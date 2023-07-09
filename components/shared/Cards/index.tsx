@@ -9,13 +9,6 @@ import {
 import { BsCheck } from "react-icons/bs";
 import { Badge } from "flowbite-react";
 
-interface userInfoType {
-    first_name: string | readonly string[] | undefined | null;
-    last_name: string | readonly string[] | undefined | null;
-    subscription_tier_id: string | readonly string[] | undefined | null;
-
-}
-
 interface SubscriptionTier {
     categories_limit: number;
     character_limit: number;
@@ -25,8 +18,9 @@ interface SubscriptionTier {
     templates_limit: number;
 }
 
-export const TierCard = ({ subTier, userInfo }: { subTier: SubscriptionTier, userInfo: userInfoType }) => {
-    const isSelected = subTier.id === userInfo.subscription_tier_id
+export const TierCard = ({ subTier, subTierId }: { subTier: SubscriptionTier, subTierId: string }) => {
+    //.log(subTierId)
+    const isSelected = subTier.id === subTierId
     //console.log(subTier)
     return (
         <FlexColContainer className="relative gap-8 min-w-[10rem] min-h-[25rem] border-[1px] border-gray-300 rounded p-4 shadow-md bg-white dark:bg-gray-900 dark:border-white">

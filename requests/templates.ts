@@ -41,12 +41,13 @@ export const updateTemplate = async (newTitle: string, newText: string, userID: 
     }
 }
 
-export const fetchTemplatesForUser = async (userId: string | undefined | null) => {
+export const fetchTemplatesForUser = async (userId: string | undefined | null, setIsLoading: any) => {
     if (!userId) {
         return Promise.resolve(null); // or some other default value
     }
     console.log("userId", userId)
     try {
+        setIsLoading(true)
         const { data, error } = await supabase
             .from('categories')
             .select(`
@@ -57,7 +58,9 @@ export const fetchTemplatesForUser = async (userId: string | undefined | null) =
             .eq('user_id', userId)
         if (error) {
             console.log("Fetch templates error", error)
+            setIsLoading(false)
         }
+        setIsLoading(false)
         return data;
     } catch (error) {
         console.log("error", error)

@@ -102,7 +102,6 @@ const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
             // Here you could set an error state, show a toast notification, etc.
         }
     };
-
     return (
         <NavItemContainer>
             <IconBackground onClick={() => setIsOpen(!isOpen)}>
@@ -112,10 +111,10 @@ const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
                 <Dropdown ref={dropdownRef}>
                     <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                         <span className="block text-sm">
-                            {JSCookies.get("full_name") ? JSCookies.get("full_name") : ""}
+                            {JSCookies.get("user_first_name") ? JSCookies.get("user_first_name") : ""}
                         </span>
                         <span className="block truncate text-sm font-bold">
-                            {JSCookies.get("public_email") ? JSCookies.get("public_email") : ""}
+                            {JSCookies.get("email") ? JSCookies.get("email") : ""}
                         </span>
                     </div>
                     <ListContainer>

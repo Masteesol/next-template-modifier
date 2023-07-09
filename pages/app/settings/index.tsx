@@ -31,6 +31,7 @@ import { AuthContext } from "@/context/AuthContext";
 import Cookies from "js-cookie";
 import checkEnv from "@/utils/checkEnv";
 import debounce from "lodash.debounce";
+import { set } from "immutable";
 
 interface SubscriptionTier {
   categories_limit: number;
@@ -207,6 +208,7 @@ const Page = () => {
       return false
     }
     async function deleteUserFrontend() {
+      setIsLoading(true)
       const response = await fetch(checkEnv() + '/api/auth/deleteUser', {
         method: 'POST',
         headers: {
@@ -216,7 +218,6 @@ const Page = () => {
       })
 
       if (response.ok) {
-        setIsLoading(true)
         const data = await response.json()
         console.log('User deleted:', data)
         const res = await supabase.auth.signOut();
@@ -227,6 +228,7 @@ const Page = () => {
           window.location.href = "/"
         }
       } else {
+        setIsLoading(false)
         setDeleteTryAgain(true)
         const error = await response.json()
         console.error('Error deleting user:', error)

@@ -61,6 +61,8 @@ const Page = () => {
   const [subTierId, setSubTierID] = useState('');
   const [subTiers, setSubTiers] = useState<SubscriptionTier[] | null>(null)
   const [deleteClickedOnce, setDeleteClickedOnce] = useState(false)
+  const [deleteTryAgain, setDeleteTryAgain] = useState(false)
+
   //const [email, setEmail] = useState("")
   const { setIsLoading } = useContext(LoadingContext);
 
@@ -214,6 +216,7 @@ const Page = () => {
       })
 
       if (response.ok) {
+        setIsLoading(true)
         const data = await response.json()
         console.log('User deleted:', data)
         const res = await supabase.auth.signOut();
@@ -223,8 +226,8 @@ const Page = () => {
         if (!res.error) {
           window.location.href = "/"
         }
-
       } else {
+        setDeleteTryAgain(true)
         const error = await response.json()
         console.error('Error deleting user:', error)
       }
@@ -339,28 +342,33 @@ const Page = () => {
                 <Badge color="failure">An error has occured</Badge>
               }
               <FlexRowEnd>
-                {!deleteClickedOnce ?
-                  <HollowButton
-                    className="border-red-600 text-red-600"
-                    onClick={() => setDeleteClickedOnce(true)}
-                  >
-                    Delete User
-                  </HollowButton>
-                  : <FlexRowCenteredY className="gap-2">
-                    <span>Are you sure?</span>
-                    <SubmitButton
-                      className="bg-red-600"
-                      onClick={() => userID ? handleDeleteuser() : console.error("UserID not provided")}
-                    >
-                      Yes
-                    </SubmitButton>
+                <FlexColCentered className="gap-2">
+                  {!deleteClickedOnce ?
                     <HollowButton
-                      onClick={() => setDeleteClickedOnce(false)}
+                      className="border-red-600 text-red-600"
+                      onClick={() => setDeleteClickedOnce(true)}
                     >
-                      Cancel
+                      Delete User
                     </HollowButton>
-                  </FlexRowCenteredY>
-                }
+                    : <FlexRowCenteredY className="gap-2">
+
+                      {!deleteTryAgain && <span>Are you sure?</span>}
+                      <SubmitButton
+                        className="bg-red-600"
+                        onClick={() => userID ? handleDeleteuser() : console.error("UserID not provided")}
+                      >
+                        {!deleteTryAgain ? "Yes" : "Retry"}
+                      </SubmitButton>
+                      <HollowButton
+                        onClick={() => setDeleteClickedOnce(false)}
+                      >
+                        Cancel
+                      </HollowButton>
+                    </FlexRowCenteredY>
+                  }
+                  {deleteTryAgain && <Badge color="failure">Something went wrong - try again</Badge>}
+                </FlexColCentered>
+
 
               </FlexRowEnd>
               <FlexRowCentered className="gap-4">

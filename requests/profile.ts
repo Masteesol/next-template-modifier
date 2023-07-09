@@ -55,9 +55,10 @@ export const updateUserInfo = async (userID: string, firstName: string, lastName
                 last_name: lastName
             })
             .eq('id', userID)
+            .select()
         if (data) {
             console.log(data)
-            return data[0]
+            return data
         }
         if (error) {
             console.log(error)

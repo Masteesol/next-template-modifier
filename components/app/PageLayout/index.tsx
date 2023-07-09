@@ -9,6 +9,7 @@ import Sidebar from "./PageLayoutComponents/Sidebar";
 import IdComponent from "./PageLayoutComponents/idComponent";
 import useDarkMode from "@/hooks/useDarkMode";
 import { LoadingContext } from '@/context/LoadingContext';
+import { SaveStatusContext } from "@/context/SavedStatusContext";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -17,7 +18,7 @@ interface PageLayoutProps {
 
 const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
   const { isLoading } = useContext(LoadingContext);
-
+  const { saveStatus } = useContext(SaveStatusContext)
   const navRef = useRef<HTMLDivElement>(null);
   const breadcrumbsRef = useRef<HTMLDivElement>(null);
   const [darkMode, toggleDarkMode] = useDarkMode();
@@ -40,7 +41,7 @@ const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
       {authenticated &&
         <FlexRowContainer className="text-black dark:text-white w-full h-[100vh]">
           <Sidebar />
-          <FlexColContainer className="w-full h-full">
+          <FlexColContainer className="w-full h-full relative">
             <TopBar
               ref={navRef}
               darkMode={darkMode}
@@ -50,7 +51,7 @@ const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
             <IdComponent ref={breadcrumbsRef} />
             <FlexColContainer
               id="main"
-              className="w-full overflow-auto bg-slate-50 dark:bg-gray-800 box-border"
+              className="w-full  overflow-auto bg-slate-50 dark:bg-gray-800 box-border"
             >
               {
                 isLoading
@@ -61,7 +62,14 @@ const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
                   :
                   children
               }
+
             </FlexColContainer>
+            {saveStatus !== ""
+              &&
+              <span className="absolute top-[3rem] right-4 text-gray-500 bg-white dark:bg-gray-900 opacity-90 p-2 rounded">
+                {saveStatus}
+              </span>
+            }
           </FlexColContainer>
         </FlexRowContainer>
       }

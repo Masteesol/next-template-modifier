@@ -37,6 +37,7 @@ import {
   updateCategory,
   updateTemplate
 } from "@/requests/templates";
+import { SaveStatusContext } from "@/context/SavedStatusContext";
 
 interface Templates {
   title: string;
@@ -55,21 +56,31 @@ type PageProps = {
   userID: string | null,
 }
 
-const delayedUpdateCategory = debounce((category_id, userID, newCatTitle) => {
+const delayedUpdateCategory = debounce((category_id, userID, newCatTitle, setSaveStatus) => {
   const update = async () => {
     const response = await updateCategory(newCatTitle, category_id, userID)
     if (response) {
       console.log("updated category")
+      setSaveStatus("Auto-saved Changes")
+      setTimeout(() => { setSaveStatus("") }, 2000)
+    } else {
+      setSaveStatus("Erro saving changes")
+      setTimeout(() => { setSaveStatus("") }, 2000)
     }
   }
   update()
 }, 2000);
 
-const delayedUpdateTemplateText = debounce((template_id, userID, newText, newTitle) => {
+const delayedUpdateTemplateText = debounce((template_id, userID, newText, newTitle, setSaveStatus) => {
   const update = async () => {
     const response = await updateTemplate(newTitle, newText, userID, template_id)
     if (response) {
       console.log("updated template")
+      setSaveStatus("Auto-saved Changes")
+      setTimeout(() => { setSaveStatus("") }, 2000)
+    } else {
+      setSaveStatus("Erro saving changes")
+      setTimeout(() => { setSaveStatus("") }, 2000)
     }
   }
   update()
@@ -93,7 +104,7 @@ const Page: NextPage<PageProps> = () => {
   const [viewCategories, setViewCategories] = useState(true);
   const [viewNavigation, setViewNavigation] = useState(true);
   const { setIsLoading } = useContext(LoadingContext);
-
+  const { setSaveStatus } = useContext(SaveStatusContext)
   const { isAuthenticated } = useContext(AuthContext)
   const userID = Cookies.get("user_id")
   /* eslint-disable react-hooks/exhaustive-deps */
@@ -169,7 +180,7 @@ const Page: NextPage<PageProps> = () => {
       console.error("User ID is null.");
       return;
     }
-    delayedUpdateCategory(category_id, userID, newCatTitle)
+    delayedUpdateCategory(category_id, userID, newCatTitle, setSaveStatus)
     //updateCategory(category_id, userID, newCatTitle)
     const newTextTemplates = [...textTemplates];
     newTextTemplates[index].category_name = newCatTitle;
@@ -182,7 +193,7 @@ const Page: NextPage<PageProps> = () => {
       return;
     }
     const { template_id, text, title } = newTemplate
-    delayedUpdateTemplateText(template_id, userID, text, title)
+    delayedUpdateTemplateText(template_id, userID, text, title, setSaveStatus)
     setTextTemplates(prevTemplates => {
       const newTemplates = [...prevTemplates];
       // Copy the templates array of the category

@@ -28,6 +28,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { TierCard } from "@/components/shared/Cards";
 import { getSubTiers, getUserInfo, updateUserInfo } from "@/requests/profile";
 import { AuthContext } from "@/context/AuthContext";
+import { SaveStatusContext } from "@/context/SavedStatusContext";
 import Cookies from "js-cookie";
 import checkEnv from "@/utils/checkEnv";
 import debounce from "lodash.debounce";
@@ -41,14 +42,22 @@ interface SubscriptionTier {
   templates_limit: number;
 }
 
-const delayedUpdateUserInfo = debounce((userID, firstName, lastName) => {
+
+const delayedUpdateUserInfo = debounce((userID, firstName, lastName, setSaveStatus) => {
   const update = async () => {
     const response = await updateUserInfo(userID, firstName, lastName)
+    console.log(response)
     if (response) {
       console.log("updated user")
+      setSaveStatus("Auto-saved Changes")
+      setTimeout(() => { setSaveStatus("") }, 3000)
+    } else {
+      setSaveStatus("Error saving changes")
+      setTimeout(() => { setSaveStatus("") }, 2000)
     }
   }
-  update()
+  return update()
+
 }, 2000);
 
 
@@ -62,6 +71,7 @@ const Page = () => {
   const [subTiers, setSubTiers] = useState<SubscriptionTier[] | null>(null)
   const [deleteClickedOnce, setDeleteClickedOnce] = useState(false)
   const [deleteTryAgain, setDeleteTryAgain] = useState(false)
+  const { setSaveStatus } = useContext(SaveStatusContext)
 
   //const [email, setEmail] = useState("")
   const { setIsLoading } = useContext(LoadingContext);
@@ -235,8 +245,14 @@ const Page = () => {
     }
     deleteUserFrontend()
   }
-  const handleUpdatetNameInfo = () => {
-    delayedUpdateUserInfo(userID, firstNameInput, lastNameInput);
+  const handleUpdatetNameInfo = async (e: any) => {
+    const id = e.target.id
+    const value = e.target.value
+    if (id === "first_name") {
+      delayedUpdateUserInfo(userID, value, lastNameInput, setSaveStatus);
+    } else {
+      delayedUpdateUserInfo(userID, firstNameInput, value, setSaveStatus);
+    }
   }
 
   return (
@@ -260,7 +276,7 @@ const Page = () => {
                     disabled={(isPasswordActive || isEmailActive) ? true : false}
                     id="first_name"
                     defaultValue={firstNameInput && firstNameInput ? firstNameInput : ''}
-                    onChange={(e) => { setFirstNameInput(e.target.value); handleUpdatetNameInfo() }}
+                    onChange={handleUpdatetNameInfo}
                   />
                   <Label htmlFor="last_name">Last Name</Label>
                   <TextInput
@@ -268,7 +284,7 @@ const Page = () => {
                     disabled={(isPasswordActive || isEmailActive) ? true : false}
                     id="last_name"
                     defaultValue={lastNameInput && lastNameInput ? lastNameInput : ''}
-                    onChange={(e) => { setLastNameInput(e.target.value); handleUpdatetNameInfo() }}
+                    onChange={handleUpdatetNameInfo}
                   />
                   <FlexColContainer className="gap-4">
                     <FlexRowContainer className="justify-between">

@@ -1,4 +1,4 @@
-import { FaSun, FaMoon, FaCog, FaSignOutAlt, FaUser } from "react-icons/fa";
+import { FaSun, FaMoon, FaCog, FaSignOutAlt, FaUser, FaCreditCard } from "react-icons/fa";
 import tw from "tailwind-styled-components";
 import { useState, useEffect, useRef, useContext } from "react";
 import { FlexRowCenteredY } from "@/components/shared/styled-global-components";
@@ -128,6 +128,12 @@ const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
                             <FaCog />
                             <Link href="/app/settings" className="w-full">
                                 Settings
+                            </Link>
+                        </ListItem>
+                        <ListItem>
+                            <FaCreditCard />
+                            <Link href="/app/plans" className="w-full">
+                                Subscription
                             </Link>
                         </ListItem>
                         {/**  <li className="p-2">

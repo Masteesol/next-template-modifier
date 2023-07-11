@@ -14,34 +14,22 @@ import {
   SubmitButton,
   FlexColCenteredX,
   FlexColCentered,
-  FlexRowCentered,
   FlexRowEnd,
   FlexRowCenteredY,
 } from "@/components/shared/styled-global-components";
 import { translateOrDefault } from "@/utils/i18nUtils";
-import { Label, TextInput, Badge } from "flowbite-react";
+import { Label, TextInput, Badge, Select } from "flowbite-react";
 import { FaEdit } from "react-icons/fa";
 import React from "react";
 import { CheckIcon } from "@/components/shared/CustomIcons";
 import { LoadingContext } from "@/context/LoadingContext";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { TierCard } from "@/components/shared/Cards";
-import { getSubTiers, getUserInfo, updateUserInfo } from "@/requests/profile";
+import { getUserInfo, updateUserInfo } from "@/requests/profile";
 import { AuthContext } from "@/context/AuthContext";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import Cookies from "js-cookie";
 import checkEnv from "@/utils/checkEnv";
 import debounce from "lodash.debounce";
-
-interface SubscriptionTier {
-  categories_limit: number;
-  character_limit: number;
-  created_at: string;
-  id: string;
-  name: string;
-  templates_limit: number;
-}
-
 
 const delayedUpdateUserInfo = debounce((userID, firstName, lastName, setSaveStatus) => {
   const update = async () => {
@@ -67,8 +55,6 @@ const Page = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [firstNameInput, setFirstNameInput] = useState('');
   const [lastNameInput, setLastNameInput] = useState('');
-  const [subTierId, setSubTierID] = useState('');
-  const [subTiers, setSubTiers] = useState<SubscriptionTier[] | null>(null)
   const [deleteClickedOnce, setDeleteClickedOnce] = useState(false)
   const [deleteTryAgain, setDeleteTryAgain] = useState(false)
   const { setSaveStatus } = useContext(SaveStatusContext)
@@ -79,20 +65,14 @@ const Page = () => {
   const { isAuthenticated } = useContext(AuthContext)
   const userID = Cookies.get("user_id")
   const userEmail = Cookies.get("email")
-
   useEffect(() => {
     const setStates = async () => {
-      const tiers = await getSubTiers()
       if (userID) {
         const user = await getUserInfo(userID)
         if (user) {
           setFirstNameInput(user.first_name)
           setLastNameInput(user.last_name)
-          setSubTierID(user.subscription_tier_id)
         }
-      }
-      if (tiers) {
-        setSubTiers(tiers)
       }
     }
     if (userID) {
@@ -168,8 +148,6 @@ const Page = () => {
       } catch (error) {
         console.log("error changing password")
       }
-
-
     }
   }
 
@@ -302,6 +280,11 @@ const Page = () => {
                     </FlexRowContainer>
                     <TextInput type="password" id="old-password" disabled={true} value={"placeholder12"} />
                   </FlexColContainer>
+                  <Label htmlFor="sub-tier">Subscription Tier</Label>
+                  <Select id="sub-tier">
+                    <option>Basic (free)</option>
+                    <option disabled>Pro (unavailable)</option>
+                  </Select>
                 </Form>
               </FormWrapper>
 
@@ -385,20 +368,7 @@ const Page = () => {
                   }
                   {deleteTryAgain && <Badge color="failure">Something went wrong - try again</Badge>}
                 </FlexColCentered>
-
-
               </FlexRowEnd>
-              <FlexRowCentered className="gap-4">
-                {subTiers && subTierId &&
-                  subTiers.map((tier) => {
-                    return <div key={"card-" + tier.id}>
-                      <TierCard subTier={tier} subTierId={subTierId} />
-                    </div>
-                  })
-                }
-              </FlexRowCentered>
-
-
             </FlexColContainer>
           </FlexColCenteredX>
         </FlexColContainer>

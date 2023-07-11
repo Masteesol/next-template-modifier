@@ -8,9 +8,11 @@ import {
   BsPerson,
   BsPersonFill,
   BsChevronRight,
-  BsChevronLeft
-
+  BsChevronLeft,
+  BsCreditCard2FrontFill,
+  BsCreditCard2Front
 } from "react-icons/bs";
+
 import tw from "tailwind-styled-components";
 import { FlexColCentered, FlexRowCenteredY, FlexColContainer, DividerHorizontal } from "@/components/shared/styled-global-components";
 import Link from "next/link";
@@ -120,7 +122,6 @@ const SidebarElement = () => {
           </Link>
           <Link href="/app/settings">
             <FlexRowCenteredY>
-
               <SideBarItemContainer>
                 <div className="flex flex-col items-center relative p-2">
                   {router.pathname.startsWith("/app/settings")
@@ -130,6 +131,19 @@ const SidebarElement = () => {
                 </div>
               </SideBarItemContainer>
               <span className="md:hidden">Settings</span>
+            </FlexRowCenteredY>
+          </Link>
+          <Link href="/app/plans">
+            <FlexRowCenteredY>
+              <SideBarItemContainer>
+                <div className="flex flex-col items-center relative p-2">
+                  {router.pathname === "/app/plans"
+                    ? <BsCreditCard2FrontFill size={28} />
+                    : <BsCreditCard2Front size={28} />
+                  }
+                </div>
+              </SideBarItemContainer>
+              <span className="md:hidden">Plans</span>
             </FlexRowCenteredY>
           </Link>
         </FlexColContainer>

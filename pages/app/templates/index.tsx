@@ -48,6 +48,7 @@ interface Templates {
 interface TemplatesContainer {
   category_id: string;
   category_name: string;
+  order: number;
   templates: Templates[];
 }
 
@@ -111,7 +112,8 @@ const Page: NextPage<PageProps> = () => {
   useEffect(() => {
     fetchTemplatesForUser(userID, setIsLoading).then((data) => {
       if (data) {
-        const templatesContainers: TemplatesContainer[] = data;
+        console.log("Templates", data)
+        const templatesContainers: TemplatesContainer[] = data.sort((a, b) => a.order - b.order);
         setTextTemplates(templatesContainers);
       }
     }).catch((error) => {
@@ -279,11 +281,14 @@ const Page: NextPage<PageProps> = () => {
                   viewCategories={viewCategories}
                   handleViewCategorySelect={handleViewCategorySelect}
                   textTemplates={textTemplates}
+                  setTextTemplates={setTextTemplates}
                   addCategory={handleCreateCategory}
                   selectedCategory={selectedCategory}
                   handleSelectCategory={handleSelectCategory}
                   handleRemoveCategory={handleRemoveCategory}
                   handleInputCatTitleChange={handleInputCatTitleChange}
+                  userID={userID}
+                  setSelectedCategory={setSelectedCategory}
                 />
               }
             </FlexRowContainer>

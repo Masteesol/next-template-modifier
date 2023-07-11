@@ -106,7 +106,7 @@ export const CardBaseDark = tw.div`
 export const CardBaseLightHover = tw.div`
     shadow
     rounded
-    bg-gray-200
+    bg-white
     dark:bg-slate-700
     dark:hover:bg-slate-600
     hover:bg-gray-50

@@ -1,5 +1,5 @@
-import { FaArrowRight } from "react-icons/fa";
 import { HollowButton } from "@/components/shared/styled-global-components";
+import { BsArrowRight } from "react-icons/bs";
 
 const NavHollowButton = ({ index, templateRefs, template }: any) => {
     return <HollowButton
@@ -36,7 +36,7 @@ const NavHollowButton = ({ index, templateRefs, template }: any) => {
         }}
     >
         {template.title}
-        <FaArrowRight
+        <BsArrowRight
             className="text-2xl cursor-pointer hover:text-green-800 dark:hover:text-green-100 ms-auto"
         />
     </HollowButton>

@@ -3,14 +3,18 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 const supabase = createClientComponentClient()
 import { v4 as uuidv4 } from 'uuid';
 
-export const updateCategory = async (newCatTitle: string, category_id: string, userID: string) => {
+export const updateCategory = async (newCatTitle: string, category_id: string, userID: string, order = null) => {
     try {
+        let updateObject: { category_name: string; order?: number } = { category_name: newCatTitle };
+        if (order !== null) {
+            updateObject.order = order;
+        }
         const { data, error } = await supabase
             .from("categories")
-            .update({ category_name: newCatTitle })
+            .update(updateObject)
             .eq("category_id", category_id)
             .match({ user_id: userID })
-            .select()
+            .select();
         if (error) {
             return error
         }
@@ -21,6 +25,27 @@ export const updateCategory = async (newCatTitle: string, category_id: string, u
         console.log(error)
     }
 }
+
+export const updateCategoryOrder = async (category_id: string, userID: string, order: number) => {
+    try {
+        const { data, error } = await supabase
+            .from("categories")
+            .update({ order: order })
+            .eq("category_id", category_id)
+            .match({ user_id: userID })
+            .select();
+        if (error) {
+            return error
+        }
+        if (data) {
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 
 export const updateTemplate = async (newTitle: string, newText: string, userID: string, template_id: string) => {
     try {
@@ -53,6 +78,7 @@ export const fetchTemplatesForUser = async (userId: string | undefined | null, s
             .select(`
             category_id,
             category_name,
+            order,
             templates (template_id, title, text)
           `)
             .eq('user_id', userId)
@@ -77,6 +103,7 @@ interface Templates {
 interface TemplatesContainer {
     category_id: string;
     category_name: string;
+    order: number;
     templates: Templates[];
 }
 
@@ -87,11 +114,13 @@ export const createCategory = async (
     setSelectedCategory: React.Dispatch<React.SetStateAction<number>>
 ) => {
     try {
+        const order = textTemplates.length
         const { data, error } = await supabase
             .from('categories')
             .insert([{
                 category_name: "New Category",
-                user_id: userID
+                user_id: userID,
+                order: order
             }])
             .select()
         if (data) {
@@ -102,6 +131,7 @@ export const createCategory = async (
             const newCategoryWithTemplates: TemplatesContainer = {
                 category_id: category_id,
                 category_name: category_name,
+                order: order,
                 templates: []
             }
             const updatedTextTemplates = [newCategoryWithTemplates, ...textTemplates];

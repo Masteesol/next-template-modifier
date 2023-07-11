@@ -89,8 +89,9 @@ const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
         try {
             setIsLoading(true)
             const response = await supabase.auth.signOut();
-            Cookies.set("email", "");
-            Cookies.set("user_id", "")
+            Cookies.remove("email");
+            Cookies.remove("user_id")
+            Cookies.remove("authenticated")
             console.log(response)
             if (!response.error) {
                 window.location.href = "/"
@@ -133,7 +134,7 @@ const NavDropdown = ({ onDarkModeToggle, darkMode }: DropDownProps,) => {
                         <ListItem>
                             <FaCreditCard />
                             <Link href="/app/plans" className="w-full">
-                                Subscription
+                                Subscriptions
                             </Link>
                         </ListItem>
                         {/**  <li className="p-2">

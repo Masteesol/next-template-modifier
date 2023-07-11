@@ -70,7 +70,7 @@ export const fetchTemplatesForUser = async (userId: string | undefined | null, s
     if (!userId) {
         return Promise.resolve(null); // or some other default value
     }
-    console.log("userId", userId)
+    //console.log("userId", userId)
     try {
         setIsLoading(true)
         const { data, error } = await supabase

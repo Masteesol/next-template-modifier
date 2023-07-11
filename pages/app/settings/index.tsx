@@ -30,6 +30,7 @@ import { SaveStatusContext } from "@/context/SavedStatusContext";
 import Cookies from "js-cookie";
 import checkEnv from "@/utils/checkEnv";
 import debounce from "lodash.debounce";
+import { forceLogout } from "@/utils/checkAuth";
 
 const delayedUpdateUserInfo = debounce((userID, firstName, lastName, setSaveStatus) => {
   const update = async () => {
@@ -58,7 +59,6 @@ const Page = () => {
   const [deleteClickedOnce, setDeleteClickedOnce] = useState(false)
   const [deleteTryAgain, setDeleteTryAgain] = useState(false)
   const { setSaveStatus } = useContext(SaveStatusContext)
-
   //const [email, setEmail] = useState("")
   const { setIsLoading } = useContext(LoadingContext);
 
@@ -67,6 +67,7 @@ const Page = () => {
   const userEmail = Cookies.get("email")
   useEffect(() => {
     const setStates = async () => {
+
       if (userID) {
         const user = await getUserInfo(userID)
         if (user) {
@@ -77,6 +78,8 @@ const Page = () => {
     }
     if (userID) {
       setStates()
+    } else {
+      forceLogout()
     }
   }, [userID, setIsLoading])
 
@@ -192,6 +195,7 @@ const Page = () => {
   }
   const handleDeleteuser = () => {
     if (!userID) {
+
       return false
     }
     async function deleteUserFrontend() {

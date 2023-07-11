@@ -109,6 +109,7 @@ const Page: NextPage<PageProps> = () => {
   const { isAuthenticated } = useContext(AuthContext)
   const userID = Cookies.get("user_id")
   /* eslint-disable react-hooks/exhaustive-deps */
+
   useEffect(() => {
     fetchTemplatesForUser(userID, setIsLoading).then((data) => {
       if (data) {
@@ -133,7 +134,7 @@ const Page: NextPage<PageProps> = () => {
     }
     const getViewTemplates = () => {
       const savedValue = checkLocalStorage("viewNavigation")
-      console.log(savedValue)
+      //console.log(savedValue)
       if (savedValue === true || savedValue === false) {
         setViewNavigation(savedValue)
       } else {

@@ -1,4 +1,5 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import Cookies from 'js-cookie'
 
 const supabase = createClientComponentClient()
 
@@ -12,3 +13,10 @@ const checkSession = async () => {
     }
 }
 export default checkSession
+
+export const forceLogout = () => {
+    Cookies.remove("email");
+    Cookies.remove("user_id")
+    Cookies.remove("authenticated")
+    window.location.replace("/")
+}

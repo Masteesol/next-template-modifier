@@ -10,43 +10,56 @@ export const AuthContext = createContext({
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const router = useRouter()
+    const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const { setIsLoading } = useContext(LoadingContext)
+    const { setIsLoading } = useContext(LoadingContext);
 
     useEffect(() => {
         const authenticate = async () => {
-            const auth = await checkSession();
-            console.log("Checked authentication: ", auth);
-            setIsLoading(false);
-
-            if (auth) {
+            //limit auth requests
+            const isAuthenticatedCookie = Cookies.get('authenticated');
+            if (isAuthenticatedCookie === undefined || isAuthenticatedCookie === 'false') {
+                console.log("Checked auth from session cookie: ", isAuthenticatedCookie)
+                if (window.location.pathname === "/") {
+                    setIsAuthenticated(false);
+                } else {
+                    console.log("Checking authentication backend")
+                    const auth = await checkSession();
+                    console.log("Finished authentication from backend. Is authenticated: ", auth);
+                    setIsLoading(false);
+                    if (auth) {
+                        setIsAuthenticated(true);
+                        Cookies.set("authenticated", 'true', { expires: 0.020833 });
+                        Cookies.set("user_id", auth.session.user.id);
+                        if (auth.session.user.email) {
+                            Cookies.set("email", auth.session.user.email);
+                        }
+                        const user = await getUserInfo(auth.session.user.id)
+                        if (user) {
+                            Cookies.set("user_first_name", user.first_name)
+                            Cookies.set("user_last_name", user.last_name)
+                            Cookies.set("sub_tier_id", user.subscription_tier_id)
+                        }
+                    } else {
+                        setIsAuthenticated(false);
+                        if (router.pathname.startsWith("/app")) {
+                            router.push("/");
+                        }
+                    }
+                }
+            } else if (isAuthenticatedCookie) {
+                console.log("Checked auth from session cookie: ", isAuthenticatedCookie)
                 setIsAuthenticated(true);
-                Cookies.set("user_id", auth.session.user.id);
-                if (auth.session.user.email) {
-                    Cookies.set("email", auth.session.user.email);
-                }
-                const user = await getUserInfo(auth.session.user.id)
-                if (user) {
-                    //console.log(user)
-                    Cookies.set("user_first_name", user.first_name)
-                    Cookies.set("user_last_name", user.last_name)
-                    Cookies.set("sub_tier_id", user.subscription_tier_id)
-                }
-            } else {
-                setIsAuthenticated(false);
-                if (router.pathname.startsWith("/app")) {
-                    router.push("/");
-                }
             }
+
         };
+
         authenticate();
     }, [setIsAuthenticated, router]);
-
-    console.log("Is logged in: ", isAuthenticated)
     return (
         <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
             {children}
         </AuthContext.Provider>
     );
 };
+

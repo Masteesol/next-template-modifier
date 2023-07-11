@@ -25,7 +25,7 @@ const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
   //console.log(authenticated)
   useEffect(() => {
     if (authenticated) {
-      console.log("useEffect is running");
+      //console.log("useEffect is running");
       const navHeight = navRef.current?.offsetHeight ?? 0;
       const breadcrumbsHeight = breadcrumbsRef.current?.offsetHeight ?? 0;
       const totalHeight = navHeight + breadcrumbsHeight;

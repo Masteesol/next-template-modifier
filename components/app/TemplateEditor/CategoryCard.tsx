@@ -3,7 +3,6 @@ import { BsArrowRight, BsFillGrid3X2GapFill } from "react-icons/bs";
 import { useState } from "react"
 import { Dropdown } from "flowbite-react";
 
-
 interface CatType {
     category: any;
     index: number;
@@ -11,11 +10,19 @@ interface CatType {
     handleSelectCategory: () => void;
     handleInputCatTitleChange: (e: React.ChangeEvent<HTMLInputElement>, index: number, category_id: string) => void;
     handleRemoveCategory: (index: number, category_id: string) => void;  // New prop
-    isEditing: boolean
+    isEditing: boolean,
 }
 
 const CategoryCard = (props: CatType) => {
-    const { category, index, handleSelectCategory, handleInputCatTitleChange, handleRemoveCategory, selectedCategory, isEditing } = props
+    const { category,
+        index,
+        handleSelectCategory,
+        handleInputCatTitleChange,
+        handleRemoveCategory,
+        selectedCategory,
+        isEditing,
+    } = props
+
     const [isDeleteActive, setIsDeleteActive] = useState(selectedCategory === index ? false : false)
     //console.log("Category card", category)
     const handleDeleteFirstStep = () => {
@@ -92,7 +99,6 @@ const CategoryCard = (props: CatType) => {
                     </FlexRowCenteredY>
                 </CardBaseLightHover >
             }
-
         </div>
     );
 };

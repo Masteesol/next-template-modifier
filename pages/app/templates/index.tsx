@@ -242,6 +242,7 @@ const Page: NextPage<PageProps> = () => {
       return;
     }
     deletedCategory(userID, textTemplates, setTextTemplates, setSelectedCategory, selectedCategory, category_id, index)
+
   };
   return (
     <>

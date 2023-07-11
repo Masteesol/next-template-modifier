@@ -225,7 +225,6 @@ export const deletedTemplate = async (
     }
 }
 
-
 export const deletedCategory = async (
     userID: string,
     textTemplates: TemplatesContainer[],
@@ -246,20 +245,32 @@ export const deletedCategory = async (
             .delete()
             .eq("category_id", category_id)
             .match({ user_id: userID })
+
         if (deleteTempError) {
             console.log("deleteTempError", deleteTempError)
         } else if (deleteCatError) {
             console.log("deleteCatError", deleteCatError)
         } else {
             const updatedCategories = textTemplates.filter((_, i) => i !== index);
+
+            // Update the order property for each remaining category
+            updatedCategories.forEach((category, idx) => {
+                category.order = idx;
+            });
+
             setTextTemplates(updatedCategories);
+
+            // Update the order for each category in the database
+            const updatePromises = updatedCategories.map((item: TemplatesContainer) =>
+                updateCategoryOrder(item.category_id, userID, item.order)
+            );
+            await Promise.all(updatePromises);
+
             if (index === selectedCategory) {
                 setSelectedCategory(updatedCategories.length > 0 ? 0 : -1);
             }
         }
     } catch (error) {
-        console.error("Failed to create template:", error);
+        console.error("Failed to delete category:", error);
     }
 }
-
-

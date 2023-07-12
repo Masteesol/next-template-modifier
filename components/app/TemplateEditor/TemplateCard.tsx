@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BsXLg } from "react-icons/bs";
+import { BiEraser } from "react-icons/bi";
 import { FaArrowLeft, FaCheck, FaCopy, FaEdit } from "react-icons/fa";
 import { FlexColContainer, FlexRowCenteredY, FlexColCentered, CardBaseLight, DividerHorizontal } from "@/components/shared/styled-global-components";
 import tw from "tailwind-styled-components";
@@ -7,7 +8,7 @@ import tw from "tailwind-styled-components";
 const InputBase = tw.input`
   border-1 
   border-transparent
-  rounded 
+  rounded
   bg-transparent 
   focus:border-1 
   focus:border-green-200 
@@ -17,6 +18,8 @@ const InputBase = tw.input`
 const CardInput = tw(InputBase)`
   bg-slate-50
   dark:bg-gray-800
+  rounded-r-none
+  relative
 `
 
 const IconContainer = tw(FlexColCentered)`
@@ -75,7 +78,17 @@ const TemplateCard = (props: any, ref: any) => {
         }));
     };
 
-
+    const handleRemoveInputText = (count: number, templateIndex: number) => {
+        const input = document.getElementById(`input-${count}-${templateIndex}`) as HTMLInputElement
+        const inputLabel = document.getElementById(`label-${count}-${templateIndex}`) as HTMLLabelElement
+        //console.log(inputLabel)
+        if (input && inputLabel) {
+            input.value = ""
+            inputLabel.innerText = "{  }"
+        } else {
+            console.log("No input element:", input)
+        }
+    }
     const handleCopy = () => {
         let finalText = textTemplate.text;
         Object.keys(inputValues).forEach(key => {
@@ -96,18 +109,31 @@ const TemplateCard = (props: any, ref: any) => {
             const count = placeholderCount; // save the current placeholder count to use in the handler function
             placeholderCount += 1;
             return (
-                <CardInput
+                <FlexRowCenteredY
                     key={`input-${count}-${templateIndex}-${template.template_id}`}
-                    type="text"
-                    placeholder={"Word " + (index + 1)}
-                    value={!isEditActive && inputValues[count] || ''}
-                    id={`input-${count}-${templateIndex}`}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(count, event)}
-                    onFocus={() => setFocusedInput(count)}
-                    onBlur={() => setFocusedInput(null)}
-                    disabled={isEditActive}
-                    className={`${isEditActive && "bg-gray-300 cursor-not-allowed"}`}
-                />
+                    className={`${isEditActive ? "bg-gray-300 cursor-not-allowed dark:bg-gray-700" : "bg-slate-50 dark:bg-gray-800"} rounded `}
+                >
+                    <CardInput
+
+                        type="text"
+                        placeholder={"Word " + (index + 1)}
+                        value={!isEditActive && inputValues[count] || ''}
+                        id={`input-${count}-${templateIndex}`}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(count, event)}
+                        onFocus={() => setFocusedInput(count)}
+                        onBlur={() => setFocusedInput(null)}
+                        disabled={isEditActive}
+                        className={`${isEditActive && "bg-gray-300 dark:bg-gray-700 cursor-not-allowed"} w-full`}
+                    />
+                    <button
+                        disabled={isEditActive}
+                        className={`${isEditActive && "cursor-not-allowed"} p-2 border-1 text-lg text-gray-500 hover:bg-slate-100 dark:hover:bg-gray-900`}
+                        onClick={() => { handleRemoveInputText(count, templateIndex) }}
+                    >
+                        <BiEraser />
+                    </button>
+                </FlexRowCenteredY>
+
             );
         }
     });
@@ -119,6 +145,7 @@ const TemplateCard = (props: any, ref: any) => {
                 <span key={`inline-${template.template_id}-${index}`}>
                     {segment}
                     <label
+                        id={`label-${index}-${templateIndex}`}
                         htmlFor={`input-${index}-${templateIndex}`}
                         className={`bg-green-100 cursor-pointer rounded px-1 pb-1 leading-8 ${index === focusedInput && 'bg-green-300 text-green-900 dark:text-white'} dark:bg-green-600 dark:hover:bg-green-900 text-green-800 dark:text-white`}
                     >

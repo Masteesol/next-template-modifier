@@ -42,27 +42,33 @@ const CategoryCard = (props: CatType) => {
                     className={`${isSelected && "border-l-8 border-l-green-400"} w-full my-2 hover:border-l-green-400 hover:border-l-8 pe-2 hover:ps-2 hover:pe-0 transition-all ease-in-out duration-300 transition-delay-200`}
                     id={`${index}`}
                 >
-                    <FlexRowCenteredY className="gap-4">
-                        <InputBase
-                            type="text"
-                            value={category.category_name || ''}
-                            className={"font-bold max-w-[80%]"}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputCatTitleChange(e, index, category.category_id)}
-                            placeholder={"Input Category Name"}
-                        />
+                    <FlexRowCenteredY className="gap-4 justify-between p-4">
+                        <h3 className={"font-bold "}>
+                            {category.category_name}
+                        </h3>
                         <BsFillGrid3X2GapFill className="text-2xl cursor-grab" />
                     </FlexRowCenteredY>
                 </CardBaseLightHover >
                 :
                 <CardBaseLightHover
-                    className={`${isSelected ? "border-l-8 border-l-green-400 pe-2 ps-4" : "ps-2 hover:border-l-green-400 hover:border-l-8 pe-4 hover:ps-4 hover:pe-2 transition-all ease-in-out duration-300 transition-delay-200"} py-2 w-full my-2  `}
-
+                    className={`${isSelected ? "border-l-8 border-l-green-400 pe-2 ps-4" : "cursor-pointer ps-2 hover:border-l-green-400 hover:border-l-8 pe-4 hover:ps-4 hover:pe-2 transition-all ease-in-out duration-300 transition-delay-200"} py-2 w-full my-2  `}
                     id={`${index}`}
+                    onClick={handleSelectCategory}
+
                 >
                     <FlexRowCenteredY>
-                        <h3 className={"font-bold"}>
-                            {category.category_name}
-                        </h3>
+                        {!isSelected ?
+                            <h3 className={"font-bold"}>
+                                {category.category_name}
+                            </h3> :
+                            <InputBase
+                                type="text"
+                                value={category.category_name || ''}
+                                className={"font-bold max-w-[80%]"}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputCatTitleChange(e, index, category.category_id)}
+                                placeholder={"Input Category Name"}
+                            />
+                        }
                         < FlexRowCenteredY className="ms-auto">
                             <BsArrowRight
                                 className="text-2xl cursor-pointer hover:text-green-800 dark:hover:text-green-100"

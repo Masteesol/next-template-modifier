@@ -110,15 +110,18 @@ const SortingList = (props: CateGoryListTypes) => {
                     <h3 className="p-4">Edit Categories</h3>
                 </FlexColCenteredX>
             }
-            <FlexColContainer className="w-[18rem] lg:w-[19rem] relative h-full max-h-[90%] overflow-y-auto">
+            <FlexColContainer
+                className="w-[18rem] lg:w-[19rem] relative h-full max-h-[90%] overflow-y-auto"
+            >
                 {isEditing ?
                     <List
+
                         values={items}
                         onChange={({ oldIndex, newIndex }) =>
                             handleNewListOrder(items, oldIndex, newIndex)
                         }
                         renderList={({ children, props }) => <ul {...props}>{children}</ul>}
-                        renderItem={({ value, props }) => <li {...props}>{value}</li>}
+                        renderItem={({ value, props }) => <li className="list-none" {...props} style={{ ...props.style, zIndex: 1000 }}>{value}</li>}
                     />
                     :
                     <ul >

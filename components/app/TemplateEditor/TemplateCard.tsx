@@ -78,16 +78,11 @@ const TemplateCard = (props: any, ref: any) => {
         }));
     };
 
-    const handleRemoveInputText = (count: number, templateIndex: number) => {
-        const input = document.getElementById(`input-${count}-${templateIndex}`) as HTMLInputElement
-        const inputLabel = document.getElementById(`label-${count}-${templateIndex}`) as HTMLLabelElement
-        //console.log(inputLabel)
-        if (input && inputLabel) {
-            input.value = ""
-            inputLabel.innerText = "{  }"
-        } else {
-            console.log("No input element:", input)
-        }
+    const handleRemoveInputText = (index: number) => {
+        setInputValues(prevInputValues => ({
+            ...prevInputValues,
+            [index]: "",
+        }));
     }
     const handleCopy = () => {
         let finalText = textTemplate.text;
@@ -128,7 +123,7 @@ const TemplateCard = (props: any, ref: any) => {
                     <button
                         disabled={isEditActive}
                         className={`${isEditActive && "cursor-not-allowed"} p-2 border-1 text-lg text-gray-500 hover:bg-slate-100 dark:hover:bg-gray-900`}
-                        onClick={() => { handleRemoveInputText(count, templateIndex) }}
+                        onClick={() => { handleRemoveInputText(count) }}
                     >
                         <BiEraser />
                     </button>

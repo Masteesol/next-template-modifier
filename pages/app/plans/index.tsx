@@ -7,7 +7,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
 import { AuthContext } from "@/context/AuthContext";
-import { FlexColCentered, FlexRowCentered, H1 } from "@/components/shared/styled-global-components";
+import { FlexColCentered, FlexRowCentered, FlexRowContainer, H1 } from "@/components/shared/styled-global-components";
 import { TierCard } from "@/components/shared/Cards";
 import { getSubTiers } from "@/requests/profile";
 import { LoadingContext } from "@/context/LoadingContext";
@@ -55,11 +55,11 @@ const Page = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <PageLayout authenticated={isAuthenticated}>
-                <FlexColCentered className="h-full ">
-                    <FlexColCentered className="w-full max-w-[900px] gap-8">
+                <FlexColCentered className="h-full p-4">
+                    <FlexColCentered className="w-full max-w-[550px] gap-8">
                         <H1>Subscription plans</H1>
-                        <i>The templify app is currently in beta and PRO subscriptions will be available upon launch</i>
-                        <FlexRowCentered className="gap-4">
+                        <i className="text-center">The templify app is currently in beta and PRO subscriptions will be available upon launch</i>
+                        <FlexRowContainer className="gap-4 justify-between w-full">
                             {subTiers && subTierId &&
                                 subTiers.map((tier) => {
                                     return <div key={"card-" + tier.id}>
@@ -67,7 +67,7 @@ const Page = () => {
                                     </div>
                                 })
                             }
-                        </FlexRowCentered>
+                        </FlexRowContainer>
                     </FlexColCentered>
 
                 </FlexColCentered>

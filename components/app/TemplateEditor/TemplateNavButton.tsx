@@ -1,9 +1,9 @@
-import { HollowButton } from "@/components/shared/styled-global-components";
+
 import { BsArrowRight } from "react-icons/bs";
 
 const NavHollowButton = ({ index, templateRefs, template }: any) => {
-    return <HollowButton
-        className="w-full text-left flex justify-between"
+    return <button
+        className="w-full text-left flex justify-between rounded-sm hover:border-l-4 pe-2 hover:ps-2 hover:pe-0 border-green-500 transition-all ease-in-out duration-300 transition-delay-200"
         key={index}
         onClick={() => {
             console.log(templateRefs[index])
@@ -39,7 +39,7 @@ const NavHollowButton = ({ index, templateRefs, template }: any) => {
         <BsArrowRight
             className="text-2xl cursor-pointer hover:text-green-800 dark:hover:text-green-100 ms-auto"
         />
-    </HollowButton>
+    </button>
 }
 
 export default NavHollowButton;

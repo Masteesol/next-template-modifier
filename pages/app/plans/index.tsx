@@ -7,7 +7,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
 import { AuthContext } from "@/context/AuthContext";
-import { FlexColCentered, FlexRowCentered, FlexRowContainer, H1 } from "@/components/shared/styled-global-components";
+import { FlexColCentered, FlexRowContainer, H1 } from "@/components/shared/styled-global-components";
 import { TierCard } from "@/components/shared/Cards";
 import { getSubTiers } from "@/requests/profile";
 import { LoadingContext } from "@/context/LoadingContext";

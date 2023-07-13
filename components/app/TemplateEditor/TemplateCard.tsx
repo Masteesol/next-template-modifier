@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { BsXLg } from "react-icons/bs";
+import { BsArrowLeft, BsCheckLg, BsXLg } from "react-icons/bs";
 import { BiEraser } from "react-icons/bi";
-import { FaArrowLeft, FaCheck, FaCopy, FaEdit } from "react-icons/fa";
-import { FlexColContainer, FlexRowCenteredY, FlexColCentered, CardBaseLight, DividerHorizontal } from "@/components/shared/styled-global-components";
+import { FaCheck, FaCopy, FaEdit } from "react-icons/fa";
+import { FlexColContainer, FlexRowCenteredY, FlexColCentered, CardBaseLight, DividerHorizontal, FlexRowContainer, FlexColCenteredX } from "@/components/shared/styled-global-components";
 import tw from "tailwind-styled-components";
 
 const InputBase = tw.input`
@@ -122,7 +122,7 @@ const TemplateCard = (props: any, ref: any) => {
                     />
                     <button
                         disabled={isEditActive}
-                        className={`${isEditActive && "cursor-not-allowed"} p-2 border-1 text-lg text-gray-500 hover:bg-slate-100 dark:hover:bg-gray-900`}
+                        className={`${isEditActive ? "cursor-not-allowed" : "hover:bg-slate-100 dark:hover:bg-gray-900"} p-2 border-1 text-lg text-gray-500  `}
                         onClick={() => { handleRemoveInputText(count) }}
                     >
                         <BiEraser />
@@ -174,11 +174,28 @@ const TemplateCard = (props: any, ref: any) => {
                 {placeholderCount > 0 && <DividerHorizontal />}
                 {isEditActive
                     ?
-                    <textarea className="border-0 rounded bg-slate-50 dark:bg-gray-800 min-h-[15rem]"
-                        value={stagedTemplate.text}
-                        onChange={handleTextChange}
-                    />
-                    : <div className="min-h-[10rem]">
+                    <FlexRowContainer className="w-full h-full gap-2">
+                        <textarea className="border-0 rounded bg-slate-50 dark:bg-gray-800 min-h-[15rem] w-full"
+                            value={stagedTemplate.text}
+                            onChange={handleTextChange}
+                        />
+                        <FlexColCenteredX>
+                            <div className="hover:bg-green-300 rounded p-2 cursor-pointer">
+                                <BiEraser className="text-2xl" />
+                            </div>
+                            <FlexColContainer className="mt-auto">
+                                <DividerHorizontal className="border-gray-100" />
+                                <div className="hover:bg-green-300 rounded p-2 cursor-pointer" onClick={handleApprove}>
+                                    <BsCheckLg className="text-2xl" />
+                                </div>
+                                <div className="hover:bg-green-300 rounded p-2 cursor-pointer" onClick={handleEditActive}>
+                                    <BsArrowLeft className="text-2xl " />
+                                </div>
+                            </FlexColContainer>
+                        </FlexColCenteredX>
+                    </FlexRowContainer>
+                    :
+                    <div className="min-h-[10rem]">
                         <pre className="font-sans"
                             style={{
                                 whiteSpace: "pre-wrap",
@@ -190,12 +207,9 @@ const TemplateCard = (props: any, ref: any) => {
                 <FlexRowCenteredY className="justify-end gap-4">
 
                     <IconContainer onClick={handleEditActive}>
-                        {!isEditActive ? <FaEdit /> : <FaArrowLeft />}
+                        {!isEditActive && <FaEdit />}
                     </IconContainer>
-                    {isEditActive &&
-                        <IconContainer onClick={handleApprove}>
-                            <FaCheck />
-                        </IconContainer>}
+
                     {!isEditActive &&
                         <IconContainer onClick={handleCopy}>
                             {!hasBeenCopied ? <FaCopy /> : <FaCheck />}

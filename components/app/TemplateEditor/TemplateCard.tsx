@@ -100,6 +100,16 @@ const TemplateCard = (props: any, ref: any) => {
             [index]: "",
         }));
     }
+
+    const handleRemoveAllInputText = () => {
+        setInputValues(prevInputValues => (
+            Object.keys(prevInputValues).reduce((acc: Record<string, string>, key) => {
+                acc[key] = "";
+                return acc;
+            }, {})
+        ));
+    }
+
     const handleCopy = () => {
         let finalText = textTemplate.text;
         Object.keys(inputValues).forEach(key => {
@@ -192,9 +202,27 @@ const TemplateCard = (props: any, ref: any) => {
                 {!placeholders &&
                     <p className="text-gray-500">Add your template text and use the <span className="font-bold text-green-600">#</span> symbol to create placeholders.
                         Your placeholders will show up here and will be active once you apply the changes.</p>}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    {placeholders}
-                </div>
+                <FlexRowContainer className="w-full h-full gap-2">
+                    <div className="w-full">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            {placeholders}
+                        </div>
+                    </div>
+                    {!isEditActive &&
+                        <FlexColContainer className="border-l-2 border-gray-100 ps-2 ms-2">
+                            <div className="group relative">
+                                <IconContainer
+                                    className="hover:bg-red-300 dark:hover:bg-red-500"
+                                    onClick={handleRemoveAllInputText}
+                                >
+                                    <BiEraser className="text-2xl" />
+                                    <HoverLabel className="w-[6rem] bg-red-200 text-red-700">Empty all</HoverLabel>
+                                </IconContainer>
+                            </div>
+                        </FlexColContainer>
+                    }
+
+                </FlexRowContainer>
                 {placeholderCount > 0 && <DividerHorizontal />}
                 {isEditActive
                     ?
@@ -206,10 +234,11 @@ const TemplateCard = (props: any, ref: any) => {
                         <FlexColCenteredX>
                             <div className="group relative">
                                 <IconContainer
+                                    className="hover:bg-red-300 dark:hover:bg-red-500"
                                     onClick={handleRemoveTextAreaText}
                                 >
                                     <BiEraser className="text-2xl" />
-                                    <HoverLabel className="w-[6rem]">Remove text</HoverLabel>
+                                    <HoverLabel className="w-[6rem] bg-red-200 text-red-700">Remove text</HoverLabel>
                                 </IconContainer>
                             </div>
                             <FlexColContainer className="mt-auto">

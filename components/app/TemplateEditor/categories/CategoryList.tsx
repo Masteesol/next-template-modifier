@@ -166,7 +166,7 @@ const CategoryList = (props: CateGoryListTypes, isEditing: boolean) => {
 
 export default SortingList
 
-export const Accordion = ({ isEditing, setIsEditing, handleViewCategorySelect, textTemplates }: any) => {
+const Accordion = ({ isEditing, setIsEditing, handleViewCategorySelect, textTemplates }: any) => {
     const [expanded, setExpanded] = useState(false)
 
     return (
@@ -220,7 +220,7 @@ export const EditToggle = ({ isEditing, setIsEditing }: any) => {
                 <div className={`after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${isEditing ? 'after:translate-x-full after:bg-green-600 after:border-green-400' : 'after:bg-gray-500 after:border-gray-300'}`}></div>
             </div>
             <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Edit Order
+                Edit List
             </span>
         </label>
     );

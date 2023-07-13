@@ -22,7 +22,7 @@ const NavHollowButton = ({ index, templateRefs, template }: any) => {
                 }
                 const scrollToTemplate = (index: number) => {
                     const container = document.querySelector('#templates-container') as HTMLElement; // get the container
-                    console.log(container)
+                    //console.log(container)
                     const targetElement = templateRefs[index].current as HTMLDivElement; // get the target element
 
                     if (container && targetElement) {

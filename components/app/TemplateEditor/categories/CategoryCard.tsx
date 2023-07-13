@@ -1,7 +1,6 @@
-import { CardBaseLightHover, FlexRowCenteredY, HollowButton, InputBase, SubmitButton } from "@/components/shared/styled-global-components";
-import { BsArrowRight, BsFillGrid3X2GapFill } from "react-icons/bs";
-import { useState } from "react"
-import { Dropdown } from "flowbite-react";
+import { CardBaseLightHover, DividerPipe, FlexRowCentered, FlexRowCenteredY, HollowButton, InputBase, SubmitButton } from "@/components/shared/styled-global-components";
+import { BsArrowRight, BsChevronDown, BsChevronUp, BsFillGrid3X2GapFill, BsStar, BsTrash3Fill } from "react-icons/bs";
+import { useEffect, useState } from "react"
 
 interface CatType {
     category: any;
@@ -14,6 +13,7 @@ interface CatType {
 }
 
 const CategoryCard = (props: CatType) => {
+
     const { category,
         index,
         handleSelectCategory,
@@ -22,9 +22,15 @@ const CategoryCard = (props: CatType) => {
         selectedCategory,
         isEditing,
     } = props
+    const isSelected = selectedCategory === index
 
-    const [isDeleteActive, setIsDeleteActive] = useState(selectedCategory === index ? false : false)
-    //console.log("Category card", category)
+    const [expanded, setExpanded] = useState(false)
+    const [isDeleteActive, setIsDeleteActive] = useState(isSelected ? false : false)
+
+    useEffect(() => {
+        setExpanded(false)
+    }, [selectedCategory])
+
     const handleDeleteFirstStep = () => {
         setIsDeleteActive(!isDeleteActive)
     }
@@ -33,8 +39,7 @@ const CategoryCard = (props: CatType) => {
         handleRemoveCategory(index, category.category_id)
         setIsDeleteActive(false)
     }
-    //console.log("isEditing", isEditing)
-    const isSelected = selectedCategory === index
+
     return (
         <div>
             {isEditing
@@ -43,7 +48,7 @@ const CategoryCard = (props: CatType) => {
                     id={`${index}`}
                 >
                     <FlexRowCenteredY className="gap-4 justify-between p-4">
-                        <h3 className={"font-bold "}>
+                        <h3 className={"font-bold"}>
                             {category.category_name}
                         </h3>
                         <BsFillGrid3X2GapFill className="text-2xl cursor-grab" />
@@ -56,51 +61,82 @@ const CategoryCard = (props: CatType) => {
                     onClick={handleSelectCategory}
 
                 >
-                    <FlexRowCenteredY>
+                    <FlexRowCenteredY className={`${!isSelected ? "p-2" : "pe-2"}`}>
                         {!isSelected ?
-                            <h3 className={"font-bold"}>
+                            <h3 className={"font-bold "}>
                                 {category.category_name}
-                            </h3> :
+                            </h3>
+                            :
                             <InputBase
                                 type="text"
                                 value={category.category_name || ''}
-                                className={"font-bold max-w-[80%]"}
+                                className={"font-bold max-w-[80%] p-2"}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputCatTitleChange(e, index, category.category_id)}
                                 placeholder={"Input Category Name"}
                             />
                         }
                         < FlexRowCenteredY className="ms-auto">
-                            <BsArrowRight
-                                className="text-2xl cursor-pointer hover:text-green-800 dark:hover:text-green-100"
-                                onClick={handleSelectCategory}
-                            />
+                            {!isSelected
+                                ?
+                                <BsArrowRight
+                                    className="text-2xl cursor-pointer hover:text-green-800 dark:hover:text-green-100"
+                                    onClick={handleSelectCategory}
+                                />
+                                :
+                                <FlexRowCentered
+                                    onClick={() => setExpanded(!expanded)}
+                                >
+                                    {!expanded
+                                        ?
+                                        <BsChevronDown
+                                            className="text-xl cursor-pointer hover:text-green-800 dark:hover:text-green-100"
+                                        />
+                                        :
+                                        <BsChevronUp
+                                            className="text-xl cursor-pointer hover:text-green-800 dark:hover:text-green-100"
+                                        />
+                                    }
+
+                                </FlexRowCentered>
+                            }
                         </FlexRowCenteredY>
                     </FlexRowCenteredY>
                     <FlexRowCenteredY
-                        className="pt-4"
+                        className={`${expanded && isSelected ? "h-[5rem] py-4" : "h-0"} overflow-hidden gap-4 w-full transition-all ease-in-out`}
                     >
-                        {!isDeleteActive && isSelected &&
-                            <FlexRowCenteredY className="w-full">
-                                <Dropdown label="Options" style={{ backgroundColor: "transparent", color: "black", borderColor: "lightgray" }}>
-                                    <Dropdown.Item>
-                                        Favourite
-                                    </Dropdown.Item>
-                                    <Dropdown.Item onClick={handleDeleteFirstStep}>
-                                        Delete
-                                    </Dropdown.Item>
-                                </Dropdown>
-                            </FlexRowCenteredY>
-                        }
-                        {isDeleteActive && isSelected
-                            &&
-                            <FlexRowCenteredY className="gap-2 ms-auto ">
-                                <SubmitButton className="text-sm cursor-pointer hover:text-green-800 dark:hover:text-green-100" onClick={handleRemoveArrayEntry}>Yes</SubmitButton>
-                                <HollowButton
-                                    className="text-sm"
+                        {!isDeleteActive && expanded &&
+                            <FlexRowCenteredY className="w-full h-full gap-2">
+                                <FlexRowCentered className="gap-2 flex-1 cursor-pointer hover:bg-green-200 p-2 rounded">
+                                    <BsStar className="text-xl" />
+                                    <span>Favourite</span>
+                                </FlexRowCentered>
+                                <DividerPipe />
+                                <FlexRowCentered className="gap-2 flex-1 cursor-pointer hover:bg-green-200 p-2 rounded"
                                     onClick={handleDeleteFirstStep}
                                 >
-                                    Cancel
-                                </HollowButton>
+                                    <BsTrash3Fill className="text-xl" />
+                                    <span>Delete</span>
+                                </FlexRowCentered>
+                            </FlexRowCenteredY>
+
+                        }
+                        {isDeleteActive && expanded
+                            &&
+                            <FlexRowCenteredY className="w-full">
+                                <span>Are you sure?</span>
+                                <FlexRowCenteredY className="gap-2 ms-auto ">
+                                    <SubmitButton
+                                        className="text-sm cursor-pointer hover:text-green-800 dark:hover:text-green-100"
+                                        onClick={handleRemoveArrayEntry}>
+                                        Yes
+                                    </SubmitButton>
+                                    <HollowButton
+                                        className="text-sm"
+                                        onClick={handleDeleteFirstStep}
+                                    >
+                                        Cancel
+                                    </HollowButton>
+                                </FlexRowCenteredY>
                             </FlexRowCenteredY>
                         }
                     </FlexRowCenteredY>

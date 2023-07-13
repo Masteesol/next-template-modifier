@@ -5,7 +5,6 @@ import PageLayout from "@/components/app/PageLayout";
 import {
   DividerPipe,
   FlexColCentered,
-  FlexColCenteredX,
   FlexColContainer,
   FlexRowCentered,
   FlexRowCenteredY,
@@ -21,8 +20,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import { debounce } from 'lodash';
 import ForwardedRefTemplateCard from "@/components/app/TemplateEditor/TemplateCard";
-import TemplateNavButton from "@/components/app/TemplateEditor/TemplateNavButton";
-import CategoryList, { CategoryHeaderButton } from "@/components/app/TemplateEditor/CategoryList";
+import CategoryList, { CategoryHeaderButton } from "@/components/app/TemplateEditor/categories/CategoryList";
 import GuidingDescriptionText from "@/components/app/TemplateEditor/GuidingDescription";
 import cookie from 'cookie'
 import { LoadingContext } from '@/context/LoadingContext';
@@ -38,6 +36,7 @@ import {
   updateTemplate
 } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
+import TemplateNavigation from "@/components/app/TemplateEditor/templateNavigation"
 
 interface Templates {
   title: string;
@@ -300,23 +299,13 @@ const Page: NextPage<PageProps> = () => {
               textTemplates.length > 0 &&
               textTemplates[selectedCategory].templates.length > 0 &&
               viewNavigation &&
-              <FlexColContainer className="p-2">
-                <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
-                <FlexColCenteredX className="w-full gap-4 min-w-[18rem] max-w-[18rem] max-h-[90%] overflow-y-auto">
-                  {textTemplates[selectedCategory].templates.map((template, templateIndex) => (
-                    <TemplateNavButton
-                      template={template}
-                      index={templateIndex}
-                      categoryIndex={selectedCategory}
-                      templateRefs={templateRefs}
-                      key={`template-nav-button-${selectedCategory}-${templateIndex}`}
-                    />
-                  ))}
-                </FlexColCenteredX>
-                <FlexColCentered className="mt-auto w-full mb-8 gap-4">
-                  <AddTemplateButton onClick={handleCreateTemplate} />
-                </FlexColCentered>
-              </FlexColContainer>
+              <TemplateNavigation
+                handleViewNavigationSelect={handleViewNavigationSelect}
+                textTemplates={textTemplates}
+                selectedCategory={selectedCategory}
+                handleCreateTemplate={handleCreateTemplate}
+                templateRefs={templateRefs}
+              />
             }
             {textTemplates.length > 0 &&
               textTemplates[selectedCategory].templates.length > 0 &&

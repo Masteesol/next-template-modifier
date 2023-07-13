@@ -1,12 +1,13 @@
-import { FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, AddButton, FlexRowContainer } from "@/components/shared/styled-global-components";
-import CategoryCard from "@/components/app/TemplateEditor/CategoryCard";
+import { FlexColCentered, FlexColContainer, FlexRowCenteredY, AddButton, FlexRowContainer, DividerPipe, FlexRowCentered, DividerHorizontal } from "@/components/shared/styled-global-components";
+import CategoryCard from "@/components/app/TemplateEditor/categories/CategoryCard";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
-import GuidingDescriptionText from "./GuidingDescription";
+import GuidingDescriptionText from "../GuidingDescription";
 import { List, arrayMove } from 'react-movable';
 import { useState, useEffect, useContext } from "react";
 import { updateCategoryOrder } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import debounce from "lodash.debounce";
+import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
 export const CategoryHeaderButton = ({ viewCategories, handleViewCategorySelect }: any) => {
     return <FlexRowCenteredY className={`p-4 gap-4 rounded relative`}>
@@ -100,16 +101,13 @@ const SortingList = (props: CateGoryListTypes) => {
 
     return (
         <FlexColContainer className="px-2">
-            {!isEditing
-                ?
-                <FlexColCenteredX>
-                    <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
-                </FlexColCenteredX>
-                :
-                <FlexColCenteredX>
-                    <h3 className="p-4">Edit Categories</h3>
-                </FlexColCenteredX>
-            }
+            <Accordion
+                viewCategories={viewCategories}
+                handleViewCategorySelect={handleViewCategorySelect}
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
+                textTemplates={textTemplates}
+            />
             <FlexColContainer
                 className="w-[18rem] lg:w-[19rem] relative h-full max-h-[90%] overflow-y-auto"
             >
@@ -135,7 +133,6 @@ const SortingList = (props: CateGoryListTypes) => {
             <FlexColCentered className="mt-auto w-full mb-10 gap-4">
                 {textTemplates.length === 0 && <GuidingDescriptionText>Add a new category to begin</GuidingDescriptionText>}
                 <FlexRowCenteredY className="w-full">
-                    {textTemplates.length > 0 && <EditToggle isEditing={isEditing} setIsEditing={setIsEditing} />}
                     {!isEditing && <AddCategoryButton onClick={addCategory} />}
                 </FlexRowCenteredY>
             </FlexColCentered>
@@ -169,25 +166,61 @@ const CategoryList = (props: CateGoryListTypes, isEditing: boolean) => {
 
 export default SortingList
 
-export const EditToggle = ({ isEditing, setIsEditing }: any) => {
+export const Accordion = ({ isEditing, setIsEditing, handleViewCategorySelect, textTemplates }: any) => {
+    const [expanded, setExpanded] = useState(false)
 
+    return (
+        <FlexColContainer className="gap-2">
+            <FlexRowCenteredY className="justify-between text-lg cursor-pointer"
+                onClick={() => setExpanded(!expanded)}
+            >
+                <h3>Categories</h3>
+                {!expanded
+                    ?
+                    <BsChevronDown />
+                    :
+                    <BsChevronUp />
+                }
+
+            </FlexRowCenteredY>
+            <DividerHorizontal className="w-full border-gray-200" />
+            <FlexRowCenteredY
+                className={`${expanded ? "h-[5rem] py-4" : "h-0"} overflow-hidden gap-4 w-full transition-all ease-in-out`}
+            >
+                {textTemplates.length > 0 &&
+                    <FlexRowCentered className="flex-1">
+                        <EditToggle isEditing={isEditing} setIsEditing={setIsEditing} />
+                    </FlexRowCentered>}
+                {textTemplates.length > 0 && <DividerPipe />}
+                <FlexRowCentered className="gap-2 cursor-pointer flex-1"
+                    onClick={handleViewCategorySelect}
+                >
+                    <FaEyeSlash className="text-lg" />
+                    <label className="cursor-pointer">Hide</label>
+                </FlexRowCentered>
+            </FlexRowCenteredY>
+        </FlexColContainer>
+    );
+};
+
+export const EditToggle = ({ isEditing, setIsEditing }: any) => {
     const handleToggle = () => {
         setIsEditing(!isEditing);
     };
 
     return (
-        <label className="relative inline-flex items-center cursor-pointer w-full">
+        <label className="relative flex cursor-pointer">
             <input
                 type="checkbox"
                 checked={isEditing}
                 onChange={handleToggle}
                 className="sr-only"
             />
-            <div className={`w-11 h-6 rounded-full transition-all peer-checked:bg-blue-600 dark:bg-gray-700 bg-gray-200 peer-checked:after:translate-x-full peer-checked:after:border-white ${isEditing ? 'peer-checked:bg-blue-600' : 'bg-gray-200'}`}>
-                <div className={`after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${isEditing ? 'after:translate-x-full' : ''}`}></div>
+            <div className={`w-11 h-6 rounded-full transition-all dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white ${isEditing ? 'bg-green-300' : 'bg-gray-200'}`}>
+                <div className={`after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${isEditing ? 'after:translate-x-full after:bg-green-600 after:border-green-400' : 'after:bg-gray-500 after:border-gray-300'}`}></div>
             </div>
             <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                {isEditing ? 'Finish Editing' : 'Edit List'}
+                Edit Order
             </span>
         </label>
     );

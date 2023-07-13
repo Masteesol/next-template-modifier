@@ -189,8 +189,9 @@ const TemplateCard = (props: any, ref: any) => {
                         <h3 className="font-bold text-gray-600 dark:text-gray-400">Created Placeholders</h3>
                         <span className="bg-yellow-300 text-yellow-800 p-2 rounded text-xs">Editing Mode</span>
                     </FlexRowCenteredY>}
-                {!placeholders && <p className="text-gray-500">Add your template text and use the <span className="font-bold text-green-600">#</span> symbol to create placeholders.
-                    Your placeholders will show up here and will be active once you exit editing mode.</p>}
+                {!placeholders &&
+                    <p className="text-gray-500">Add your template text and use the <span className="font-bold text-green-600">#</span> symbol to create placeholders.
+                        Your placeholders will show up here and will be active once you apply the changes.</p>}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {placeholders}
                 </div>

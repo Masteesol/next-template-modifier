@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { BsArrowLeft, BsCheckLg, BsXLg } from "react-icons/bs";
+import { BsArrowLeft, BsCheckLg, BsPencilSquare, BsXLg } from "react-icons/bs";
 import { BiEraser } from "react-icons/bi";
-import { FaCheck, FaCopy, FaEdit } from "react-icons/fa";
+import { FaRegCopy } from "react-icons/fa";
 import { FlexColContainer, FlexRowCenteredY, FlexColCentered, CardBaseLight, DividerHorizontal, FlexRowContainer, FlexColCenteredX } from "@/components/shared/styled-global-components";
 import tw from "tailwind-styled-components";
 
@@ -23,15 +23,26 @@ const CardInput = tw(InputBase)`
 `
 
 const IconContainer = tw(FlexColCentered)`
-  p-1 
+  hover:bg-green-300
   rounded 
-  text-xl 
-  cursor-pointer 
-  hover:bg-slate-200
+  p-2 
+  cursor-pointer
   dark:hover:bg-slate-500
 `
 
-
+const HoverLabel = tw.label`
+    text-sm 
+    text-gray-600 
+    text-center 
+    bg-gray-100 
+    rounded
+    group-hover:block
+    hidden 
+    p-1 
+    absolute 
+    top-1
+    right-[3rem]
+`
 
 const TemplateCard = (props: any, ref: any) => {
     const { categoryIndex, template, index, handleTextTemplateChange, handleRemoveTemplate } = props;
@@ -168,6 +179,13 @@ const TemplateCard = (props: any, ref: any) => {
                     </IconContainer>
                 </FlexRowCenteredY>
                 <DividerHorizontal />
+                {isEditActive &&
+                    <FlexRowCenteredY className="justify-between">
+                        <h3 className="font-bold">Created Placeholders</h3>
+                        <span className="bg-yellow-300 text-yellow-800 p-2 rounded text-xs">Editing Mode</span>
+                    </FlexRowCenteredY>}
+                {!placeholders && <p className="text-gray-500">Add your template text and use the <span className="font-bold text-green-600">#</span> symbol to create placeholders.
+                    Your placeholders will show up here and will be active once you exit editing mode.</p>}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {placeholders}
                 </div>
@@ -180,41 +198,61 @@ const TemplateCard = (props: any, ref: any) => {
                             onChange={handleTextChange}
                         />
                         <FlexColCenteredX>
-                            <div className="hover:bg-green-300 rounded p-2 cursor-pointer">
-                                <BiEraser className="text-2xl" />
+                            <div className="group relative">
+                                <IconContainer>
+                                    <BiEraser className="text-2xl" />
+                                    <HoverLabel className="w-[6rem]">Delete text</HoverLabel>
+                                </IconContainer>
                             </div>
                             <FlexColContainer className="mt-auto">
                                 <DividerHorizontal className="border-gray-100" />
-                                <div className="hover:bg-green-300 rounded p-2 cursor-pointer" onClick={handleApprove}>
-                                    <BsCheckLg className="text-2xl" />
+                                <div className="group relative">
+                                    <IconContainer onClick={handleApprove}>
+                                        <BsCheckLg className="text-2xl" />
+                                        <HoverLabel className="w-[7rem]">Apply changes</HoverLabel>
+                                    </IconContainer>
                                 </div>
-                                <div className="hover:bg-green-300 rounded p-2 cursor-pointer" onClick={handleEditActive}>
-                                    <BsArrowLeft className="text-2xl " />
+                                <div className="group relative">
+                                    <IconContainer onClick={handleEditActive}>
+                                        <BsArrowLeft className="text-2xl " />
+                                        <HoverLabel className="w-[8rem]">Go back without saving</HoverLabel>
+                                    </IconContainer>
                                 </div>
                             </FlexColContainer>
                         </FlexColCenteredX>
                     </FlexRowContainer>
                     :
-                    <div className="min-h-[10rem]">
-                        <pre className="font-sans"
-                            style={{
-                                whiteSpace: "pre-wrap",
-                                wordWrap: "break-word"
-                            }}>{displayText}
-                        </pre>
-                    </div>
+                    <FlexRowContainer className="w-full h-full gap-4">
+                        <div className="min-h-[10rem] w-full">
+                            <pre className="font-sans"
+                                style={{
+                                    whiteSpace: "pre-wrap",
+                                    wordWrap: "break-word"
+                                }}>{displayText}
+                            </pre>
+                        </div>
+                        <FlexColContainer className="justify-end">
+                            <div className="group relative">
+                                <IconContainer onClick={handleEditActive}>
+                                    <BsPencilSquare className="text-xl" />
+                                    <HoverLabel className="w-[4rem]">Edit text</HoverLabel>
+                                </IconContainer>
+                            </div>
+                            <div className="group relative">
+                                <IconContainer onClick={handleCopy}>
+                                    {!hasBeenCopied
+                                        ?
+                                        <FaRegCopy className="text-xl" />
+                                        :
+                                        <BsCheckLg className="text-xl" />
+                                    }
+                                    <HoverLabel className="w-[9rem]">{!hasBeenCopied ? "Copy to clipboard" : "Copied to clipboard!"}</HoverLabel>
+                                </IconContainer>
+                            </div>
+                        </FlexColContainer>
+                    </FlexRowContainer>
                 }
-                <FlexRowCenteredY className="justify-end gap-4">
 
-                    <IconContainer onClick={handleEditActive}>
-                        {!isEditActive && <FaEdit />}
-                    </IconContainer>
-
-                    {!isEditActive &&
-                        <IconContainer onClick={handleCopy}>
-                            {!hasBeenCopied ? <FaCopy /> : <FaCheck />}
-                        </IconContainer>}
-                </FlexRowCenteredY>
             </FlexColContainer>
         </CardBaseLight>
     );

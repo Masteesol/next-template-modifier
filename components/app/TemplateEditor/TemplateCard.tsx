@@ -23,7 +23,7 @@ const CardInput = tw(InputBase)`
 `
 
 const IconContainer = tw(FlexColCentered)`
-  hover:bg-green-300
+  hover:bg-green-200
   rounded 
   p-2 
   cursor-pointer
@@ -70,11 +70,16 @@ const TemplateCard = (props: any, ref: any) => {
         handleTextTemplateChange(categoryIndex, index, stagedTemplate); // update parent state
     };
 
-
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newTemplate = { text: e.target.value, title: stagedTemplate.title, template_id: template.template_id };
         setStagedTemplate(newTemplate);  // update staging state
     };
+
+    const handleRemoveTextAreaText = () => {
+        const newTemplate = { text: "", title: stagedTemplate.title, template_id: template.template_id };
+        console.log("handleRemoveTextAreaText", newTemplate)
+        setStagedTemplate(newTemplate);
+    }
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTemplate = { title: e.target.value, text: textTemplate.text, template_id: template.template_id };
@@ -181,7 +186,7 @@ const TemplateCard = (props: any, ref: any) => {
                 <DividerHorizontal />
                 {isEditActive &&
                     <FlexRowCenteredY className="justify-between">
-                        <h3 className="font-bold">Created Placeholders</h3>
+                        <h3 className="font-bold text-gray-600 dark:text-gray-400">Created Placeholders</h3>
                         <span className="bg-yellow-300 text-yellow-800 p-2 rounded text-xs">Editing Mode</span>
                     </FlexRowCenteredY>}
                 {!placeholders && <p className="text-gray-500">Add your template text and use the <span className="font-bold text-green-600">#</span> symbol to create placeholders.
@@ -199,9 +204,11 @@ const TemplateCard = (props: any, ref: any) => {
                         />
                         <FlexColCenteredX>
                             <div className="group relative">
-                                <IconContainer>
+                                <IconContainer
+                                    onClick={handleRemoveTextAreaText}
+                                >
                                     <BiEraser className="text-2xl" />
-                                    <HoverLabel className="w-[6rem]">Delete text</HoverLabel>
+                                    <HoverLabel className="w-[6rem]">Remove text</HoverLabel>
                                 </IconContainer>
                             </div>
                             <FlexColContainer className="mt-auto">

@@ -167,7 +167,9 @@ const CategoryList = (props: CateGoryListTypes, isEditing: boolean) => {
 export default SortingList
 
 const Accordion = ({ isEditing, setIsEditing, handleViewCategorySelect, textTemplates }: any) => {
-    const [expanded, setExpanded] = useState(false)
+    //by default expanded on mobile devices
+    const [expanded, setExpanded] = useState(window ? window.innerWidth < 1280 : false)
+
 
     return (
         <FlexColContainer className="gap-2">

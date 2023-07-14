@@ -30,8 +30,15 @@ const IconContainer = tw(FlexColCentered)`
   dark:hover:bg-slate-500
 `
 
+const IconContainerWarning = tw(IconContainer)`
+  hover:bg-red-300 
+  dark:hover:bg-red-500
+  hover:text-red-800
+  dark:hover:bg-red-500
+`
+
 const HoverLabel = tw.label`
-    text-sm 
+    text-xs
     text-gray-600 
     text-center 
     bg-gray-100 
@@ -189,20 +196,27 @@ const TemplateCard = (props: any, ref: any) => {
                         onChange={handleTitleChange}
                         placeholder="Template Title..."
                     />
-                    <IconContainer>
-                        <BsXLg onClick={() => handleRemoveTemplate(index, template.template_id)} />
-                    </IconContainer>
+                    <div className="group relative">
+                        <IconContainerWarning
+                            onClick={() => handleRemoveTemplate(index, template.template_id)}
+                        >
+                            <BsXLg />
+                            <HoverLabel className="w-[7rem] bg-red-200 text-red-700">Delete template</HoverLabel>
+                        </IconContainerWarning>
+                    </div>
                 </FlexRowCenteredY>
                 <DividerHorizontal />
                 {isEditActive &&
                     <FlexRowCenteredY className="justify-between">
                         <h3 className="font-bold text-gray-600 dark:text-gray-400">Created Placeholders</h3>
-                        <span className="bg-yellow-300 text-yellow-800 p-2 rounded text-xs">Editing Mode</span>
-                    </FlexRowCenteredY>}
+                        <span className="bg-yellow-200 text-yellow-800 p-2 rounded text-xs">Editing Mode</span>
+                    </FlexRowCenteredY>
+                }
                 {!placeholders &&
                     <p className="text-gray-500">Add your template text and use the <span className="font-bold text-green-600">#</span> symbol to create placeholders.
                         Your placeholders will show up here and will be active once you apply the changes.</p>}
-                <FlexRowContainer className="w-full h-full gap-2">
+                {/**--INPUT GRID--*/}
+                <FlexRowContainer id="input-grid-component" className="w-full h-full gap-2">
                     <div className="w-full">
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                             {placeholders}
@@ -211,18 +225,17 @@ const TemplateCard = (props: any, ref: any) => {
                     {!isEditActive &&
                         <FlexColContainer className="border-l-2 border-gray-100 ps-2 ms-2">
                             <div className="group relative">
-                                <IconContainer
-                                    className="hover:bg-red-300 dark:hover:bg-red-500"
+                                <IconContainerWarning
                                     onClick={handleRemoveAllInputText}
                                 >
                                     <BiEraser className="text-2xl" />
-                                    <HoverLabel className="w-[6rem] bg-red-200 text-red-700">Empty all</HoverLabel>
-                                </IconContainer>
+                                    <HoverLabel className="w-[4rem] bg-red-200 text-red-700">Empty all</HoverLabel>
+                                </IconContainerWarning>
                             </div>
                         </FlexColContainer>
                     }
-
                 </FlexRowContainer>
+                {/**--END INPUT GRID--*/}
                 {placeholderCount > 0 && <DividerHorizontal />}
                 {isEditActive
                     ?
@@ -233,26 +246,25 @@ const TemplateCard = (props: any, ref: any) => {
                         />
                         <FlexColCenteredX>
                             <div className="group relative">
-                                <IconContainer
-                                    className="hover:bg-red-300 dark:hover:bg-red-500"
+                                <IconContainerWarning
                                     onClick={handleRemoveTextAreaText}
                                 >
                                     <BiEraser className="text-2xl" />
-                                    <HoverLabel className="w-[6rem] bg-red-200 text-red-700">Remove text</HoverLabel>
-                                </IconContainer>
+                                    <HoverLabel className="w-[5rem] bg-red-200 text-red-700">Remove text</HoverLabel>
+                                </IconContainerWarning>
                             </div>
                             <FlexColContainer className="mt-auto">
                                 <DividerHorizontal className="border-gray-100" />
                                 <div className="group relative">
                                     <IconContainer onClick={handleApprove}>
                                         <BsCheckLg className="text-2xl" />
-                                        <HoverLabel className="w-[7rem]">Apply changes</HoverLabel>
+                                        <HoverLabel className="w-[6rem]">Apply changes</HoverLabel>
                                     </IconContainer>
                                 </div>
                                 <div className="group relative">
                                     <IconContainer onClick={handleEditActive}>
                                         <BsArrowLeft className="text-2xl " />
-                                        <HoverLabel className="w-[8rem]">Go back without saving</HoverLabel>
+                                        <HoverLabel className="w-[7rem]">Go back without saving</HoverLabel>
                                     </IconContainer>
                                 </div>
                             </FlexColContainer>
@@ -283,7 +295,7 @@ const TemplateCard = (props: any, ref: any) => {
                                         :
                                         <BsCheckLg className="text-xl" />
                                     }
-                                    <HoverLabel className="w-[9rem]">{!hasBeenCopied ? "Copy to clipboard" : "Copied to clipboard!"}</HoverLabel>
+                                    <HoverLabel className="w-[7rem]">{!hasBeenCopied ? "Copy to clipboard" : "Copied to clipboard!"}</HoverLabel>
                                 </IconContainer>
                             </div>
                         </FlexColContainer>

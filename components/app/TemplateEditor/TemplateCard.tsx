@@ -23,18 +23,23 @@ const CardInput = tw(InputBase)`
 `
 
 const IconContainer = tw(FlexColCentered)`
-  hover:bg-green-200
   rounded 
   p-2 
   cursor-pointer
-  dark:hover:bg-slate-500
+`
+
+const IconContainerNormal = tw(IconContainer)`
+  hover:bg-green-200
+  dark:hover:bg-green-400
+  hover:text-green-900
+  dark:hover:text-green-900
 `
 
 const IconContainerWarning = tw(IconContainer)`
   hover:bg-red-300 
   dark:hover:bg-red-500
   hover:text-red-800
-  dark:hover:bg-red-500
+  dark:hover:text-red-950
 `
 
 const HoverLabel = tw.label`
@@ -256,16 +261,16 @@ const TemplateCard = (props: any, ref: any) => {
                             <FlexColContainer className="mt-auto">
                                 <DividerHorizontal className="border-gray-100" />
                                 <div className="group relative">
-                                    <IconContainer onClick={handleApprove}>
+                                    <IconContainerNormal onClick={handleApprove}>
                                         <BsCheckLg className="text-2xl" />
                                         <HoverLabel className="w-[6rem]">Apply changes</HoverLabel>
-                                    </IconContainer>
+                                    </IconContainerNormal>
                                 </div>
                                 <div className="group relative">
-                                    <IconContainer onClick={handleEditActive}>
+                                    <IconContainerNormal onClick={handleEditActive}>
                                         <BsArrowLeft className="text-2xl " />
                                         <HoverLabel className="w-[7rem]">Go back without saving</HoverLabel>
-                                    </IconContainer>
+                                    </IconContainerNormal>
                                 </div>
                             </FlexColContainer>
                         </FlexColCenteredX>
@@ -282,13 +287,13 @@ const TemplateCard = (props: any, ref: any) => {
                         </div>
                         <FlexColContainer className="justify-end">
                             <div className="group relative">
-                                <IconContainer onClick={handleEditActive}>
+                                <IconContainerNormal onClick={handleEditActive}>
                                     <BsPencilSquare className="text-xl" />
                                     <HoverLabel className="w-[4rem]">Edit text</HoverLabel>
-                                </IconContainer>
+                                </IconContainerNormal>
                             </div>
                             <div className="group relative">
-                                <IconContainer onClick={handleCopy}>
+                                <IconContainerNormal onClick={handleCopy}>
                                     {!hasBeenCopied
                                         ?
                                         <FaRegCopy className="text-xl" />
@@ -296,7 +301,7 @@ const TemplateCard = (props: any, ref: any) => {
                                         <BsCheckLg className="text-xl" />
                                     }
                                     <HoverLabel className="w-[7rem]">{!hasBeenCopied ? "Copy to clipboard" : "Copied to clipboard!"}</HoverLabel>
-                                </IconContainer>
+                                </IconContainerNormal>
                             </div>
                         </FlexColContainer>
                     </FlexRowContainer>

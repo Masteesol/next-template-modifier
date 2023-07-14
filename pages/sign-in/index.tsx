@@ -33,7 +33,9 @@ const FormLogin = ({ setIsLoading }: any) => {
   const [errorMessage, setErrorMessage] = useState("");
   const { isAuthenticated } = useContext(AuthContext)
   if (isAuthenticated) {
-    router.push("/app/templates")
+    setIsLoading(true)
+    router.push("/app")
+    setIsLoading(false)
   }
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -45,7 +47,7 @@ const FormLogin = ({ setIsLoading }: any) => {
       })
       if (data.session && !error) { // check for a session instead of no error
         setIsLoading(true)
-        window.location.href = "/app/templates"
+        window.location.href = "/app"
       } else {
         setErrorMessage("Either password or email is wrong");
       }

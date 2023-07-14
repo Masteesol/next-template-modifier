@@ -1,8 +1,6 @@
 import { useEffect, useCallback, useState } from "react";
 import { useRouter } from "next/router"
 import {
-  BsHouseDoor,
-  BsHouseDoorFill,
   BsFileEarmarkText,
   BsFileEarmarkTextFill,
   BsPerson,
@@ -10,9 +8,9 @@ import {
   BsChevronRight,
   BsChevronLeft,
   BsCreditCard2FrontFill,
-  BsCreditCard2Front
+  BsCreditCard2Front,
 } from "react-icons/bs";
-
+import { MdOutlineDashboard, MdDashboard } from "react-icons/md"
 import tw from "tailwind-styled-components";
 import { FlexColCentered, FlexRowCenteredY, FlexColContainer, DividerHorizontal } from "@/components/shared/styled-global-components";
 import Link from "next/link";
@@ -99,8 +97,8 @@ const SidebarElement = () => {
               <SideBarItemContainer>
                 <div className="flex flex-col items-center relative p-2">
                   {router.pathname === "/app"
-                    ? <BsHouseDoorFill size={28} />
-                    : <BsHouseDoor size={28} />
+                    ? <MdDashboard size={28} />
+                    : <MdOutlineDashboard size={28} />
                   }
                 </div>
               </SideBarItemContainer>

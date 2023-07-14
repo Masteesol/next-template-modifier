@@ -19,7 +19,7 @@ const IdComponent = forwardRef<HTMLDivElement>((props, ref) => {
       .filter((segment) => segment);
 
     const breadcrumbPaths: BreadcrumbPath[] = [
-      { name: t("paths.home"), url: "/" },
+      { name: t("paths.home"), url: "/app" },
     ];
 
     let accumulatedPath = "";

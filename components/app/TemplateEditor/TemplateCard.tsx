@@ -223,7 +223,7 @@ const TemplateCard = (props: any, ref: any) => {
                 {/**--INPUT GRID--*/}
                 <FlexRowContainer id="input-grid-component" className="w-full h-full gap-2">
                     <div className="w-full">
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                             {placeholders}
                         </div>
                     </div>

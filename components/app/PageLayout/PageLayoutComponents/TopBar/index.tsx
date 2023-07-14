@@ -39,7 +39,7 @@ const Nav = forwardRef<HTMLDivElement, NavProps>((props, ref) => {
           </FlexRowCenteredY>
         </Link>
         <FlexRowCenteredY className="ml-auto gap-4">
-          <Link href="/app" className="hover:underline">How to use</Link>
+          <Link href="/app/templates/tutorial" className="hover:underline">How to use</Link>
           <NavDropdown onDarkModeToggle={props.onDarkModeToggle} darkMode={props.darkMode} />
         </FlexRowCenteredY>
       </NavElement>

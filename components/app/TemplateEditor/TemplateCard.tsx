@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { BsArrowLeft, BsCheckLg, BsPencilSquare, BsXLg } from "react-icons/bs";
 import { BiEraser } from "react-icons/bi";
 import { FaArrowRight, FaRegCopy } from "react-icons/fa";
 import { FlexColContainer, FlexRowCenteredY, FlexColCentered, CardBaseLight, DividerHorizontal, FlexRowContainer, FlexColCenteredX } from "@/components/shared/styled-global-components";
 import tw from "tailwind-styled-components";
+import debounce from "lodash.debounce";
+import { updateTemplateMetaData } from "@/requests/templates";
+import { SaveStatusContext } from "@/context/SavedStatusContext";
 
 const InputBase = tw.input`
   border-1 
@@ -56,8 +59,23 @@ const HoverLabel = tw.label`
     right-[3rem]
 `
 
+const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count, word_limit, char_limit, setSaveStatus) => {
+    const update = async () => {
+        const response = await updateTemplateMetaData(template_id, userID, copy_count, word_limit, char_limit)
+        if (response) {
+            console.log("updated template")
+            setSaveStatus("Updated Click Count")
+            setTimeout(() => { setSaveStatus("") }, 2000)
+        } else {
+            setSaveStatus("Erro saving changes")
+            setTimeout(() => { setSaveStatus("") }, 2000)
+        }
+    }
+    update()
+}, 2000);
+
 const TemplateCard = (props: any, ref: any) => {
-    const { categoryIndex, template, index, handleTextTemplateChange, handleRemoveTemplate } = props;
+    const { categoryIndex, template, index, handleTextTemplateChange, handleRemoveTemplate, userID } = props;
     const templateIndex = index
     const [textTemplate, setTextTemplate] = useState(template);
     const [isEditActive, setIsEditActive] = useState<boolean>(false);
@@ -65,12 +83,14 @@ const TemplateCard = (props: any, ref: any) => {
     const [hasBeenCopied, setHasBeenCopied] = useState<boolean>(false);
     const [focusedInput, setFocusedInput] = useState<number | null>(null);
     const [stagedTemplate, setStagedTemplate] = useState(template);
-
+    const [copyCount, setCopyCount] = useState(template.copy_count)
+    const { setSaveStatus } = useContext(SaveStatusContext)
     useEffect(() => {
         setTextTemplate(template);
         setInputValues({});
     }, [template]);
 
+    //console.log(template)
     const handleEditActive = () => {
         setIsEditActive(prevIsEditActive => !prevIsEditActive);
         setStagedTemplate(textTemplate);  // copy current state to staging state
@@ -79,12 +99,17 @@ const TemplateCard = (props: any, ref: any) => {
     const handleApprove = () => {
         setIsEditActive(prevIsEditActive => !prevIsEditActive);
         setTextTemplate(stagedTemplate);  // copy staging state to current state
-        handleTextTemplateChange(categoryIndex, index, stagedTemplate); // update parent state
+        handleTextTemplateChange(categoryIndex, index, stagedTemplate, false);
     };
 
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newTemplate = { text: e.target.value, title: stagedTemplate.title, template_id: template.template_id };
         setStagedTemplate(newTemplate);  // update staging state
+    };
+
+    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newTemplate = { title: e.target.value, text: stagedTemplate.text, template_id: template.template_id };
+        setStagedTemplate(newTemplate);
     };
 
     const handleRemoveTextAreaText = () => {
@@ -93,11 +118,7 @@ const TemplateCard = (props: any, ref: any) => {
         setStagedTemplate(newTemplate);
     }
 
-    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newTemplate = { title: e.target.value, text: textTemplate.text, template_id: template.template_id };
-        setTextTemplate(newTemplate);
-        handleTextTemplateChange(categoryIndex, index, newTemplate);
-    };
+
 
     const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         setInputValues(prevInputValues => ({
@@ -130,11 +151,15 @@ const TemplateCard = (props: any, ref: any) => {
 
         navigator.clipboard.writeText(finalText)
             .then(() => {
+                const newCopyCount = copyCount + 1
                 setHasBeenCopied(true);
+                setCopyCount(newCopyCount)
+                delayedUpdateTemplateMetaData(template.template_id, userID, newCopyCount, textTemplate.word_limit, textTemplate.char_limit, setSaveStatus)
                 setTimeout(() => setHasBeenCopied(false), 2000);
             })
             .catch(err => console.log('Something went wrong', err));
     };
+
     let placeholderCount = 0; // this variable will track the number of placeholders encountered
     const regex = /#|\b\w+\b/g;
     const placeholders = (isEditActive ? stagedTemplate.text : textTemplate.text).match(regex)?.map((word: any, index: any) => {
@@ -147,7 +172,6 @@ const TemplateCard = (props: any, ref: any) => {
                     className={`${isEditActive ? "bg-gray-300 cursor-not-allowed dark:bg-gray-700" : "bg-slate-50 dark:bg-gray-800"} rounded `}
                 >
                     <CardInput
-
                         type="text"
                         placeholder={"Word " + (index + 1)}
                         value={!isEditActive && inputValues[count] || ''}
@@ -195,28 +219,38 @@ const TemplateCard = (props: any, ref: any) => {
 
             <FlexColContainer className="min-h-[15rem] w-full p-4 gap-4 md:min-w-[30rem]">
                 <FlexRowCenteredY className="justify-between gap-4">
-                    <InputBase
-                        type="text"
-                        value={textTemplate.title}
-                        className="text-2xl"
-                        onChange={handleTitleChange}
-                        placeholder="Template Title..."
-                    />
-                    <div className="group relative">
-                        <IconContainerWarning
-                            onClick={() => handleRemoveTemplate(index, template.template_id)}
-                        >
-                            <BsXLg />
-                            <HoverLabel className="w-[7rem] bg-red-200 text-red-700">Delete template</HoverLabel>
-                        </IconContainerWarning>
-                    </div>
+                    {isEditActive
+                        ?
+                        <InputBase
+                            type="text"
+                            value={stagedTemplate.title}
+                            className="text-2xl"
+                            onChange={handleTitleChange}
+                            placeholder="Template Title..."
+                        />
+
+
+                        : <h3 className="text-2xl">
+                            {textTemplate.title}
+                        </h3>
+                    }
+                    {isEditActive ?
+                        <span className="bg-yellow-200 text-yellow-800 p-2 rounded text-xs">Editing Mode</span>
+                        :
+                        <div className="group relative">
+                            <IconContainerWarning
+                                onClick={() => handleRemoveTemplate(index, template.template_id)}
+                            >
+                                <BsXLg />
+                                <HoverLabel className="w-[7rem] bg-red-200 text-red-700">Delete template</HoverLabel>
+                            </IconContainerWarning>
+                        </div>
+                    }
+
                 </FlexRowCenteredY>
                 <DividerHorizontal />
                 {isEditActive &&
-                    <FlexRowCenteredY className="justify-between">
-                        <h3 className="font-bold text-gray-600 dark:text-gray-400">Created Placeholders</h3>
-                        <span className="bg-yellow-200 text-yellow-800 p-2 rounded text-xs">Editing Mode</span>
-                    </FlexRowCenteredY>
+                    <h3 className="font-bold text-gray-600 dark:text-gray-400">Created Placeholders</h3>
                 }
                 {/**--INPUT GRID--*/}
                 <FlexRowContainer id="input-grid-component" className="w-full h-full gap-2">
@@ -246,7 +280,6 @@ const TemplateCard = (props: any, ref: any) => {
                                 </FlexColContainer>
                             }
                         </div>
-
                         :
                         <FlexColContainer className="gap-2 text-xs">
                             <FlexColContainer className="border-l-2 border-gray-100 ps-2 ms-2 min-w-[8rem]">
@@ -299,7 +332,7 @@ const TemplateCard = (props: any, ref: any) => {
                     </FlexRowContainer>
                     :
                     <FlexRowContainer className="w-full h-full gap-4">
-                        <div className="min-h-[10rem] w-full ps-4 border-l-4 border-green-500">
+                        <div className="min-h-[10rem] w-full ps-4 border-l-2 border-green-200">
                             <pre className="font-sans"
                                 style={{
                                     whiteSpace: "pre-wrap",
@@ -315,7 +348,7 @@ const TemplateCard = (props: any, ref: any) => {
                                     <HoverLabel className="w-[4rem]">Edit text</HoverLabel>
                                 </IconContainerNormal>
                                 {placeholderCount === 0 &&
-                                    <FlexRowCenteredY className="absolute right-[3rem] top-2 text-sm group-hover:hidden text-green-500 font-bold animate-slide duration-500 ease-in-out">
+                                    <FlexRowCenteredY className="absolute right-[3rem] top-2 text-sm group-hover:hidden text-green-600 font-bold animate-slide duration-500 ease-in-out">
                                         <span className="w-[5rem] text-center ">Click Edit</span>
                                         <FaArrowRight />
                                     </FlexRowCenteredY>

@@ -189,13 +189,18 @@ const Page: NextPage<PageProps> = () => {
     setTextTemplates(newTextTemplates);
   };
 
-  const handleTextTemplateChange = (categoryIndex: number, templateIndex: number, newTemplate: any) => {
+  const handleTextTemplateChange = async (categoryIndex: number, templateIndex: number, newTemplate: any, delayed = true) => {
     if (!userID) {
       console.error("User ID is null.");
       return;
     }
     const { template_id, text, title } = newTemplate
-    delayedUpdateTemplateText(template_id, userID, text, title, setSaveStatus)
+    if (delayed) {
+      delayedUpdateTemplateText(template_id, userID, text, title, setSaveStatus)
+    } else {
+      await updateTemplate(title, text, userID, template_id)
+    }
+
     setTextTemplates(prevTemplates => {
       const newTemplates = [...prevTemplates];
       // Copy the templates array of the category
@@ -330,6 +335,7 @@ const Page: NextPage<PageProps> = () => {
                             handleRemoveTemplate={handleRemoveTemplate}
                             handleTextTemplateChange={handleTextTemplateChange}
                             ref={templateRefs[templateIndex]}
+                            userID={userID}
                           />
                         )
                       }

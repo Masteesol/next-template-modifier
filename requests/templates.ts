@@ -66,6 +66,29 @@ export const updateTemplate = async (newTitle: string, newText: string, userID: 
     }
 }
 
+export const updateTemplateMetaData = async (template_id: string, userID: string, copy_count: number, word_limit: number, char_limit: number) => {
+    try {
+        const { data, error } = await supabase
+            .from("templates")
+            .update({
+                copy_count: copy_count,
+                word_limit: word_limit,
+                char_limit: char_limit
+            })
+            .eq("template_id", template_id)
+            .match({ user_id: userID })
+            .select()
+        if (error) {
+            return error
+        }
+        if (data) {
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const fetchTemplatesForUser = async (userId: string | undefined | null, setIsLoading: any) => {
     if (!userId) {
         return Promise.resolve(null); // or some other default value
@@ -79,9 +102,10 @@ export const fetchTemplatesForUser = async (userId: string | undefined | null, s
             category_id,
             category_name,
             order,
-            templates (template_id, title, text)
+            templates (template_id, title, text, copy_count, word_limit, char_limit)
           `)
             .eq('user_id', userId)
+
         if (error) {
             console.log("Fetch templates error", error)
             setIsLoading(false)
@@ -92,6 +116,36 @@ export const fetchTemplatesForUser = async (userId: string | undefined | null, s
         console.log("error", error)
     }
 };
+
+export const fetchOnlyTemplatesForUser = async (userId: string | undefined | null, setIsLoading: any) => {
+    if (!userId) {
+        return Promise.resolve(null); // or some other default value
+    }
+    //console.log("userId", userId)
+    try {
+        setIsLoading(true)
+        const { data, error } = await supabase
+            .from('templates')
+            .select(`
+            template_id,
+            text,
+            copy_count,
+            category_id
+          `)
+            .eq('user_id', userId)
+
+
+        if (error) {
+            console.log("Fetch templates error", error)
+            setIsLoading(false)
+        }
+        setIsLoading(false)
+        return data;
+    } catch (error) {
+        console.log("error", error)
+    }
+};
+
 
 interface Templates {
     title: string;

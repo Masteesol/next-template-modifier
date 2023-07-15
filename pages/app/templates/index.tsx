@@ -292,11 +292,12 @@ const Page: NextPage<PageProps> = () => {
                   setSelectedCategory={setSelectedCategory}
                 />
               }
+
             </FlexRowContainer>
             {/**Template Navigation List */}
             {viewCategories && <DividerPipe />}
             {
-              textTemplates.length > 0 &&
+              textTemplates && textTemplates.length > 0 &&
               textTemplates[selectedCategory].templates.length > 0 &&
               viewNavigation &&
               <TemplateNavigation
@@ -315,9 +316,9 @@ const Page: NextPage<PageProps> = () => {
           <FlexRowContainer className="gap-4 w-full justify-center overflow-y-auto h-full" id="templates-container">
             <FlexColContainer className="w-full max-w-[900px] gap-4 relative h-full">
               {textTemplates.length > 0 && textTemplates[0].category_name !== undefined ?
-                <FlexColContainer className="gap-4 h-full">
-                  <FlexColContainer className="max-h-[77vh] h-full" >
-                    <FlexColContainer className="gap-4 h-full">
+                <FlexColContainer className="gap-4">
+                  <FlexColContainer className="h-full" >
+                    <FlexColContainer className="gap-4">
                       {
                         textTemplates[selectedCategory].templates.length > 0
                         && textTemplates[selectedCategory].templates.map((template, templateIndex) =>
@@ -355,7 +356,9 @@ const Page: NextPage<PageProps> = () => {
                   <GuidingDescriptionText>Your templates will show up here, but first add a template category.</GuidingDescriptionText>
                 </FlexColContainer>
               }
+              {textTemplates[selectedCategory] && textTemplates[selectedCategory].templates.length > 1 && <div className="min-h-[30rem] w-full"></div>}
             </FlexColContainer>
+
           </FlexRowContainer>
 
         </FlexRowContainer>

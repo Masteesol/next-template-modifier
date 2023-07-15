@@ -9,16 +9,42 @@ import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
 
 import { AuthContext } from "@/context/AuthContext";
-import { CardBaseLightHover, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexColRowContainer, FlexRowCenteredY, H1 } from "@/components/shared/styled-global-components";
+import { CardBaseLightHover, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, FlexRowContainer, H1 } from "@/components/shared/styled-global-components";
 import {
     BsFileEarmarkText,
     BsPerson,
     BsCreditCard2Front,
 } from "react-icons/bs";
 
+const mockData = [
+    {
+        name: "Ticket Closed",
+        category: "Ticket Updates",
+        copiedCount: 21
+    },
+    {
+        name: "Friendly reminder",
+        category: "Payment reminders",
+        copiedCount: 8
+    },
+    {
+        name: "Ticket Update",
+        category: "Ticket Updates",
+        copiedCount: 14
+    },
+    {
+        name: "Ticket Closed",
+        category: "Ticket Updates",
+        copiedCount: 2
+    },
+]
+
 const Page = () => {
     //const { t } = useTranslation("common");
     const { isAuthenticated } = useContext(AuthContext)
+    const sortedData = mockData.sort((a, b) => {
+        return b.copiedCount - a.copiedCount
+    })
     return (
         <>
             <Head>
@@ -69,85 +95,30 @@ const Page = () => {
                         <FlexColContainer className="gap-4">
                             <h2>Statistics</h2>
                             {/**Will be replaced with real data */}
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                                <FlexColContainer className="gap-4">
-                                    <h3 className="text-xl">#1</h3>
-                                    <FlexColRowContainer className="gap-4 rounded shadow bg-white p-4">
-                                        <FlexColContainer className="w-full items-center md:items-start gap-2 truncate">
-                                            <h4 className="text-sm font-bold">Ticked Closed</h4>
-                                            <p className="text-gray-500 text-sm">Category: Ticket Updates</p>
-                                            <p className="text-gray-500 text-sm">Date Created: 14/07/23</p>
-                                        </FlexColContainer>
-                                        <FlexColCentered className="w-full md:w-[40%] ">
-                                            <span className="text-xs">
-                                                Times copied:
-                                            </span>
-                                            <span className="font-bold text-6xl text-green-600">
-                                                21
-                                            </span>
-
-                                        </FlexColCentered>
-                                    </FlexColRowContainer>
-                                </FlexColContainer>
-                                <FlexColContainer className="gap-4">
-                                    <h3 className="text-xl">#2</h3>
-                                    <FlexColRowContainer className="gap-4 rounded shadow bg-white p-4">
-                                        <FlexColContainer className="w-full items-center md:items-start gap-2 truncate">
-                                            <h4 className="text-sm font-bold">Ticked Closed</h4>
-                                            <p className="text-gray-500 text-sm">Category: Ticket Updates</p>
-                                            <p className="text-gray-500 text-sm">Date Created: 14/07/23</p>
-                                        </FlexColContainer>
-                                        <FlexColCentered className="w-full md:w-[40%] ">
-                                            <span className="text-xs">
-                                                Times copied:
-                                            </span>
-                                            <span className="font-bold text-6xl text-green-600">
-                                                8
-                                            </span>
-
-                                        </FlexColCentered>
-                                    </FlexColRowContainer>
-                                </FlexColContainer>
-                                <FlexColContainer className="gap-4">
-                                    <h3 className="text-xl">#3</h3>
-                                    <FlexColRowContainer className="gap-4 rounded shadow bg-white p-4">
-                                        <FlexColContainer className="w-full items-center md:items-start gap-2 truncate">
-                                            <h4 className="text-sm font-bold">Ticket Update</h4>
-                                            <p className="text-gray-500 text-sm">Category: Ticket Updates</p>
-                                            <p className="text-gray-500 text-sm">Date Created: 14/07/23</p>
-                                        </FlexColContainer>
-                                        <FlexColCentered className="w-full md:w-[40%] ">
-                                            <span className="text-xs">
-                                                Times copied:
-                                            </span>
-                                            <span className="font-bold text-6xl text-green-600">
-                                                14
-                                            </span>
-
-                                        </FlexColCentered>
-                                    </FlexColRowContainer>
-                                </FlexColContainer>
-                                <FlexColContainer className="gap-4">
-                                    <h3 className="text-xl">#4</h3>
-                                    <FlexColRowContainer className="gap-4 rounded shadow bg-white p-4">
-                                        <FlexColContainer className="w-[60%] items-center md:items-start gap-2 truncate">
-                                            <h4 className="text-sm font-bold">Friendly reminder </h4>
-                                            <p className="text-gray-500 text-sm">Category: Payment reminders</p>
-                                            <p className="text-gray-500 text-sm">Date Created: 14/07/23</p>
-                                        </FlexColContainer>
-                                        <FlexColCentered className="w-full md:w-[40%] ">
-                                            <span className="text-xs">
-                                                Times copied:
-                                            </span>
-                                            <span className="font-bold text-6xl text-green-600">
-                                                2
-                                            </span>
-                                        </FlexColCentered>
-                                    </FlexColRowContainer>
-                                </FlexColContainer>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                {sortedData.map((item, index) => {
+                                    const { name, category, copiedCount } = item
+                                    return <FlexColContainer className="gap-2" key={`count-card-${index}`}>
+                                        <h3 className="text-xl">#{index + 1}</h3>
+                                        <FlexRowContainer className="gap-4 rounded shadow bg-white p-4">
+                                            <FlexColContainer className="w-full gap-2 truncate text-xs md:text-sm">
+                                                <h4 className="font-bold">{name}</h4>
+                                                <p className="text-gray-500">Category: {category}</p>
+                                                <p className="text-gray-500">Date Created: 14/07/23</p>
+                                            </FlexColContainer>
+                                            <FlexColCentered className="w-full md:w-[40%] gap-2">
+                                                <span className="font-bold text-4xl md:text-6xl text-green-600">
+                                                    {copiedCount}
+                                                </span>
+                                                <span className="text-xs text-gray-500">
+                                                    Times Copied
+                                                </span>
+                                            </FlexColCentered>
+                                        </FlexRowContainer>
+                                    </FlexColContainer>
+                                })}
                             </div>
                         </FlexColContainer>
-
                     </FlexColContainer>
                 </FlexColCenteredX>
 

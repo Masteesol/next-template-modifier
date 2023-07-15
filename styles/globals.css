@@ -107,3 +107,15 @@ body {
     transform: rotate(360deg);
   }
 }
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(1rem);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

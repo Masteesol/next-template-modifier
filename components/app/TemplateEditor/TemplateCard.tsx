@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BsArrowLeft, BsCheckLg, BsPencilSquare, BsXLg } from "react-icons/bs";
 import { BiEraser } from "react-icons/bi";
-import { FaRegCopy } from "react-icons/fa";
+import { FaArrowRight, FaRegCopy } from "react-icons/fa";
 import { FlexColContainer, FlexRowCenteredY, FlexColCentered, CardBaseLight, DividerHorizontal, FlexRowContainer, FlexColCenteredX } from "@/components/shared/styled-global-components";
 import tw from "tailwind-styled-components";
 
@@ -170,7 +170,7 @@ const TemplateCard = (props: any, ref: any) => {
             );
         }
     });
-
+    //console.log(placeholders)
 
     const displayText = textTemplate.text.split("#").map((segment: any, index: number) => {
         if (index < textTemplate.text.split("#").length - 1) {
@@ -192,6 +192,7 @@ const TemplateCard = (props: any, ref: any) => {
     });
     return (
         <CardBaseLight className="w-full" ref={ref} key={template.template_id}>
+
             <FlexColContainer className="min-h-[15rem] w-full p-4 gap-4 md:min-w-[30rem]">
                 <FlexRowCenteredY className="justify-between gap-4">
                     <InputBase
@@ -217,26 +218,47 @@ const TemplateCard = (props: any, ref: any) => {
                         <span className="bg-yellow-200 text-yellow-800 p-2 rounded text-xs">Editing Mode</span>
                     </FlexRowCenteredY>
                 }
-                {!placeholders &&
-                    <p className="text-gray-500">Add your template text and use the <span className="font-bold text-green-600">#</span> symbol to create placeholders.
-                        Your placeholders will show up here and will be active once you apply the changes.</p>}
                 {/**--INPUT GRID--*/}
                 <FlexRowContainer id="input-grid-component" className="w-full h-full gap-2">
-                    <div className="w-full">
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-                            {placeholders}
-                        </div>
-                    </div>
-                    {!isEditActive &&
-                        <FlexColContainer className="border-l-2 border-gray-100 ps-2 ms-2">
-                            <div className="group relative">
-                                <IconContainerWarning
-                                    onClick={handleRemoveAllInputText}
-                                >
-                                    <BiEraser className="text-2xl" />
-                                    <HoverLabel className="w-[4rem] bg-red-200 text-red-700">Empty all</HoverLabel>
-                                </IconContainerWarning>
+                    {placeholderCount === 0
+                        ?
+                        <p className="text-gray-500">Add your template text and use the <span className="font-bold text-green-600">#</span> symbol to create placeholders.
+                            Your placeholders will show up here and will be active once you apply the changes.</p>
+                        :
+                        <div className="w-full">
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                                {placeholders}
                             </div>
+                        </div>
+                    }
+                    {!isEditActive ?
+                        <div>
+                            {placeholderCount > 0 &&
+                                <FlexColContainer className="border-l-2 border-gray-100 ps-2 ms-2">
+                                    <div className="group relative">
+                                        <IconContainerWarning
+                                            onClick={handleRemoveAllInputText}
+                                        >
+                                            <BiEraser className="text-2xl" />
+                                            <HoverLabel className="w-[4rem] bg-red-200 text-red-700">Empty all</HoverLabel>
+                                        </IconContainerWarning>
+                                    </div>
+                                </FlexColContainer>
+                            }
+                        </div>
+
+                        :
+                        <FlexColContainer className="gap-2 text-xs">
+                            <FlexColContainer className="border-l-2 border-gray-100 ps-2 ms-2 min-w-[8rem]">
+                                <FlexRowContainer className="justify-between">
+                                    <span>Characters:</span>
+                                    <span>{stagedTemplate.text.trim().length}</span>
+                                </FlexRowContainer>
+                                <FlexRowContainer className="justify-between">
+                                    <span>Words:</span>
+                                    <span>{stagedTemplate.text.trim().length > 0 ? stagedTemplate.text.trim().split(" ").length : 0}</span>
+                                </FlexRowContainer>
+                            </FlexColContainer>
                         </FlexColContainer>
                     }
                 </FlexRowContainer>
@@ -277,12 +299,13 @@ const TemplateCard = (props: any, ref: any) => {
                     </FlexRowContainer>
                     :
                     <FlexRowContainer className="w-full h-full gap-4">
-                        <div className="min-h-[10rem] w-full">
+                        <div className="min-h-[10rem] w-full ps-4 border-l-4 border-green-500">
                             <pre className="font-sans"
                                 style={{
                                     whiteSpace: "pre-wrap",
                                     wordWrap: "break-word"
-                                }}>{displayText}
+                                }}>
+                                {textTemplate.text.length > 0 ? displayText : <i className="text-gray-500">Empty Text</i>}
                             </pre>
                         </div>
                         <FlexColContainer className="justify-end">
@@ -291,6 +314,12 @@ const TemplateCard = (props: any, ref: any) => {
                                     <BsPencilSquare className="text-xl" />
                                     <HoverLabel className="w-[4rem]">Edit text</HoverLabel>
                                 </IconContainerNormal>
+                                {placeholderCount === 0 &&
+                                    <FlexRowCenteredY className="absolute right-[3rem] top-2 text-sm group-hover:hidden text-green-500 font-bold animate-slide duration-500 ease-in-out">
+                                        <span className="w-[5rem] text-center ">Click Edit</span>
+                                        <FaArrowRight />
+                                    </FlexRowCenteredY>
+                                }
                             </div>
                             <div className="group relative">
                                 <IconContainerNormal onClick={handleCopy}>

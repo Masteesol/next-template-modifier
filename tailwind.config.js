@@ -16,6 +16,9 @@ module.exports = {
         "overlay-dark": "rgba(0, 0, 0, 0.5)",
         primary: "#8EF3E3",
       },
+      animation: {
+        slide: "slide 2s ease-in-out infinite",
+      },
     },
   },
   plugins: [

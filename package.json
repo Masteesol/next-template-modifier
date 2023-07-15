@@ -31,7 +31,8 @@
     "react-movable": "^3.0.4",
     "react-use-cookie": "^1.4.0",
     "styled-components": "^5.3.9",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "word-count": "^0.2.2"
   },
   "devDependencies": {
     "@types/cookie": "^0.5.1",

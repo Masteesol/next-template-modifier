@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { BsArrowLeft, BsCheckLg, BsPencilSquare, BsXLg } from "react-icons/bs";
+import { BsArrowLeft, BsCheckLg, BsPencilSquare, BsRobot, BsSliders, BsXLg } from "react-icons/bs";
 import { BiEraser } from "react-icons/bi";
 import { FaArrowRight, FaRegCopy } from "react-icons/fa";
 import { FlexColContainer, FlexRowCenteredY, FlexColCentered, CardBaseLight, DividerHorizontal, FlexRowContainer, FlexColCenteredX } from "@/components/shared/styled-global-components";
@@ -7,6 +7,7 @@ import tw from "tailwind-styled-components";
 import debounce from "lodash.debounce";
 import { updateTemplateMetaData } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
+import wordCount from "word-count"
 
 const InputBase = tw.input`
   border-1 
@@ -285,11 +286,11 @@ const TemplateCard = (props: any, ref: any) => {
                             <FlexColContainer className="border-l-2 border-gray-100 ps-2 ms-2 min-w-[8rem]">
                                 <FlexRowContainer className="justify-between">
                                     <span>Characters:</span>
-                                    <span>{stagedTemplate.text.trim().length}</span>
+                                    <span>{stagedTemplate.text.replaceAll("#", "").trim().length}</span>
                                 </FlexRowContainer>
                                 <FlexRowContainer className="justify-between">
                                     <span>Words:</span>
-                                    <span>{stagedTemplate.text.trim().length > 0 ? stagedTemplate.text.trim().split(" ").length : 0}</span>
+                                    <span>{stagedTemplate.text.trim().length > 0 ? wordCount(stagedTemplate.text) : 0}</span>
                                 </FlexRowContainer>
                             </FlexColContainer>
                         </FlexColContainer>
@@ -306,14 +307,32 @@ const TemplateCard = (props: any, ref: any) => {
                         />
                         <FlexColCenteredX>
                             <div className="group relative">
-                                <IconContainerWarning
-                                    onClick={handleRemoveTextAreaText}
+                                <IconContainerNormal
+
                                 >
-                                    <BiEraser className="text-2xl" />
-                                    <HoverLabel className="w-[5rem] bg-red-200 text-red-700">Remove text</HoverLabel>
-                                </IconContainerWarning>
+                                    <BsRobot className="text-2xl" />
+                                    <HoverLabel className="w-[6rem] ">Generate Text</HoverLabel>
+                                </IconContainerNormal>
                             </div>
+                            <div className="group relative">
+                                <IconContainerNormal
+
+                                >
+                                    <BsSliders className="text-2xl" />
+                                    <HoverLabel className="w-[6rem] ">Text Settings</HoverLabel>
+                                </IconContainerNormal>
+                            </div>
+
                             <FlexColContainer className="mt-auto">
+                                <DividerHorizontal className="border-gray-100" />
+                                <div className="group relative">
+                                    <IconContainerWarning
+                                        onClick={handleRemoveTextAreaText}
+                                    >
+                                        <BiEraser className="text-2xl" />
+                                        <HoverLabel className="w-[5rem] bg-red-200 text-red-700">Remove text</HoverLabel>
+                                    </IconContainerWarning>
+                                </div>
                                 <DividerHorizontal className="border-gray-100" />
                                 <div className="group relative">
                                     <IconContainerNormal onClick={handleApprove}>

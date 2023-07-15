@@ -40,7 +40,7 @@ const Page = () => {
             if (data) {
                 //console.log("Templates", data)
                 const templatesContainer = data
-                const templatesModified: any = [];
+                const templatesModified: TemplateModified[] = [];
 
                 templatesContainer.forEach(container => {
                     const validTemplates = container.templates.filter(template => template.copy_count !== 0);
@@ -51,7 +51,8 @@ const Page = () => {
                         });
                     });
                 });
-                setTextTemplates(templatesModified);
+
+                setTextTemplates(templatesModified.sort((a, b) => b.copy_count - a.copy_count));
             }
         }).catch((error) => {
             console.error("Error fetching orders: ", error)

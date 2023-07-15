@@ -51,7 +51,7 @@ const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
             <IdComponent ref={breadcrumbsRef} />
             <FlexColContainer
               id="main"
-              className="w-full  overflow-auto bg-slate-50 dark:bg-gray-800 box-border"
+              className="w-full overflow-auto bg-slate-50 dark:bg-gray-800 box-border"
             >
               {
                 isLoading

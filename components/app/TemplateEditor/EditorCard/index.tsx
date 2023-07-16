@@ -74,7 +74,8 @@ const TemplateCard = (props: any, ref: any) => {
     useEffect(() => {
         setTextTemplate(template);
         setInputValues({});
-    }, [template]);
+        setCharLimitExceeded(false)
+    }, [template, isEditActive]);
 
     //console.log(template)
     const handleEditActive = () => {

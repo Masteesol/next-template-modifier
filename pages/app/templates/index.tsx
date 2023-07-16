@@ -19,7 +19,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 //import { useTranslation } from "next-i18next";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import { debounce } from 'lodash';
-import ForwardedRefTemplateCard from "@/components/app/TemplateEditor/TemplateCard";
+import ForwardedRefTemplateCard from "@/components/app/TemplateEditor/EditorCard";
 import CategoryList, { CategoryHeaderButton } from "@/components/app/TemplateEditor/categories/CategoryList";
 import GuidingDescriptionText from "@/components/app/TemplateEditor/GuidingDescription";
 import cookie from 'cookie'

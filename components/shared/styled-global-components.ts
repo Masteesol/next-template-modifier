@@ -24,7 +24,7 @@ export const GenericButton = tw.button`
     rounded
     px-4
     py-2
-    text-base
+    text-sm
     hover:opacity-50
     transition
     duration-150
@@ -81,6 +81,33 @@ export const InputBase = tw.input`
   focus:border-1 
   focus:border-green-200 
   focus:ring-green-200
+`
+
+interface IconContainerProps {
+    disabled: boolean;
+}
+
+
+const IconContainerStyles = `
+    dark:text-white
+    text-slate-800
+    hover:bg-green-200
+    dark:hover:bg-green-400
+    hover:text-green-900
+    dark:hover:text-green-900
+`
+
+export const IconContainer = tw.button`
+  flex
+  items-center
+  justify-center
+  rounded 
+  p-2 
+  cursor-pointer
+`
+
+export const IconContainerNormal = tw(IconContainer) <IconContainerProps>`
+  ${({ disabled }) => (!disabled ? IconContainerStyles : "text-gray-300 cursor-not-allowed")}
 `
 
 //Card styles-----------------------------------------------------------------
@@ -309,6 +336,31 @@ export const FlexRowCenteredY = tw.div`
     items-center
 `;
 
+interface FlexExpandableProps {
+    $expanded: boolean
+}
+
+export const FlexExpandable = tw.div <FlexExpandableProps>`
+    flex
+    overflow-hidden 
+    transition-all 
+    ease-in-out
+    w-full
+    ${(p) => (p.$expanded ? "h-[40rem] py-4" : "h-0")}
+`
+
+export const GridSm2Lg4 = tw.div`
+    grid 
+    grid-cols-2 
+    lg:grid-cols-4
+`
+
+export const GridSm1Md2Lg4 = tw.div`
+    grid 
+    grid-cols-1
+    md:grid-cols-2 
+    lg:grid-cols-4
+`
 
 //Form styling
 

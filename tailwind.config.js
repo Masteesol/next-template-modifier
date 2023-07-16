@@ -17,7 +17,7 @@ module.exports = {
         primary: "#8EF3E3",
       },
       animation: {
-        slide: "slide 2s ease-in-out infinite",
+        slide: "slide 1s ease-in-out infinite",
       },
     },
   },

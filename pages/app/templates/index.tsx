@@ -96,6 +96,15 @@ const checkLocalStorage = (key: string) => {
   return null;
 }
 
+
+const tierLimits = {
+  char: 1000,
+}
+
+interface tierLimit {
+  char: number;
+}
+
 const Page: NextPage<PageProps> = () => {
   //const { t } = useTranslation("common");
   const [selectedCategory, setSelectedCategory] = useState(0);
@@ -106,6 +115,9 @@ const Page: NextPage<PageProps> = () => {
   const { setIsLoading } = useContext(LoadingContext);
   const { setSaveStatus } = useContext(SaveStatusContext)
   const { isAuthenticated } = useContext(AuthContext)
+
+  const [subscriptionLimits, setSubscriptionLimits] = useState<tierLimit>()
+
   const userID = Cookies.get("user_id")
   /* eslint-disable react-hooks/exhaustive-deps */
 
@@ -115,6 +127,8 @@ const Page: NextPage<PageProps> = () => {
         console.log("Templates", data)
         const templatesContainers: TemplatesContainer[] = data.sort((a, b) => a.order - b.order);
         setTextTemplates(templatesContainers);
+        //needs to come from DB
+        setSubscriptionLimits(tierLimits)
       }
     }).catch((error) => {
       console.error("Error fetching orders: ", error)
@@ -336,6 +350,7 @@ const Page: NextPage<PageProps> = () => {
                             handleTextTemplateChange={handleTextTemplateChange}
                             ref={templateRefs[templateIndex]}
                             userID={userID}
+                            subscriptionLimits={subscriptionLimits}
                           />
                         )
                       }

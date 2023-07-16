@@ -19,6 +19,7 @@ interface props {
     setStagedMetaData: any;
     textTemplate: any;
     handleUpdateTemplateMetaData: any;
+    subscriptionLimits: any;
 
 }
 
@@ -29,7 +30,8 @@ const index = (props: props) => {
         stagedMetaData,
         textTemplate,
         setStagedMetaData,
-        handleUpdateTemplateMetaData
+        handleUpdateTemplateMetaData,
+        subscriptionLimits
     } = props
 
     return (
@@ -61,8 +63,8 @@ const index = (props: props) => {
                                 />
                             </FlexColContainer>
                             <FlexColContainer className="gap-2">
-                                <h4 className="text-sm text-gray-500">Max Character Limit</h4>
-                                <span className="text-lg">1000</span>
+                                <h4 className="text-sm text-gray-500">Default Max Character Limit</h4>
+                                <span className="text-lg">{subscriptionLimits.char}</span>
                             </FlexColContainer>
                             <FlexColContainer className="gap-2 h-full col-span-1">
                                 <FlexRowCenteredY className="justify-between">
@@ -78,8 +80,8 @@ const index = (props: props) => {
                                 />
                             </FlexColContainer>
                             <FlexColContainer className="gap-2">
-                                <h4 className="text-sm text-gray-500">Max Word Limit</h4>
-                                <span className="text-lg">250</span>
+                                <h4 className="text-sm text-gray-500">Default Word Limit</h4>
+                                <i className="text-base">See character limit</i>
                             </FlexColContainer>
 
 

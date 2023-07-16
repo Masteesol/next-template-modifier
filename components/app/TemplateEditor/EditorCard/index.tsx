@@ -21,6 +21,7 @@ import EditModeToolbar from "./subcomponents/EditModeToolbar";
 import RenderedTextInterface from "./subcomponents/RenderedTextInterface";
 import ProductionModeToolbar from "./subcomponents/ProductionModeToolbar";
 import Topbar from "./subcomponents/Topbar";
+import { Badge } from "flowbite-react";
 
 const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count, word_limit, char_limit, setSaveStatus) => {
     const update = async () => {
@@ -43,8 +44,18 @@ interface MetadataType {
     copy_count: number
 }
 
+
 const TemplateCard = (props: any, ref: any) => {
-    const { categoryIndex, template, index, handleTextTemplateChange, handleRemoveTemplate, userID } = props;
+    const {
+        categoryIndex,
+        template,
+        index,
+        handleTextTemplateChange,
+        handleRemoveTemplate,
+        userID,
+        subscriptionLimits
+    } = props;
+
     const templateIndex = index
     const [textTemplate, setTextTemplate] = useState(template);
     const [isEditActive, setIsEditActive] = useState<boolean>(false);
@@ -56,6 +67,7 @@ const TemplateCard = (props: any, ref: any) => {
     const [stagedMetaData, setStagedMetaData] = useState<MetadataType | null>()
     const [expandedAI, setExpandedAI] = useState(false)
     const [expandedTextSettings, setExpandedTextSettings] = useState(false)
+    const [charLimitExceeded, setCharLimitExceeded] = useState(false)
 
     const { setSaveStatus } = useContext(SaveStatusContext)
 
@@ -78,14 +90,23 @@ const TemplateCard = (props: any, ref: any) => {
     };
 
     const handleApprove = () => {
-        setIsEditActive(prevIsEditActive => !prevIsEditActive);
-        setTextTemplate(stagedTemplate);  // copy staging state to current state
-        handleTextTemplateChange(categoryIndex, index, stagedTemplate, false);
+        if (!charLimitExceeded) {
+            setIsEditActive(prevIsEditActive => !prevIsEditActive);
+            setTextTemplate(stagedTemplate);  // copy staging state to current state
+            handleTextTemplateChange(categoryIndex, index, stagedTemplate, false);
+        }
     };
 
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newTemplate = { text: e.target.value, title: stagedTemplate.title, template_id: template.template_id };
-        setStagedTemplate(newTemplate);  // update staging state
+        const isWithingLimits = subscriptionLimits.char >= e.target.value.length
+        if (isWithingLimits) {
+            setStagedTemplate(newTemplate);  // update staging state
+            setCharLimitExceeded(false)
+        } else {
+            setStagedTemplate(newTemplate);
+            setCharLimitExceeded(true)
+        }
     };
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -231,7 +252,11 @@ const TemplateCard = (props: any, ref: any) => {
                 />
                 <DividerHorizontal />
                 {isEditActive &&
-                    <h3 className="font-bold text-gray-600 dark:text-gray-400">Created Placeholders</h3>
+                    <FlexRowCenteredY className="justify-between">
+                        <h3 className="font-bold text-gray-600 dark:text-gray-400">Created Placeholders</h3>
+                        {charLimitExceeded && <Badge color="failure">Character Limit Exceeded</Badge>}
+                    </FlexRowCenteredY>
+
                 }
                 {/**--INPUT GRID--*/}
                 <InputGridSection
@@ -240,6 +265,9 @@ const TemplateCard = (props: any, ref: any) => {
                     isEditActive={isEditActive}
                     handleRemoveAllInputText={handleRemoveAllInputText}
                     stagedTemplate={stagedTemplate}
+                    textTemplate={textTemplate}
+                    subscriptionLimits={subscriptionLimits}
+
                 />
                 {/**--END INPUT GRID--*/}
                 {placeholderCount > 0 && <DividerHorizontal />}
@@ -256,6 +284,7 @@ const TemplateCard = (props: any, ref: any) => {
                                 setStagedMetaData={setStagedMetaData}
                                 textTemplate={textTemplate}
                                 handleUpdateTemplateMetaData={handleUpdateTemplateMetaData}
+                                subscriptionLimits={subscriptionLimits}
                             />
                             {/**--AI TEXT GENERATION AREA-- */}
                             <AITextGenerationSection
@@ -276,6 +305,7 @@ const TemplateCard = (props: any, ref: any) => {
                                 handleApprove={handleApprove}
                                 handleEditActive={handleEditActive}
                                 setExpandedTextSettings={setExpandedTextSettings}
+                                charLimitExceeded={charLimitExceeded}
                             />
                         </FlexRowContainer>
                     </FlexColContainer>

@@ -15,7 +15,8 @@ interface ComponentProps {
     handleRemoveTextAreaText: any;
     handleApprove: any;
     handleEditActive: any;
-    setExpandedTextSettings: any
+    setExpandedTextSettings: any;
+    charLimitExceeded: boolean;
 }
 
 const EditModeToolbar = (props: ComponentProps) => {
@@ -26,7 +27,8 @@ const EditModeToolbar = (props: ComponentProps) => {
         setExpandedTextSettings,
         handleRemoveTextAreaText,
         handleApprove,
-        handleEditActive
+        handleEditActive,
+        charLimitExceeded
     } = props
     return (
         <FlexColCenteredX>
@@ -63,7 +65,7 @@ const EditModeToolbar = (props: ComponentProps) => {
                 </div>
                 <DividerHorizontal className="border-gray-100" />
                 <div className="group relative">
-                    <IconContainerNormal onClick={handleApprove} disabled={false}>
+                    <IconContainerNormal onClick={handleApprove} disabled={charLimitExceeded}>
                         <BsCheckLg className="text-2xl" />
                         <HoverLabel className="w-[6rem]">Apply changes</HoverLabel>
                     </IconContainerNormal>

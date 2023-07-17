@@ -213,6 +213,7 @@ const Page: NextPage<PageProps> = () => {
       delayedUpdateTemplateText(template_id, userID, text, title, setSaveStatus)
     } else {
       await updateTemplate(title, text, userID, template_id)
+      console.log(("first"))
     }
 
     setTextTemplates(prevTemplates => {

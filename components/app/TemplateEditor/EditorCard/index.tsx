@@ -38,12 +38,6 @@ const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count,
     update()
 }, 2000);
 
-interface MetadataType {
-    word_limit: number
-    char_limit: number,
-    copy_count: number
-}
-
 
 const TemplateCard = (props: any, ref: any) => {
     const {
@@ -64,7 +58,6 @@ const TemplateCard = (props: any, ref: any) => {
     const [focusedInput, setFocusedInput] = useState<number | null>(null);
     const [stagedTemplate, setStagedTemplate] = useState(template);
     const [copyCount, setCopyCount] = useState(template.copy_count)
-    const [stagedMetaData, setStagedMetaData] = useState<MetadataType | null>()
     const [expandedAI, setExpandedAI] = useState(false)
     const [expandedTextSettings, setExpandedTextSettings] = useState(false)
     const [charLimitExceeded, setCharLimitExceeded] = useState(false)
@@ -75,37 +68,32 @@ const TemplateCard = (props: any, ref: any) => {
         setTextTemplate(template);
         setInputValues({});
         setCharLimitExceeded(false)
-    }, [template, isEditActive]);
+    }, [template]);
 
     //console.log(template)
     const handleEditActive = () => {
+        console.log("textTemplate", textTemplate)
         setIsEditActive(prevIsEditActive => !prevIsEditActive);
         setStagedTemplate(textTemplate);
-
-        const metaData = {
-            word_limit: textTemplate.word_limit,
-            char_limit: textTemplate.char_limit,
-            copy_count: textTemplate.copy_count
-        }
-        setStagedMetaData(metaData)
+        setCharLimitExceeded(false)
     };
 
     const handleApprove = () => {
         if (!charLimitExceeded) {
             setIsEditActive(prevIsEditActive => !prevIsEditActive);
-            setTextTemplate(stagedTemplate);  // copy staging state to current state
+            setTextTemplate(stagedTemplate);
             handleTextTemplateChange(categoryIndex, index, stagedTemplate, false);
+            //handleUpdateTemplateMetaData()
         }
     };
 
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newTemplate = { text: e.target.value, title: stagedTemplate.title, template_id: template.template_id };
         const isWithingLimits = subscriptionLimits.char >= e.target.value.length
         if (isWithingLimits) {
-            setStagedTemplate(newTemplate);  // update staging state
+            stagedTemplate && setStagedTemplate({ ...stagedTemplate, text: e.target.value, title: stagedTemplate.title })
             setCharLimitExceeded(false)
         } else {
-            setStagedTemplate(newTemplate);
+            stagedTemplate && setStagedTemplate({ ...stagedTemplate, text: e.target.value, title: stagedTemplate.title })
             setCharLimitExceeded(true)
         }
     };
@@ -163,26 +151,6 @@ const TemplateCard = (props: any, ref: any) => {
             })
             .catch(err => console.log('Something went wrong', err));
     };
-
-    const handleUpdateTemplateMetaData = async () => {
-        if (stagedMetaData) {
-            if (stagedMetaData.word_limit && stagedMetaData.char_limit) {
-                const response = await updateTemplateMetaData(template.template_id, userID, stagedMetaData.copy_count, stagedMetaData.word_limit, stagedMetaData.char_limit)
-                if (response) {
-                    setSaveStatus("Saved Changes")
-                    setTimeout(() => { setSaveStatus("") }, 2000)
-                    setTextTemplate({ ...textTemplate, word_limit: stagedMetaData.word_limit, char_limit: stagedMetaData.char_limit })
-                    console.log("Updated metadata successfully")
-                } else {
-                    setSaveStatus("Error saving changes")
-                    setTimeout(() => { setSaveStatus("") }, 2000)
-                    console.log("Updated metadata successfully")
-                }
-            } else {
-                console.log("Metadata input not set")
-            }
-        }
-    }
 
     let placeholderCount = 0; // this variable will track the number of placeholders encountered
     const regex = /#|\b\w+\b/g;
@@ -281,10 +249,9 @@ const TemplateCard = (props: any, ref: any) => {
                             <TemplateSettingsSection
                                 expandedTextSettings={expandedTextSettings}
                                 setExpandedTextSettings={setExpandedTextSettings}
-                                stagedMetaData={stagedMetaData}
-                                setStagedMetaData={setStagedMetaData}
+                                stagedTemplate={stagedTemplate}
+                                setStagedTemplate={setStagedTemplate}
                                 textTemplate={textTemplate}
-                                handleUpdateTemplateMetaData={handleUpdateTemplateMetaData}
                                 subscriptionLimits={subscriptionLimits}
                             />
                             {/**--AI TEXT GENERATION AREA-- */}

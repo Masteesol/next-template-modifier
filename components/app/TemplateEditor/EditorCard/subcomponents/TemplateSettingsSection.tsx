@@ -4,7 +4,6 @@ import {
     FlexRowCenteredY,
     FlexExpandable,
     HollowButton,
-    SubmitButton,
     IconContainer
 } from "@/components/shared/styled-global-components";
 
@@ -15,10 +14,9 @@ import { CardInput } from '../styles';
 interface props {
     expandedTextSettings: boolean;
     setExpandedTextSettings: any;
-    stagedMetaData: any;
-    setStagedMetaData: any;
+    stagedTemplate: any;
+    setStagedTemplate: any;
     textTemplate: any;
-    handleUpdateTemplateMetaData: any;
     subscriptionLimits: any;
 
 }
@@ -27,10 +25,9 @@ const index = (props: props) => {
     const {
         expandedTextSettings,
         setExpandedTextSettings,
-        stagedMetaData,
+        stagedTemplate,
         textTemplate,
-        setStagedMetaData,
-        handleUpdateTemplateMetaData,
+        setStagedTemplate,
         subscriptionLimits
     } = props
 
@@ -58,8 +55,8 @@ const index = (props: props) => {
                                     placeholder="For example 200"
                                     className="p-2"
                                     type="number"
-                                    value={stagedMetaData?.char_limit ? stagedMetaData?.char_limit : ""}
-                                    onChange={(e) => { stagedMetaData && setStagedMetaData({ ...stagedMetaData, char_limit: parseInt(e.target.value) }) }}
+                                    value={stagedTemplate?.char_limit ? stagedTemplate?.char_limit : ""}
+                                    onChange={(e) => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, char_limit: parseInt(e.target.value) }) }}
                                 />
                             </FlexColContainer>
                             <FlexColContainer className="gap-2">
@@ -75,8 +72,8 @@ const index = (props: props) => {
                                     type="number"
                                     placeholder="For example 40"
                                     className="p-2"
-                                    value={stagedMetaData?.word_limit ? stagedMetaData?.word_limit : ""}
-                                    onChange={(e) => { stagedMetaData && setStagedMetaData({ ...stagedMetaData, word_limit: parseInt(e.target.value) }) }}
+                                    value={stagedTemplate?.word_limit ? stagedTemplate?.word_limit : ""}
+                                    onChange={(e) => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, word_limit: parseInt(e.target.value) }) }}
                                 />
                             </FlexColContainer>
                             <FlexColContainer className="gap-2">
@@ -89,24 +86,24 @@ const index = (props: props) => {
                         <div className="grid grid-cols-2 gap-2">
                             <FlexColContainer className="gap-2">
                                 <h4 className="text-sm text-gray-500">Copy Counter</h4>
-                                <p>Current: <span>{stagedMetaData?.copy_count}</span></p>
+                                <p>Current: <span>{stagedTemplate?.copy_count}</span></p>
                             </FlexColContainer>
                             <FlexColContainer className="items-end">
                                 <HollowButton
                                     className="text-sm"
-                                    onClick={() => { stagedMetaData && setStagedMetaData({ ...stagedMetaData, copy_count: 0 }) }}
+                                    onClick={() => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, copy_count: 0 }) }}
                                 >Reset Count
                                 </HollowButton>
                             </FlexColContainer>
                             <div></div>
 
                         </div>
-                        <div></div>
+                        {/* <div></div>
                         <SubmitButton
                             className="text-sm"
                             onClick={handleUpdateTemplateMetaData}
                         >
-                            Save Changes</SubmitButton>
+                            Save Changes</SubmitButton> */}
                     </div>
 
                 </FlexColContainer>

@@ -13,6 +13,7 @@ import { useState } from "react"
 import { Badge, RangeSlider } from "flowbite-react";
 import { BsArrowCounterclockwise, BsXLg } from 'react-icons/bs';
 import { CardInput } from '../styles';
+import { BiEraser } from 'react-icons/bi';
 
 interface props {
     expandedTextSettings: boolean;
@@ -23,7 +24,6 @@ interface props {
 
 }
 
-
 const TemplatesSettingsSection = (props: props) => {
     const [isLimitActive, setIsLimitActive] = useState(false)
     const {
@@ -33,6 +33,17 @@ const TemplatesSettingsSection = (props: props) => {
         textTemplate,
         setStagedTemplate,
     } = props
+
+    const handleWordChange = (e: any) => {
+        const value = e.target.value
+        const valueChecked = value === "" ? null : parseInt(value)
+        stagedTemplate && setStagedTemplate({ ...stagedTemplate, word_limit: valueChecked })
+    }
+    const handleCharChange = (e: any) => {
+        const value = e.target.value
+        const valueChecked = value === "" ? null : parseInt(value)
+        stagedTemplate && setStagedTemplate({ ...stagedTemplate, char_limit: valueChecked })
+    }
 
     return (
         <FlexExpandable
@@ -49,46 +60,82 @@ const TemplatesSettingsSection = (props: props) => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 h-full">
                     <FlexColContainer className="gap-4 h-full">
-                        <Toggle isLimitActive={isLimitActive} setIsLimitActive={setIsLimitActive} />
+                        <span>
+                            <Toggle isLimitActive={isLimitActive} setIsLimitActive={setIsLimitActive} />
+                        </span>
                         <div className="grid grid-cols-2 gap-4 -fulhl">
                             <FlexColContainer className="gap-4">
                                 <FlexRowCenteredY className="justify-between">
                                     <h4 className="text-sm text-gray-500">Word Limit</h4>
                                     {!textTemplate.word_limit && <Badge color="warning">Not set</Badge>}
                                 </FlexRowCenteredY>
-                                <CardInput
-                                    type="number"
-                                    placeholder="For example 40"
-                                    className="p-2"
-                                    value={stagedTemplate?.word_limit ? stagedTemplate?.word_limit : ""}
-                                    onChange={(e) => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, word_limit: parseInt(e.target.value) }) }}
-                                />
-                                <RangeSlider
-                                    min={5}
-                                    max={150}
-                                    className=""
-                                    defaultValue={stagedTemplate?.word_limit ? stagedTemplate?.word_limit : 0}
-                                    onChange={(e) => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, word_limit: parseInt(e.target.value) }) }}
-                                />
+                                <FlexRowCenteredY className="bg-slate-50 rounded dark:bg-slate-800">
+                                    <CardInput
+                                        type="number"
+                                        placeholder="For example 40"
+                                        className="p-2 w-full"
+                                        value={stagedTemplate?.word_limit ? stagedTemplate?.word_limit : ""}
+                                        onChange={handleWordChange}
+                                    />
+                                    <div className="">
+                                        <button
+                                            onClick={() => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, word_limit: null }) }}
+                                            className={`p-2 border-1 text-lg text-gray-500 hover:text-gray-300 `}
+                                        >
+                                            <BiEraser />
+                                        </button>
+                                    </div>
+                                </FlexRowCenteredY>
+                                <FlexRowCenteredY className="gap-2">
+                                    <div className="w-full">
+                                        <RangeSlider
+                                            min={5}
+                                            max={150}
+                                            className=""
+                                            defaultValue={stagedTemplate?.word_limit ? stagedTemplate?.word_limit : 0}
+                                            onChange={handleWordChange}
+                                        />
+                                    </div>
+                                    <span className="text-gray-500">
+                                        150
+                                    </span>
+                                </FlexRowCenteredY>
                             </FlexColContainer>
                             <FlexColContainer className="gap-4">
                                 <FlexRowCenteredY className="justify-between">
                                     <h4 className="text-sm text-gray-500">Character Limit</h4>
                                     {!textTemplate.char_limit && <Badge color="warning">Not set</Badge>}
                                 </FlexRowCenteredY>
-                                <CardInput
-                                    placeholder="For example 200"
-                                    className="p-2"
-                                    type="number"
-                                    value={stagedTemplate?.char_limit ? stagedTemplate?.char_limit : ""}
-                                    onChange={(e) => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, char_limit: parseInt(e.target.value) }) }}
-                                />
-                                <RangeSlider
-                                    min={25}
-                                    max={1000}
-                                    defaultValue={stagedTemplate?.char_limit ? stagedTemplate?.char_limit : 0} className=""
-                                    onChange={(e) => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, char_limit: parseInt(e.target.value) }) }}
-                                />
+                                <FlexRowCenteredY className="bg-slate-50 rounded dark:bg-slate-800">
+                                    <CardInput
+                                        placeholder="For example 200"
+                                        className="p-2 w-full"
+                                        type="number"
+                                        value={stagedTemplate?.char_limit ? stagedTemplate?.char_limit : ""}
+                                        onChange={handleCharChange}
+                                    />
+                                    <div>
+                                        <button
+                                            className={`p-2 border-1 text-lg text-gray-500 hover:text-gray-300 `}
+                                            onClick={() => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, char_limit: null }) }}
+                                        >
+                                            <BiEraser />
+                                        </button>
+                                    </div>
+                                </FlexRowCenteredY>
+                                <FlexRowCenteredY className="gap-2">
+                                    <div className="w-full">
+                                        <RangeSlider
+                                            min={25}
+                                            max={1000}
+                                            defaultValue={stagedTemplate?.char_limit ? stagedTemplate?.char_limit : 0} className=""
+                                            onChange={handleCharChange}
+                                        />
+                                    </div>
+                                    <span className="text-gray-500">
+                                        1000
+                                    </span>
+                                </FlexRowCenteredY>
                             </FlexColContainer>
                         </div>
                     </FlexColContainer>
@@ -127,7 +174,7 @@ export const Toggle = ({ isLimitActive, setIsLimitActive }: any) => {
     };
 
     return (
-        <label className="relative flex cursor-pointer">
+        <label className="relative cursor-pointer inline-flex">
             <input
                 type="checkbox"
                 checked={isLimitActive}
@@ -145,3 +192,4 @@ export const Toggle = ({ isLimitActive, setIsLimitActive }: any) => {
 };
 
 export default TemplatesSettingsSection
+

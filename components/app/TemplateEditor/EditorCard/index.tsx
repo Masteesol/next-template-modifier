@@ -23,7 +23,7 @@ import ProductionModeToolbar from "./subcomponents/ProductionModeToolbar";
 import Topbar from "./subcomponents/Topbar";
 import { Badge } from "flowbite-react";
 import Footer from "./subcomponents/Footer";
-import { saveMessage } from "@/utils/helpers";
+import { objectsAreEqual, saveMessage } from "@/utils/helpers";
 
 const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count, word_limit, char_limit, setSaveStatus) => {
     const update = async () => {
@@ -63,6 +63,7 @@ const TemplateCard = (props: any, ref: any) => {
     const [expandedAI, setExpandedAI] = useState(false)
     const [expandedTextSettings, setExpandedTextSettings] = useState(false)
     const [charLimitExceeded, setCharLimitExceeded] = useState(false)
+    const [isUnSaved, setIsUnsaved] = useState(false)
 
     const { setSaveStatus } = useContext(SaveStatusContext)
 
@@ -87,6 +88,12 @@ const TemplateCard = (props: any, ref: any) => {
             handleTextTemplateChange(categoryIndex, index, stagedTemplate, false);
         }
     };
+
+    useEffect(() => {
+        const unSavedTextChanges = !objectsAreEqual(stagedTemplate, textTemplate)
+        setIsUnsaved(unSavedTextChanges)
+    }, [stagedTemplate, textTemplate])
+
 
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const isWithingLimits = subscriptionLimits.char >= e.target.value.length
@@ -228,6 +235,7 @@ const TemplateCard = (props: any, ref: any) => {
                     textTemplate={textTemplate}
                     index={index}
                     template={template}
+                    isUnSaved={isUnSaved}
                 />
                 <DividerHorizontal />
                 {isEditActive &&
@@ -281,6 +289,7 @@ const TemplateCard = (props: any, ref: any) => {
                                 handleEditActive={handleEditActive}
                                 setExpandedTextSettings={setExpandedTextSettings}
                                 charLimitExceeded={charLimitExceeded}
+                                isUnSaved={isUnSaved}
                             />
                         </FlexRowContainer>
                     </FlexColContainer>

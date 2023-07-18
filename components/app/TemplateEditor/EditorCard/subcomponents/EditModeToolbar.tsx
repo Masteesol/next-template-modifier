@@ -18,6 +18,7 @@ interface ComponentProps {
     handleEditActive: any;
     setExpandedTextSettings: any;
     charLimitExceeded: boolean;
+    isUnSaved: boolean
 }
 
 const EditModeToolbar = (props: ComponentProps) => {
@@ -29,7 +30,8 @@ const EditModeToolbar = (props: ComponentProps) => {
         handleRemoveTextAreaText,
         handleApprove,
         handleEditActive,
-        charLimitExceeded
+        charLimitExceeded,
+        isUnSaved
     } = props
     return (
         <FlexColCenteredX>
@@ -66,9 +68,9 @@ const EditModeToolbar = (props: ComponentProps) => {
                 </div>
                 <DividerHorizontal className="border-gray-100" />
                 <div className="group relative">
-                    <IconContainerNormal onClick={handleApprove} disabled={charLimitExceeded}>
+                    <IconContainerNormal onClick={handleApprove} disabled={charLimitExceeded || !isUnSaved}>
                         <FiSave className="text-2xl" />
-                        <HoverLabel className="w-[10rem]">Save and apply changes</HoverLabel>
+                        <HoverLabel className="w-[9rem]">{isUnSaved ? "Save and apply changes" : "No changes to save"}</HoverLabel>
                     </IconContainerNormal>
                 </div>
                 <div className="group relative">

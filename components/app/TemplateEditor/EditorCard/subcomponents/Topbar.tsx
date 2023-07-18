@@ -1,7 +1,7 @@
 import { FlexRowCenteredY } from '@/components/shared/styled-global-components'
-import React from 'react'
 import { HoverLabel, IconContainerWarning, InputBase } from '../styles'
 import { BsXLg } from 'react-icons/bs'
+
 
 interface ComponentProps {
     isEditActive: boolean;
@@ -11,7 +11,9 @@ interface ComponentProps {
     textTemplate: any
     index: number;
     template: any;
+    isUnSaved: boolean;
 }
+
 
 const Topbar = (props: ComponentProps) => {
 
@@ -22,8 +24,11 @@ const Topbar = (props: ComponentProps) => {
         textTemplate,
         handleRemoveTemplate,
         index,
-        template
+        template,
+        isUnSaved
     } = props
+
+
 
     return (
         <FlexRowCenteredY className="justify-between gap-4">
@@ -43,7 +48,13 @@ const Topbar = (props: ComponentProps) => {
                 </h3>
             }
             {isEditActive ?
-                <span className="bg-yellow-100 text-yellow-800 p-2 rounded text-xs font-bold">Editing Mode</span>
+                <FlexRowCenteredY className="gap-2">
+                    {isUnSaved &&
+                        <span className="text-gray-500">Unsaved Changes</span>
+                    }
+
+                    <span className="bg-yellow-100 text-yellow-800 p-2 rounded text-xs font-bold">Editing Mode</span>
+                </FlexRowCenteredY>
                 :
                 <div className="group relative">
                     <IconContainerWarning
@@ -59,3 +70,4 @@ const Topbar = (props: ComponentProps) => {
 }
 
 export default Topbar
+

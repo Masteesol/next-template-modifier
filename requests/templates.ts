@@ -151,8 +151,10 @@ interface Templates {
     title: string;
     text: string;
     template_id: string;
+    char_limit: number | null;
+    copy_count: number;
+    word_limit: number | null
 }
-
 
 interface TemplatesContainer {
     category_id: string;

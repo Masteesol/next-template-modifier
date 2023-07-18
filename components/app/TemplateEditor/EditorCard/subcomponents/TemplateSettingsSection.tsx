@@ -3,12 +3,15 @@ import {
     FlexColContainer,
     FlexRowCenteredY,
     FlexExpandable,
-    HollowButton,
-    IconContainer
+    IconContainer,
+    FlexColCentered,
+    FlexRowCentered
 } from "@/components/shared/styled-global-components";
 
-import { Badge } from "flowbite-react";
-import { BsXLg } from 'react-icons/bs';
+import { useState } from "react"
+
+import { Badge, RangeSlider } from "flowbite-react";
+import { BsArrowCounterclockwise, BsXLg } from 'react-icons/bs';
 import { CardInput } from '../styles';
 
 interface props {
@@ -17,24 +20,24 @@ interface props {
     stagedTemplate: any;
     setStagedTemplate: any;
     textTemplate: any;
-    subscriptionLimits: any;
 
 }
 
-const index = (props: props) => {
+
+const TemplatesSettingsSection = (props: props) => {
+    const [isLimitActive, setIsLimitActive] = useState(false)
     const {
         expandedTextSettings,
         setExpandedTextSettings,
         stagedTemplate,
         textTemplate,
         setStagedTemplate,
-        subscriptionLimits
     } = props
 
     return (
         <FlexExpandable
             $expanded={expandedTextSettings}
-            className="max-h-[30rem] md:max-h-[25rem] lg:max-h-[18rem] border-l-2 border-green-300"
+            className="max-h-[30rem] md:max-h-[18rem] border-l-2 border-green-300"
         >
             <FlexColContainer className="p-4 gap-4 w-full">
                 <FlexRowCenteredY className="justify-between">
@@ -43,27 +46,12 @@ const index = (props: props) => {
                         <BsXLg className="cursor-pointer" />
                     </IconContainer>
                 </FlexRowCenteredY>
-                <FlexColContainer className="gap-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-4">
-                            <FlexColContainer className="gap-2 h-full col-span-1">
-                                <FlexRowCenteredY className="justify-between">
-                                    <h4 className="text-sm text-gray-500">Character Limit</h4>
-                                    {!textTemplate.char_limit && <Badge color="warning">Not set</Badge>}
-                                </FlexRowCenteredY>
-                                <CardInput
-                                    placeholder="For example 200"
-                                    className="p-2"
-                                    type="number"
-                                    value={stagedTemplate?.char_limit ? stagedTemplate?.char_limit : ""}
-                                    onChange={(e) => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, char_limit: parseInt(e.target.value) }) }}
-                                />
-                            </FlexColContainer>
-                            <FlexColContainer className="gap-2">
-                                <h4 className="text-sm text-gray-500">Default Max Character Limit</h4>
-                                <span className="text-lg">{subscriptionLimits.char}</span>
-                            </FlexColContainer>
-                            <FlexColContainer className="gap-2 h-full col-span-1">
+
+                <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+                    <FlexColContainer className="gap-4 h-full">
+                        <Toggle isLimitActive={isLimitActive} setIsLimitActive={setIsLimitActive} />
+                        <div className="grid grid-cols-2 gap-4 -fulhl">
+                            <FlexColContainer className="gap-4">
                                 <FlexRowCenteredY className="justify-between">
                                     <h4 className="text-sm text-gray-500">Word Limit</h4>
                                     {!textTemplate.word_limit && <Badge color="warning">Not set</Badge>}
@@ -75,41 +63,85 @@ const index = (props: props) => {
                                     value={stagedTemplate?.word_limit ? stagedTemplate?.word_limit : ""}
                                     onChange={(e) => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, word_limit: parseInt(e.target.value) }) }}
                                 />
+                                <RangeSlider
+                                    min={5}
+                                    max={150}
+                                    className=""
+                                    defaultValue={stagedTemplate?.word_limit ? stagedTemplate?.word_limit : 0}
+                                    onChange={(e) => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, word_limit: parseInt(e.target.value) }) }}
+                                />
                             </FlexColContainer>
-                            <FlexColContainer className="gap-2">
-                                <h4 className="text-sm text-gray-500">Default Word Limit</h4>
-                                <i className="text-base">See character limit</i>
+                            <FlexColContainer className="gap-4">
+                                <FlexRowCenteredY className="justify-between">
+                                    <h4 className="text-sm text-gray-500">Character Limit</h4>
+                                    {!textTemplate.char_limit && <Badge color="warning">Not set</Badge>}
+                                </FlexRowCenteredY>
+                                <CardInput
+                                    placeholder="For example 200"
+                                    className="p-2"
+                                    type="number"
+                                    value={stagedTemplate?.char_limit ? stagedTemplate?.char_limit : ""}
+                                    onChange={(e) => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, char_limit: parseInt(e.target.value) }) }}
+                                />
+                                <RangeSlider
+                                    min={25}
+                                    max={1000}
+                                    defaultValue={stagedTemplate?.char_limit ? stagedTemplate?.char_limit : 0} className=""
+                                    onChange={(e) => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, char_limit: parseInt(e.target.value) }) }}
+                                />
                             </FlexColContainer>
-
-
                         </div>
-                        <div className="grid grid-cols-2 gap-2">
-                            <FlexColContainer className="gap-2">
-                                <h4 className="text-sm text-gray-500">Copy Counter</h4>
-                                <p>Current: <span>{stagedTemplate?.copy_count}</span></p>
-                            </FlexColContainer>
-                            <FlexColContainer className="items-end">
-                                <HollowButton
-                                    className="text-sm"
+                    </FlexColContainer>
+                    <FlexRowCentered className="gap-4 h-full">
+                        <FlexColCentered className="gap-4">
+                            <span className="font-bold text-6xl text-green-600">
+                                {stagedTemplate.copy_count}
+                            </span>
+                            <FlexRowCenteredY className="gap-2">
+                                <span className="text-xs text-gray-500">
+                                    Times Copied
+                                </span>
+                                <button className="flex gap-2 cursor-pointer hover:opacity-50 text-gray-500"
                                     onClick={() => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, copy_count: 0 }) }}
-                                >Reset Count
-                                </HollowButton>
-                            </FlexColContainer>
-                            <div></div>
+                                >
+                                    <BsArrowCounterclockwise
 
-                        </div>
-                        {/* <div></div>
-                        <SubmitButton
-                            className="text-sm"
-                            onClick={handleUpdateTemplateMetaData}
-                        >
-                            Save Changes</SubmitButton> */}
-                    </div>
+                                        className="text-xl"
+                                    />
+                                </button>
+                            </FlexRowCenteredY>
 
-                </FlexColContainer>
+                        </FlexColCentered>
+
+                    </FlexRowCentered>
+
+                </div>
             </FlexColContainer>
-        </FlexExpandable>
+        </FlexExpandable >
     )
 }
 
-export default index
+export const Toggle = ({ isLimitActive, setIsLimitActive }: any) => {
+    const handleToggle = () => {
+        setIsLimitActive(!isLimitActive);
+    };
+
+    return (
+        <label className="relative flex cursor-pointer">
+            <input
+                type="checkbox"
+                checked={isLimitActive}
+                onChange={handleToggle}
+                className="sr-only"
+            />
+            <div className={`w-11 h-6 rounded-full transition-all dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white ${isLimitActive ? 'bg-green-300' : 'bg-gray-200'}`}>
+                <div className={`after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${isLimitActive ? 'after:translate-x-full after:bg-green-600 after:border-green-400' : 'after:bg-gray-500 after:border-gray-300'}`}></div>
+            </div>
+            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Limit words and characters
+            </span>
+        </label>
+    );
+};
+
+export default TemplatesSettingsSection

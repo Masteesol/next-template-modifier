@@ -260,7 +260,6 @@ const TemplateCard = (props: any, ref: any) => {
                                 stagedTemplate={stagedTemplate}
                                 setStagedTemplate={setStagedTemplate}
                                 textTemplate={textTemplate}
-                                subscriptionLimits={subscriptionLimits}
                             />
                             {/**--AI TEXT GENERATION AREA-- */}
                             <AITextGenerationSection

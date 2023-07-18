@@ -32,7 +32,7 @@ const Topbar = (props: ComponentProps) => {
                 <InputBase
                     type="text"
                     value={stagedTemplate.title}
-                    className="text-2xl"
+                    className="text-2xl max-w-[70%]"
                     onChange={handleTitleChange}
                     placeholder="Template Title..."
                 />

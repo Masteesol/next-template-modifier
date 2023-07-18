@@ -47,11 +47,26 @@ export const updateCategoryOrder = async (category_id: string, userID: string, o
 
 
 
-export const updateTemplate = async (newTitle: string, newText: string, userID: string, template_id: string) => {
+export const updateTemplate = async (
+    newTitle: string,
+    newText: string,
+    userID: string,
+    template_id: string,
+    char_limit: number | null,
+    word_limit: number | null,
+    limiter_active: boolean
+
+) => {
     try {
         const { data, error } = await supabase
             .from("templates")
-            .update({ title: newTitle, text: newText })
+            .update({
+                title: newTitle,
+                text: newText,
+                char_limit: char_limit,
+                word_limit: word_limit,
+                limiter_active: limiter_active
+            })
             .eq("template_id", template_id)
             .match({ user_id: userID })
             .select()
@@ -66,14 +81,12 @@ export const updateTemplate = async (newTitle: string, newText: string, userID: 
     }
 }
 
-export const updateTemplateMetaData = async (template_id: string, userID: string, copy_count: number, word_limit: number, char_limit: number) => {
+export const updateTemplateMetaData = async (template_id: string, userID: string, copy_count: number) => {
     try {
         const { data, error } = await supabase
             .from("templates")
             .update({
-                copy_count: copy_count,
-                word_limit: word_limit,
-                char_limit: char_limit
+                copy_count: copy_count
             })
             .eq("template_id", template_id)
             .match({ user_id: userID })
@@ -102,7 +115,7 @@ export const fetchTemplatesForUser = async (userId: string | undefined | null, s
             category_id,
             category_name,
             order,
-            templates (template_id, title, text, copy_count, word_limit, char_limit)
+            templates (template_id, title, text, copy_count, word_limit, char_limit, limiter_active)
           `)
             .eq('user_id', userId)
 
@@ -153,9 +166,9 @@ interface Templates {
     template_id: string;
     char_limit: number | null;
     copy_count: number;
-    word_limit: number | null
+    word_limit: number | null;
+    limiter_active: boolean;
 }
-
 interface TemplatesContainer {
     category_id: string;
     category_name: string;

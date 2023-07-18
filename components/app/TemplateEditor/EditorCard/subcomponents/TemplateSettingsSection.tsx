@@ -8,8 +8,6 @@ import {
     FlexRowCentered
 } from "@/components/shared/styled-global-components";
 
-import { useState } from "react"
-
 import { Badge, RangeSlider } from "flowbite-react";
 import { BsArrowCounterclockwise, BsXLg } from 'react-icons/bs';
 import { CardInput } from '../styles';
@@ -25,7 +23,7 @@ interface props {
 }
 
 const TemplatesSettingsSection = (props: props) => {
-    const [isLimitActive, setIsLimitActive] = useState(false)
+
     const {
         expandedTextSettings,
         setExpandedTextSettings,
@@ -33,6 +31,8 @@ const TemplatesSettingsSection = (props: props) => {
         textTemplate,
         setStagedTemplate,
     } = props
+
+
 
     const handleWordChange = (e: any) => {
         const value = e.target.value
@@ -57,30 +57,32 @@ const TemplatesSettingsSection = (props: props) => {
                         <BsXLg className="cursor-pointer" />
                     </IconContainer>
                 </FlexRowCenteredY>
-
+                <span>
+                    <Toggle stagedTemplate={stagedTemplate} setStagedTemplate={setStagedTemplate} />
+                </span>
                 <div className="grid grid-cols-1 md:grid-cols-2 h-full">
                     <FlexColContainer className="gap-4 h-full">
-                        <span>
-                            <Toggle isLimitActive={isLimitActive} setIsLimitActive={setIsLimitActive} />
-                        </span>
-                        <div className="grid grid-cols-2 gap-4 -fulhl">
+
+                        <div className={`grid grid-cols-2 gap-4`}>
                             <FlexColContainer className="gap-4">
                                 <FlexRowCenteredY className="justify-between">
                                     <h4 className="text-sm text-gray-500">Word Limit</h4>
                                     {!textTemplate.word_limit && <Badge color="warning">Not set</Badge>}
                                 </FlexRowCenteredY>
-                                <FlexRowCenteredY className="bg-slate-50 rounded dark:bg-slate-800">
+                                <FlexRowCenteredY className={`${!stagedTemplate.limiter_active ? "bg-gray-300" : "bg-slate-50"}  rounded dark:bg-slate-800`}>
                                     <CardInput
                                         type="number"
                                         placeholder="For example 40"
-                                        className="p-2 w-full"
+                                        className={`${!stagedTemplate.limiter_active && "bg-gray-300"} p-2 w-full`}
                                         value={stagedTemplate?.word_limit ? stagedTemplate?.word_limit : ""}
                                         onChange={handleWordChange}
+                                        disabled={!stagedTemplate.limiter_active}
                                     />
                                     <div className="">
                                         <button
                                             onClick={() => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, word_limit: null }) }}
                                             className={`p-2 border-1 text-lg text-gray-500 hover:text-gray-300 `}
+                                            disabled={!stagedTemplate.limiter_active}
                                         >
                                             <BiEraser />
                                         </button>
@@ -94,6 +96,7 @@ const TemplatesSettingsSection = (props: props) => {
                                             className=""
                                             defaultValue={stagedTemplate?.word_limit ? stagedTemplate?.word_limit : 0}
                                             onChange={handleWordChange}
+                                            disabled={!stagedTemplate.limiter_active}
                                         />
                                     </div>
                                     <span className="text-gray-500">
@@ -106,18 +109,20 @@ const TemplatesSettingsSection = (props: props) => {
                                     <h4 className="text-sm text-gray-500">Character Limit</h4>
                                     {!textTemplate.char_limit && <Badge color="warning">Not set</Badge>}
                                 </FlexRowCenteredY>
-                                <FlexRowCenteredY className="bg-slate-50 rounded dark:bg-slate-800">
+                                <FlexRowCenteredY className={`${!stagedTemplate.limiter_active ? "bg-gray-300" : "bg-slate-50"}  rounded dark:bg-slate-800`}>
                                     <CardInput
                                         placeholder="For example 200"
-                                        className="p-2 w-full"
+                                        className={`${!stagedTemplate.limiter_active && "bg-gray-300"} p-2 w-full`}
                                         type="number"
                                         value={stagedTemplate?.char_limit ? stagedTemplate?.char_limit : ""}
                                         onChange={handleCharChange}
+                                        disabled={!stagedTemplate.limiter_active}
                                     />
                                     <div>
                                         <button
                                             className={`p-2 border-1 text-lg text-gray-500 hover:text-gray-300 `}
                                             onClick={() => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, char_limit: null }) }}
+                                            disabled={!stagedTemplate.limiter_active}
                                         >
                                             <BiEraser />
                                         </button>
@@ -128,8 +133,9 @@ const TemplatesSettingsSection = (props: props) => {
                                         <RangeSlider
                                             min={25}
                                             max={1000}
-                                            defaultValue={stagedTemplate?.char_limit ? stagedTemplate?.char_limit : 0} className=""
+                                            defaultValue={stagedTemplate?.char_limit ? stagedTemplate?.char_limit : 0}
                                             onChange={handleCharChange}
+                                            disabled={!stagedTemplate.limiter_active}
                                         />
                                     </div>
                                     <span className="text-gray-500">
@@ -163,29 +169,28 @@ const TemplatesSettingsSection = (props: props) => {
                     </FlexRowCentered>
 
                 </div>
-            </FlexColContainer>
+            </FlexColContainer >
         </FlexExpandable >
     )
 }
 
-export const Toggle = ({ isLimitActive, setIsLimitActive }: any) => {
+export const Toggle = ({ stagedTemplate, setStagedTemplate }: any) => {
     const handleToggle = () => {
-        setIsLimitActive(!isLimitActive);
+        stagedTemplate && setStagedTemplate({ ...stagedTemplate, limiter_active: !stagedTemplate.limiter_active })
     };
-
     return (
         <label className="relative cursor-pointer inline-flex">
             <input
                 type="checkbox"
-                checked={isLimitActive}
+                defaultChecked={stagedTemplate?.limiter_active}
                 onChange={handleToggle}
                 className="sr-only"
             />
-            <div className={`w-11 h-6 rounded-full transition-all dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white ${isLimitActive ? 'bg-green-300' : 'bg-gray-200'}`}>
-                <div className={`after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${isLimitActive ? 'after:translate-x-full after:bg-green-600 after:border-green-400' : 'after:bg-gray-500 after:border-gray-300'}`}></div>
+            <div className={`w-11 h-6 rounded-full transition-all dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white ${stagedTemplate?.limiter_active ? 'bg-green-300' : 'bg-gray-200'}`}>
+                <div className={`after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${stagedTemplate?.limiter_active ? 'after:translate-x-full after:bg-green-600 after:border-green-400' : 'after:bg-gray-500 after:border-gray-300'}`}></div>
             </div>
             <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Limit words and characters
+                {stagedTemplate?.limiter_active ? "Deactivate limiters" : "Activate limiters"}
             </span>
         </label>
     );

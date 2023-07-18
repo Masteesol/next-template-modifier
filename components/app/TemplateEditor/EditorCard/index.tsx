@@ -25,9 +25,9 @@ import { Badge } from "flowbite-react";
 import Footer from "./subcomponents/Footer";
 import { objectsAreEqual, saveMessage } from "@/utils/helpers";
 
-const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count, word_limit, char_limit, setSaveStatus) => {
+const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count, setSaveStatus) => {
     const update = async () => {
-        const response = await updateTemplateMetaData(template_id, userID, copy_count, word_limit, char_limit)
+        const response = await updateTemplateMetaData(template_id, userID, copy_count)
         if (response) {
             console.log("updated template")
             saveMessage(setSaveStatus, "Updated Click Count")
@@ -162,7 +162,12 @@ const TemplateCard = (props: any, ref: any) => {
                 const newCopyCount = copyCount + 1
                 setHasBeenCopied(true);
                 setCopyCount(newCopyCount)
-                delayedUpdateTemplateMetaData(template.template_id, userID, newCopyCount, textTemplate.word_limit, textTemplate.char_limit, setSaveStatus)
+                delayedUpdateTemplateMetaData(
+                    template.template_id,
+                    userID,
+                    newCopyCount,
+                    setSaveStatus
+                )
                 setTextTemplate({ ...textTemplate, copy_count: newCopyCount })
                 setTimeout(() => setHasBeenCopied(false), 2000);
             })

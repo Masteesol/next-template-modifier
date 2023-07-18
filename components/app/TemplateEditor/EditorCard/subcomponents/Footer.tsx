@@ -34,8 +34,8 @@ const Footer = (props: FooterProps) => {
     const charLimit = charLimitIsSet ? textTemplate.char_limit : "Not Set"
     const wordLimit = wordLimitIsSet ? textTemplate.word_limit : "Not set"
 
-    const charCountColor = getColorForCount(charCount, charLimit);
-    const wordCountColor = getColorForCount(wordCount, wordLimit);
+    const charCountColor = stagedTemplate.limiter_active ? getColorForCount(charCount, charLimit) : 'text-gray-500'
+    const wordCountColor = stagedTemplate.limiter_active ? getColorForCount(wordCount, wordLimit) : 'text-gray-500'
 
     return (
         <FlexRowCenteredY className="gap-4 text-gray-500">
@@ -43,7 +43,7 @@ const Footer = (props: FooterProps) => {
             >
                 <div id="character-count" className={`${charCountColor}`}>
                     <span>{`${charCount}`}</span>
-                    {charLimitIsSet
+                    {charLimitIsSet && stagedTemplate.limiter_active
                         &&
                         <span>{`/${charLimit}`}</span>
                     }
@@ -53,7 +53,7 @@ const Footer = (props: FooterProps) => {
             <FlexRowCenteredY className="gap-1">
                 <div id="words-count" className={`${wordCountColor}`}>
                     <span>{`${wordCount}`}</span>
-                    {wordLimitIsSet
+                    {wordLimitIsSet && stagedTemplate.limiter_active
                         &&
                         <span>{`/${wordLimit}`}</span>
                     }

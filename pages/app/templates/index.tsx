@@ -45,7 +45,8 @@ interface Templates {
   template_id: string;
   char_limit: number | null;
   copy_count: number;
-  word_limit: number | null
+  word_limit: number | null;
+  limiter_active: boolean;
 }
 
 interface TemplatesContainer {
@@ -75,20 +76,6 @@ const delayedUpdateCategory = debounce((category_id, userID, newCatTitle, setSav
   update()
 }, 2000);
 
-const delayedUpdateTemplateText = debounce((template_id, userID, newText, newTitle, setSaveStatus) => {
-  const update = async () => {
-    const response = await updateTemplate(newTitle, newText, userID, template_id)
-    if (response) {
-      console.log("updated template")
-      setSaveStatus("Auto-saved Changes")
-      setTimeout(() => { setSaveStatus("") }, 2000)
-    } else {
-      setSaveStatus("Erro saving changes")
-      setTimeout(() => { setSaveStatus("") }, 2000)
-    }
-  }
-  update()
-}, 2000);
 
 const checkLocalStorage = (key: string) => {
   if (typeof window !== "undefined") {
@@ -207,19 +194,15 @@ const Page: NextPage<PageProps> = () => {
     setTextTemplates(newTextTemplates);
   };
 
-  const handleTextTemplateChange = async (categoryIndex: number, templateIndex: number, newTemplate: any, delayed = true) => {
+  const handleTextTemplateChange = async (categoryIndex: number, templateIndex: number, newTemplate: Templates) => {
     if (!userID) {
       console.error("User ID is null.");
       return;
     }
-    const { template_id, text, title } = newTemplate
-    if (delayed) {
-      delayedUpdateTemplateText(template_id, userID, text, title, setSaveStatus)
-    } else {
-      await updateTemplate(title, text, userID, template_id)
-      saveMessage(setSaveStatus, "Saved Changes")
-      console.log(("Saved Changes"))
-    }
+    const { template_id, text, title, char_limit, word_limit, limiter_active } = newTemplate
+    await updateTemplate(title, text, userID, template_id, char_limit, word_limit, limiter_active)
+    saveMessage(setSaveStatus, "Saved Changes")
+    console.log(("Saved Changes"))
 
     setTextTemplates(prevTemplates => {
       const newTemplates = [...prevTemplates];

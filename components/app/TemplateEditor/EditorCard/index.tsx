@@ -22,17 +22,17 @@ import RenderedTextInterface from "./subcomponents/RenderedTextInterface";
 import ProductionModeToolbar from "./subcomponents/ProductionModeToolbar";
 import Topbar from "./subcomponents/Topbar";
 import { Badge } from "flowbite-react";
+import Footer from "./subcomponents/Footer";
+import { saveMessage } from "@/utils/helpers";
 
 const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count, word_limit, char_limit, setSaveStatus) => {
     const update = async () => {
         const response = await updateTemplateMetaData(template_id, userID, copy_count, word_limit, char_limit)
         if (response) {
             console.log("updated template")
-            setSaveStatus("Updated Click Count")
-            setTimeout(() => { setSaveStatus("") }, 2000)
+            saveMessage(setSaveStatus, "Updated Click Count")
         } else {
-            setSaveStatus("Erro saving changes")
-            setTimeout(() => { setSaveStatus("") }, 2000)
+            saveMessage(setSaveStatus, "Error")
         }
     }
     update()
@@ -52,11 +52,13 @@ const TemplateCard = (props: any, ref: any) => {
 
     const templateIndex = index
     const [textTemplate, setTextTemplate] = useState(template);
+    const [stagedTemplate, setStagedTemplate] = useState(template);
+    const [finalText, setFinalText] = useState(template.text)
     const [isEditActive, setIsEditActive] = useState<boolean>(false);
     const [inputValues, setInputValues] = useState<Record<string, string | undefined>>({});
     const [hasBeenCopied, setHasBeenCopied] = useState<boolean>(false);
     const [focusedInput, setFocusedInput] = useState<number | null>(null);
-    const [stagedTemplate, setStagedTemplate] = useState(template);
+
     const [copyCount, setCopyCount] = useState(template.copy_count)
     const [expandedAI, setExpandedAI] = useState(false)
     const [expandedTextSettings, setExpandedTextSettings] = useState(false)
@@ -70,9 +72,9 @@ const TemplateCard = (props: any, ref: any) => {
         setCharLimitExceeded(false)
     }, [template]);
 
-    //console.log(template)
     const handleEditActive = () => {
-        console.log("textTemplate", textTemplate)
+        setExpandedAI(false)
+        setExpandedTextSettings(false)
         setIsEditActive(prevIsEditActive => !prevIsEditActive);
         setStagedTemplate(textTemplate);
         setCharLimitExceeded(false)
@@ -80,10 +82,9 @@ const TemplateCard = (props: any, ref: any) => {
 
     const handleApprove = () => {
         if (!charLimitExceeded) {
-            setIsEditActive(prevIsEditActive => !prevIsEditActive);
             setTextTemplate(stagedTemplate);
+            setFinalText(stagedTemplate.text)
             handleTextTemplateChange(categoryIndex, index, stagedTemplate, false);
-            //handleUpdateTemplateMetaData()
         }
     };
 
@@ -110,13 +111,22 @@ const TemplateCard = (props: any, ref: any) => {
     }
 
 
-
+    interface InputValues {
+        [key: string]: string;
+    }
     const handleInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValues(prevInputValues => ({
-            ...prevInputValues,
+        const newInputValues: InputValues = {
+            ...inputValues,
             [index]: event.target.value,
-        }));
+        };
+        setInputValues(newInputValues);
+        let finalText = textTemplate.text;
+        Object.keys(newInputValues).forEach(key => {
+            finalText = finalText.replace('#', newInputValues[key] || '');
+        });
+        setFinalText(finalText);
     };
+
 
     const handleRemoveInputText = (index: number) => {
         setInputValues(prevInputValues => ({
@@ -233,9 +243,7 @@ const TemplateCard = (props: any, ref: any) => {
                     placeholders={placeholders}
                     isEditActive={isEditActive}
                     handleRemoveAllInputText={handleRemoveAllInputText}
-                    stagedTemplate={stagedTemplate}
                     textTemplate={textTemplate}
-                    subscriptionLimits={subscriptionLimits}
 
                 />
                 {/**--END INPUT GRID--*/}
@@ -291,7 +299,13 @@ const TemplateCard = (props: any, ref: any) => {
                         />
                     </FlexRowContainer>
                 }
-
+                <DividerHorizontal />
+                <Footer
+                    isEditActive={isEditActive}
+                    textTemplate={textTemplate}
+                    stagedTemplate={stagedTemplate}
+                    finalText={finalText}
+                />
             </FlexColContainer>
         </CardBaseLight>
     );

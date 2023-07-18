@@ -5,8 +5,9 @@ import {
     FlexColCenteredX,
 } from "@/components/shared/styled-global-components";
 import { HoverLabel, IconContainerNormal, IconContainerWarning } from '../styles';
-import { BsArrowLeft, BsCheckLg, BsRobot, BsSliders } from 'react-icons/bs';
+import { BsArrowLeft, BsRobot, BsSliders } from 'react-icons/bs';
 import { BiEraser } from 'react-icons/bi';
+import { FiSave } from "react-icons/fi"
 
 interface ComponentProps {
     expandedAI: boolean;
@@ -66,14 +67,14 @@ const EditModeToolbar = (props: ComponentProps) => {
                 <DividerHorizontal className="border-gray-100" />
                 <div className="group relative">
                     <IconContainerNormal onClick={handleApprove} disabled={charLimitExceeded}>
-                        <BsCheckLg className="text-2xl" />
-                        <HoverLabel className="w-[6rem]">Apply changes</HoverLabel>
+                        <FiSave className="text-2xl" />
+                        <HoverLabel className="w-[10rem]">Save and apply changes</HoverLabel>
                     </IconContainerNormal>
                 </div>
                 <div className="group relative">
                     <IconContainerNormal onClick={handleEditActive} disabled={false}>
                         <BsArrowLeft className="text-2xl " />
-                        <HoverLabel className="w-[7rem]">Go back without saving</HoverLabel>
+                        <HoverLabel className="w-[4rem]">Go back</HoverLabel>
                     </IconContainerNormal>
                 </div>
             </FlexColContainer>

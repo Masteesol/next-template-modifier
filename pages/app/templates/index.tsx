@@ -37,6 +37,7 @@ import {
 } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import TemplateNavigation from "@/components/app/TemplateEditor/templateNavigation"
+import { saveMessage } from "@/utils/helpers";
 
 interface Templates {
   title: string;
@@ -213,7 +214,8 @@ const Page: NextPage<PageProps> = () => {
       delayedUpdateTemplateText(template_id, userID, text, title, setSaveStatus)
     } else {
       await updateTemplate(title, text, userID, template_id)
-      console.log(("first"))
+      saveMessage(setSaveStatus, "Saved Changes")
+      console.log(("Saved Changes"))
     }
 
     setTextTemplates(prevTemplates => {
@@ -382,7 +384,6 @@ const Page: NextPage<PageProps> = () => {
             </FlexColContainer>
 
           </FlexRowContainer>
-
         </FlexRowContainer>
       </PageLayout>
     </>

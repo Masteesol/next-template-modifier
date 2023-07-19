@@ -1,4 +1,15 @@
-import { FlexColCentered, FlexColContainer, FlexRowCenteredY, AddButton, FlexRowContainer, DividerPipe, FlexRowCentered, DividerHorizontal, FlexExpandable } from "@/components/shared/styled-global-components";
+import {
+    FlexColCentered,
+    FlexColContainer,
+    FlexRowCenteredY,
+    AddButton,
+    FlexRowContainer,
+    DividerPipe,
+    FlexRowCentered,
+    DividerHorizontal,
+    FlexExpandable
+} from "@/components/shared/styled-global-components";
+
 import CategoryCard from "@/components/app/TemplateEditor/categories/CategoryCard";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import GuidingDescriptionText from "../GuidingDescription";
@@ -7,8 +18,9 @@ import { useState, useEffect, useContext } from "react";
 import { updateCategoryOrder } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import debounce from "lodash.debounce";
-import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { BsChevronDown, BsChevronUp, BsStarFill } from "react-icons/bs";
 import { EditToggle } from "../shared";
+import { TemplatesContainer } from "@/types/global";
 
 export const CategoryHeaderButton = ({ viewCategories, handleViewCategorySelect }: any) => {
     return <FlexRowCenteredY className={`p-4 gap-4 rounded relative`}>
@@ -65,6 +77,7 @@ const delayedUpdateCategory = debounce((textTemplates, setSaveStatus, userID) =>
 
 const SortingList = (props: CateGoryListTypes) => {
     const [isEditing, setIsEditing] = useState(false);
+
     const { setSaveStatus } = useContext(SaveStatusContext)
     const CategoryCardList = CategoryList(props, isEditing)
     //console.log(CategoryCardList)
@@ -76,8 +89,12 @@ const SortingList = (props: CateGoryListTypes) => {
         viewCategories,
         handleViewCategorySelect,
         setTextTemplates,
+        selectedCategory,
         setSelectedCategory,
-        userID
+        userID,
+        handleSelectCategory,
+        handleInputCatTitleChange,
+        handleRemoveCategory
     } = props
 
     useEffect(() => {
@@ -97,6 +114,7 @@ const SortingList = (props: CateGoryListTypes) => {
 
         setTextTemplates(sortedTextTemplatesArray)
         setSelectedCategory(newIndex)
+        console.log("sortedTextTemplatesArray", sortedTextTemplatesArray)
         delayedUpdateCategory(sortedTextTemplatesArray, setSaveStatus, userID)
     }
 
@@ -110,8 +128,37 @@ const SortingList = (props: CateGoryListTypes) => {
                 textTemplates={textTemplates}
             />
             <FlexColContainer
-                className="w-[18rem] lg:w-[19rem] relative h-full max-h-[90%] overflow-y-auto"
+                className="w-[18rem] lg:w-[19rem] relative h-full max-h-[90%] overflow-y-auto gap-4"
             >
+                {textTemplates.filter((item: TemplatesContainer) => item.favourited && item.favourited).length > 0
+                    &&
+                    <FlexColContainer className="gap-4">
+                        <FlexRowCenteredY className="gap-2 pt-2">
+                            <h2>Favourites</h2>
+                            <BsStarFill className="text-base text-green-500" />
+                        </FlexRowCenteredY>
+                        <FlexColContainer>
+                            {textTemplates.map((item: TemplatesContainer, index: number) => {
+                                return item.favourited && <CategoryCard
+                                    key={item.category_id}
+                                    index={index}
+                                    textTemplate={item}
+                                    selectedCategory={selectedCategory}
+                                    handleSelectCategory={() => handleSelectCategory(index)}
+                                    handleInputCatTitleChange={handleInputCatTitleChange}
+                                    handleRemoveCategory={handleRemoveCategory}
+                                    isEditing={isEditing}
+                                    favourited={item.favourited}
+                                    setTextTemplates={setTextTemplates}
+                                    textTemplates={textTemplates}
+                                    userID={userID}
+                                />
+                            })}
+                        </FlexColContainer>
+                        <DividerHorizontal className="w-full border-1 border-gray-300" />
+                    </FlexColContainer>
+
+                }
                 {isEditing ?
                     <List
 
@@ -137,30 +184,36 @@ const SortingList = (props: CateGoryListTypes) => {
                     {!isEditing && <AddCategoryButton onClick={addCategory} />}
                 </FlexRowCenteredY>
             </FlexColCentered>
-        </FlexColContainer>
+        </FlexColContainer >
     );
 };
 
 
-const CategoryList = (props: CateGoryListTypes, isEditing: boolean) => {
+const CategoryList = (props: any, isEditing: boolean) => {
     const {
         textTemplates,
         selectedCategory,
         handleSelectCategory,
         handleRemoveCategory,
         handleInputCatTitleChange,
+        setTextTemplates,
+        userID
     } = props
     //console.log("isEditing CategoryList", isEditing)
     return textTemplates.map((item: any, index: number) => {
-        return <CategoryCard
+        return !item.favourited && <CategoryCard
             key={item.category_id}
             index={index}
-            category={item}
+            textTemplate={item}
+            setTextTemplates={setTextTemplates}
             selectedCategory={selectedCategory}
             handleSelectCategory={() => handleSelectCategory(index)}
             handleInputCatTitleChange={handleInputCatTitleChange}
             handleRemoveCategory={handleRemoveCategory}
             isEditing={isEditing}
+            favourited={item.favourited}
+            textTemplates={textTemplates}
+            userID={userID}
         />
     })
 }

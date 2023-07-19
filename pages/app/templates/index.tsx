@@ -39,24 +39,8 @@ import { SaveStatusContext } from "@/context/SavedStatusContext";
 import TemplateNavigation from "@/components/app/TemplateEditor/templateNavigation"
 import { saveMessage } from "@/utils/helpers";
 import { ListAddButton } from "@/components/app/TemplateEditor/shared";
+import { Templates, TemplatesContainer } from "@/types/global"
 
-interface Templates {
-  title: string;
-  text: string;
-  template_id: string;
-  char_limit: number | null;
-  copy_count: number;
-  word_limit: number | null;
-  limiter_active: boolean;
-  order: number;
-}
-
-interface TemplatesContainer {
-  category_id: string;
-  category_name: string;
-  order: number;
-  templates: Templates[];
-}
 
 type PageProps = {
   authenticated: boolean,
@@ -113,7 +97,6 @@ const Page: NextPage<PageProps> = () => {
 
   const userID = Cookies.get("user_id")
   /* eslint-disable react-hooks/exhaustive-deps */
-
   useEffect(() => {
     fetchTemplatesForUser(userID, setIsLoading).then((data) => {
       if (data) {

@@ -2,6 +2,7 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 const supabase = createClientComponentClient()
 import { v4 as uuidv4 } from 'uuid';
+import { TemplatesContainer } from "@/types/global"
 
 export const updateCategory = async (newCatTitle: string, category_id: string, userID: string, order = null) => {
     try {
@@ -121,6 +122,26 @@ export const updateTemplateMetaData = async (template_id: string, userID: string
     }
 }
 
+export const updateCategoryFavourite = async (category_id: string, userID: string, favourited: boolean) => {
+    try {
+        const { data, error } = await supabase
+            .from("categories")
+            .update({ favourited: favourited })
+            .eq("category_id", category_id)
+            .match({ user_id: userID })
+            .select();
+        if (error) {
+            return error
+        }
+        if (data) {
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 export const fetchTemplatesForUser = async (userId: string | undefined | null, setIsLoading: any) => {
     if (!userId) {
         return Promise.resolve(null); // or some other default value
@@ -134,7 +155,8 @@ export const fetchTemplatesForUser = async (userId: string | undefined | null, s
             category_id,
             category_name,
             order,
-            templates (template_id, title, text, copy_count, word_limit, char_limit, limiter_active, order)
+            favourited,
+            templates (template_id, title, text, copy_count, word_limit, char_limit, limiter_active, order, favourited)
           `)
             .eq('user_id', userId)
 
@@ -179,23 +201,6 @@ export const fetchOnlyTemplatesForUser = async (userId: string | undefined | nul
 };
 
 
-interface Templates {
-    title: string;
-    text: string;
-    template_id: string;
-    char_limit: number | null;
-    copy_count: number;
-    word_limit: number | null;
-    limiter_active: boolean;
-    order: number;
-}
-interface TemplatesContainer {
-    category_id: string;
-    category_name: string;
-    order: number;
-    templates: Templates[];
-}
-
 export const createCategory = async (
     userID: string,
     textTemplates: TemplatesContainer[],
@@ -221,6 +226,7 @@ export const createCategory = async (
                 category_id: category_id,
                 category_name: category_name,
                 order: order,
+                favourited: false,
                 templates: []
             }
             const updatedTextTemplates = [newCategoryWithTemplates, ...textTemplates];

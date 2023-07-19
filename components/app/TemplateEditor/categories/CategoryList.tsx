@@ -1,4 +1,4 @@
-import { FlexColCentered, FlexColContainer, FlexRowCenteredY, AddButton, FlexRowContainer, DividerPipe, FlexRowCentered, DividerHorizontal } from "@/components/shared/styled-global-components";
+import { FlexColCentered, FlexColContainer, FlexRowCenteredY, AddButton, FlexRowContainer, DividerPipe, FlexRowCentered, DividerHorizontal, FlexExpandable } from "@/components/shared/styled-global-components";
 import CategoryCard from "@/components/app/TemplateEditor/categories/CategoryCard";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import GuidingDescriptionText from "../GuidingDescription";
@@ -8,6 +8,7 @@ import { updateCategoryOrder } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import debounce from "lodash.debounce";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { EditToggle } from "../shared";
 
 export const CategoryHeaderButton = ({ viewCategories, handleViewCategorySelect }: any) => {
     return <FlexRowCenteredY className={`p-4 gap-4 rounded relative`}>
@@ -186,8 +187,9 @@ const Accordion = ({ isEditing, setIsEditing, handleViewCategorySelect, textTemp
 
             </FlexRowCenteredY>
             <DividerHorizontal className="w-full border-gray-200" />
-            <FlexRowCenteredY
-                className={`${expanded ? "h-[5rem] py-4" : "h-0"} overflow-hidden gap-4 w-full transition-all ease-in-out`}
+            <FlexExpandable
+                $expanded={expanded}
+                $heightAndPadding="h-[5rem] py-4"
             >
                 {textTemplates.length > 0 &&
                     <FlexRowCentered className="flex-1">
@@ -200,30 +202,8 @@ const Accordion = ({ isEditing, setIsEditing, handleViewCategorySelect, textTemp
                     <FaEyeSlash className="text-lg" />
                     <label className="cursor-pointer">Hide</label>
                 </FlexRowCentered>
-            </FlexRowCenteredY>
+            </FlexExpandable>
         </FlexColContainer>
     );
 };
 
-export const EditToggle = ({ isEditing, setIsEditing }: any) => {
-    const handleToggle = () => {
-        setIsEditing(!isEditing);
-    };
-
-    return (
-        <label className="relative flex cursor-pointer">
-            <input
-                type="checkbox"
-                checked={isEditing}
-                onChange={handleToggle}
-                className="sr-only"
-            />
-            <div className={`w-11 h-6 rounded-full transition-all dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white ${isEditing ? 'bg-green-300' : 'bg-gray-200'}`}>
-                <div className={`after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${isEditing ? 'after:translate-x-full after:bg-green-600 after:border-green-400' : 'after:bg-gray-500 after:border-gray-300'}`}></div>
-            </div>
-            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Edit List
-            </span>
-        </label>
-    );
-};

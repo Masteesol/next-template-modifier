@@ -1,121 +1,139 @@
 import {
     FlexColCentered,
-    FlexColCenteredX,
     FlexColContainer,
-    FlexRowCentered,
-    FlexRowCenteredY,
-    FlexRowContainer,
-    AddButton,
-    DividerHorizontal,
-
 } from "@/components/shared/styled-global-components";
-import { FaEyeSlash, FaPlus } from "react-icons/fa";
 import TemplateNavButton from "@/components/app/TemplateEditor/templateNavigation/TemplateNavButton";
-import { BsChevronDown, BsChevronUp } from "react-icons/bs";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
+import { Accordion, ListAddButton } from "../shared";
+import { SaveStatusContext } from "@/context/SavedStatusContext";
+import { List, arrayMove } from "react-movable";
+import debounce from "lodash.debounce";
+import { updateTemplatesOrder } from "@/requests/templates";
 
 interface TemplateNavigationProps {
     handleViewNavigationSelect: any
     textTemplates: any
     selectedCategory: number
     handleCreateTemplate: any
-    templateRefs: any
+    templateRefs: any;
+    setTextTemplates: any;
+    userID: any;
 }
 
-const index = (props: TemplateNavigationProps) => {
+const delayedUpdateCategory = debounce((textTemplates, categoryID, setSaveStatus, userID) => {
+    const update = async () => {
+        try {
+            const updatePromises = textTemplates.map((item: any) =>
+                updateTemplatesOrder(categoryID, item.template_id, userID, item.order,)
+            );
+            await Promise.all(updatePromises);
+            setSaveStatus("Auto-saved Changes")
+            setTimeout(() => { setSaveStatus("") }, 2000)
+        } catch (error) {
+            setSaveStatus("Erro saving changes")
+            setTimeout(() => { setSaveStatus("") }, 2000)
+            console.log(error);
+        }
+    }
+    update()
+}, 2000);
+
+const SortingList = (props: TemplateNavigationProps) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const { setSaveStatus } = useContext(SaveStatusContext)
     const {
         handleViewNavigationSelect,
         textTemplates,
-        selectedCategory,
         handleCreateTemplate,
-        templateRefs,
+        selectedCategory,
+        setTextTemplates,
+        userID
     } = props
+
+    const TemplatesCardList = TemplatesNavCardList(props, isEditing)
+    const [items, setItems] = useState<JSX.Element[]>(TemplatesCardList);
+
+    useEffect(() => {
+        setItems(TemplatesNavCardList(props, isEditing))
+    }, [props, isEditing]);
+
+    const handleNewListOrder = async (items: JSX.Element[], oldIndex: number, newIndex: number) => {
+        const movedTextTemplatesArray = arrayMove(textTemplates[selectedCategory].templates, oldIndex, newIndex);
+
+        const sortedTextTemplatesArray = movedTextTemplatesArray.map((item: any, index: number) => {
+            if (item.order !== index) {
+                return { ...item, order: index }
+            } else {
+                return item;
+            }
+        }).sort((a, b) => a.order - b.order)
+        const newTextTemplates = textTemplates.map((item: any, index: number) => {
+            if (index === selectedCategory) {
+                return {
+                    ...item,
+                    templates: sortedTextTemplatesArray,
+                }
+            }
+            return item;
+        });
+        setTextTemplates(newTextTemplates)
+        delayedUpdateCategory(sortedTextTemplatesArray, textTemplates[selectedCategory].category_id, setSaveStatus, userID)
+    }
+
 
     return (
         <FlexColContainer className="px-2">
-            <Accordion handleViewNavigationSelect={handleViewNavigationSelect} />
-            <FlexColCenteredX className="w-full gap-4 min-w-[18rem] max-w-[18rem] max-h-[90%] overflow-y-auto">
-                {textTemplates[selectedCategory].templates.map((template: any, templateIndex: number) => (
-                    <TemplateNavButton
-                        template={template}
-                        index={templateIndex}
-                        categoryIndex={selectedCategory}
-                        templateRefs={templateRefs}
-                        key={`template-nav-button-${selectedCategory}-${templateIndex}`}
+            <Accordion
+                handleView={handleViewNavigationSelect}
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
+                title="Templates"
+            />
+            <FlexColContainer className="w-full gap-4 min-w-[18rem] max-w-[18rem] max-h-[90%] overflow-y-auto">
+                {isEditing ?
+                    <List
+                        values={items}
+                        onChange={({ oldIndex, newIndex }) =>
+                            handleNewListOrder(items, oldIndex, newIndex)
+                        }
+                        renderList={({ children, props }) => <ul className="w-full flex flex-col gap-2" {...props}>{children}</ul>}
+                        renderItem={({ value, props }) => <li className="list-none w-full" {...props} style={{ ...props.style, zIndex: 1000 }}>{value}</li>}
                     />
-                ))}
-            </FlexColCenteredX>
+                    :
+                    <ul className="flex flex-col gap-2">
+                        {items.map((item, index) =>
+                            <li className="w-full" key={index}>{item}</li>
+                        )}
+                    </ul>
+                }
+            </FlexColContainer>
             <FlexColCentered className="mt-auto w-full mb-8 gap-4">
-                <AddTemplateButton onClick={handleCreateTemplate} />
+                <ListAddButton onClick={handleCreateTemplate} />
             </FlexColCentered>
         </FlexColContainer>
     )
 }
 
-export default index
+export default SortingList
 
-const AddTemplateButton = ({ onClick }: any) => {
-    return <FlexRowContainer className="justify-end w-full ">
-        <AddButton onClick={onClick}>
-            <FlexColCentered>
-                <FaPlus />
-            </FlexColCentered>
-        </AddButton>
-    </FlexRowContainer>
+
+
+const TemplatesNavCardList = (props: TemplateNavigationProps, isEditing: boolean) => {
+    const {
+        textTemplates,
+        selectedCategory,
+        templateRefs,
+    } = props
+
+    //console.log("isEditing CategoryList", isEditing)
+    return textTemplates[selectedCategory].templates.map((template: any, templateIndex: number) => (
+        <TemplateNavButton
+            template={template}
+            index={templateIndex}
+            categoryIndex={selectedCategory}
+            templateRefs={templateRefs}
+            key={`template-nav-button-${selectedCategory}-${templateIndex}`}
+            isEditing={isEditing}
+        />
+    ))
 }
-
-export const Accordion = ({ handleViewNavigationSelect }: any) => {
-    //by default expanded on mobile devices
-    const [expanded, setExpanded] = useState(window ? window.innerWidth < 1280 : false)
-
-    return (
-        <FlexColContainer className="gap-2">
-            <FlexRowCenteredY className="justify-between text-lg cursor-pointer gap-4"
-                onClick={() => setExpanded(!expanded)}
-            >
-                <h3>Templates</h3>
-                {!expanded
-                    ?
-                    <BsChevronDown />
-                    :
-                    <BsChevronUp />
-                }
-
-            </FlexRowCenteredY>
-            <DividerHorizontal className="w-full border-gray-200" />
-            <FlexRowCenteredY
-                className={`${expanded ? "h-[5rem] py-4" : "h-0"} overflow-hidden gap-4 w-full transition-all ease-in-out`}
-            >
-                <FlexRowCentered className="gap-2 cursor-pointer flex-1"
-                    onClick={handleViewNavigationSelect}
-                >
-                    <FaEyeSlash className="text-lg" />
-                    <label className="cursor-pointer">Hide</label>
-                </FlexRowCentered>
-            </FlexRowCenteredY>
-        </FlexColContainer>
-    );
-};
-
-export const EditToggle = ({ isEditing, setIsEditing }: any) => {
-    const handleToggle = () => {
-        setIsEditing(!isEditing);
-    };
-
-    return (
-        <label className="relative flex cursor-pointer">
-            <input
-                type="checkbox"
-                checked={isEditing}
-                onChange={handleToggle}
-                className="sr-only"
-            />
-            <div className={`w-11 h-6 rounded-full transition-all dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white ${isEditing ? 'bg-green-300' : 'bg-gray-200'}`}>
-                <div className={`after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${isEditing ? 'after:translate-x-full after:bg-green-600 after:border-green-400' : 'after:bg-gray-500 after:border-gray-300'}`}></div>
-            </div>
-            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Edit Order
-            </span>
-        </label>
-    );
-};

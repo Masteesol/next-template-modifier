@@ -45,6 +45,25 @@ export const updateCategoryOrder = async (category_id: string, userID: string, o
     }
 }
 
+export const updateTemplatesOrder = async (category_id: string, template_id: string, userID: string, order: number) => {
+    try {
+        const { data, error } = await supabase
+            .from("templates")
+            .update({ order: order })
+            .eq("template_id", template_id)
+            .match({ user_id: userID, category_id: category_id })
+            .select();
+        if (error) {
+            return error
+        }
+        if (data) {
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 
 export const updateTemplate = async (
@@ -115,7 +134,7 @@ export const fetchTemplatesForUser = async (userId: string | undefined | null, s
             category_id,
             category_name,
             order,
-            templates (template_id, title, text, copy_count, word_limit, char_limit, limiter_active)
+            templates (template_id, title, text, copy_count, word_limit, char_limit, limiter_active, order)
           `)
             .eq('user_id', userId)
 
@@ -168,6 +187,7 @@ interface Templates {
     copy_count: number;
     word_limit: number | null;
     limiter_active: boolean;
+    order: number;
 }
 interface TemplatesContainer {
     category_id: string;

@@ -337,7 +337,8 @@ export const FlexRowCenteredY = tw.div`
 `;
 
 interface FlexExpandableProps {
-    $expanded: boolean
+    $expanded: boolean;
+    $heightAndPadding: string
 }
 
 export const FlexExpandable = tw.div <FlexExpandableProps>`
@@ -346,7 +347,7 @@ export const FlexExpandable = tw.div <FlexExpandableProps>`
     transition-all 
     ease-in-out
     w-full
-    ${(p) => (p.$expanded ? "h-[40rem] py-4" : "h-0")}
+    ${(p) => (p.$expanded ? p.$heightAndPadding : "h-0")}
 `
 
 export const GridSm2Lg4 = tw.div`

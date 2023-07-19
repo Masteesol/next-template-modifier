@@ -38,6 +38,7 @@ import {
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import TemplateNavigation from "@/components/app/TemplateEditor/templateNavigation"
 import { saveMessage } from "@/utils/helpers";
+import { ListAddButton } from "@/components/app/TemplateEditor/shared";
 
 interface Templates {
   title: string;
@@ -47,6 +48,7 @@ interface Templates {
   copy_count: number;
   word_limit: number | null;
   limiter_active: boolean;
+  order: number;
 }
 
 interface TemplatesContainer {
@@ -116,7 +118,13 @@ const Page: NextPage<PageProps> = () => {
     fetchTemplatesForUser(userID, setIsLoading).then((data) => {
       if (data) {
         console.log("Templates", data)
-        const templatesContainers: TemplatesContainer[] = data.sort((a, b) => a.order - b.order);
+        const templatesContainers: TemplatesContainer[] = data
+          .sort((a, b) => a.order - b.order)
+          .map(container => ({
+            ...container,
+            templates: container.templates.sort((a, b) => a.order - b.order)
+          }));
+
         setTextTemplates(templatesContainers);
         //needs to come from DB
         setSubscriptionLimits(tierLimits)
@@ -267,7 +275,7 @@ const Page: NextPage<PageProps> = () => {
             {!viewCategories &&
               <FlexRowCentered className="relative bg-slate-100 dark:bg-slate-700 rounded shadow">
                 <div className="absolute right-[10rem]">
-                  <AddTemplateButton onClick={handleCreateCategory} />
+                  <ListAddButton onClick={handleCreateCategory} />
                 </div>
                 <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
               </FlexRowCentered>
@@ -276,7 +284,7 @@ const Page: NextPage<PageProps> = () => {
               textTemplates[selectedCategory].templates.length > 0 && !viewNavigation &&
               <FlexRowCentered className="relative bg-slate-100 dark:bg-slate-700 rounded shadow">
                 <div className="absolute right-[10rem]">
-                  <AddTemplateButton onClick={handleCreateTemplate} />
+                  <ListAddButton onClick={handleCreateTemplate} />
                 </div>
                 <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
               </FlexRowCentered>
@@ -311,9 +319,11 @@ const Page: NextPage<PageProps> = () => {
               <TemplateNavigation
                 handleViewNavigationSelect={handleViewNavigationSelect}
                 textTemplates={textTemplates}
+                setTextTemplates={setTextTemplates}
                 selectedCategory={selectedCategory}
                 handleCreateTemplate={handleCreateTemplate}
                 templateRefs={templateRefs}
+                userID={userID}
               />
             }
             {textTemplates.length > 0 &&
@@ -385,16 +395,6 @@ const NavigationHeaderButton = ({ viewNavigation, handleViewNavigationSelect }: 
   </FlexRowCentered>
 }
 
-
-const AddTemplateButton = ({ onClick }: any) => {
-  return <FlexRowContainer className="justify-end w-full ">
-    <AddButton onClick={onClick}>
-      <FlexColCentered>
-        <FaPlus />
-      </FlexColCentered>
-    </AddButton>
-  </FlexRowContainer>
-}
 
 const AddTemplateButtonEmpty = ({ onClick }: any) => {
   return <AddButton onClick={onClick}>

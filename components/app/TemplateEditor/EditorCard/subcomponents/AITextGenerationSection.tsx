@@ -23,7 +23,8 @@ const index = (props: props) => {
     return (
         <FlexExpandable
             $expanded={expandedAI}
-            className="max-h-[20rem] lg:max-h-[20rem] border-l-2 border-green-300"
+            $heightAndPadding='h-[20rem] py-4'
+            className="border-l-2 border-green-300"
         >
             <FlexColContainer className="p-2 gap-4 w-full">
                 <FlexRowCenteredY className="justify-between">

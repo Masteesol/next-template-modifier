@@ -48,7 +48,8 @@ const TemplatesSettingsSection = (props: props) => {
     return (
         <FlexExpandable
             $expanded={expandedTextSettings}
-            className="max-h-[30rem] md:max-h-[18rem] border-l-2 border-green-300"
+            $heightAndPadding='h-[30rem] md:h-[18rem] py-4'
+            className=" border-l-2 border-green-300"
         >
             <FlexColContainer className="p-4 gap-4 w-full">
                 <FlexRowCenteredY className="justify-between">
@@ -157,10 +158,7 @@ const TemplatesSettingsSection = (props: props) => {
                                 <button className="flex gap-2 cursor-pointer hover:opacity-50 text-gray-500"
                                     onClick={() => { stagedTemplate && setStagedTemplate({ ...stagedTemplate, copy_count: 0 }) }}
                                 >
-                                    <BsArrowCounterclockwise
-
-                                        className="text-xl"
-                                    />
+                                    <BsArrowCounterclockwise className="text-xl" />
                                 </button>
                             </FlexRowCenteredY>
 

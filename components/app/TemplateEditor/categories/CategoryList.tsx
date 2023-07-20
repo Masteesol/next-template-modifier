@@ -14,7 +14,7 @@ import CategoryCard from "@/components/app/TemplateEditor/categories/CategoryCar
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import GuidingDescriptionText from "../GuidingDescription";
 import { List, arrayMove } from 'react-movable';
-import { useState, useEffect, useContext } from "react";
+import { useState, useLayoutEffect, useContext } from "react";
 import { updateCategoryOrder } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import debounce from "lodash.debounce";
@@ -97,7 +97,7 @@ const SortingList = (props: CateGoryListTypes) => {
         handleRemoveCategory
     } = props
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setItems(CategoryList(props, isEditing))
     }, [props, isEditing]);
 
@@ -157,7 +157,6 @@ const SortingList = (props: CateGoryListTypes) => {
                         </FlexColContainer>
                         <DividerHorizontal className="w-full border-1 border-gray-300" />
                     </FlexColContainer>
-
                 }
                 {isEditing ?
                     <List

@@ -1,6 +1,8 @@
 import {
+    DividerHorizontal,
     FlexColCentered,
     FlexColContainer,
+    FlexRowCenteredY,
 } from "@/components/shared/styled-global-components";
 import TemplateNavButton from "@/components/app/TemplateEditor/templateNavigation/TemplateNavButton";
 import { useState, useEffect, useContext } from "react";
@@ -9,6 +11,8 @@ import { SaveStatusContext } from "@/context/SavedStatusContext";
 import { List, arrayMove } from "react-movable";
 import debounce from "lodash.debounce";
 import { updateTemplatesOrder } from "@/requests/templates";
+import { Templates } from "@/types/global";
+import { BsStarFill } from "react-icons/bs";
 
 interface TemplateNavigationProps {
     handleViewNavigationSelect: any
@@ -47,7 +51,8 @@ const SortingList = (props: TemplateNavigationProps) => {
         handleCreateTemplate,
         selectedCategory,
         setTextTemplates,
-        userID
+        userID,
+        templateRefs
     } = props
 
     const TemplatesCardList = TemplatesNavCardList(props, isEditing)
@@ -90,6 +95,29 @@ const SortingList = (props: TemplateNavigationProps) => {
                 title="Templates"
             />
             <FlexColContainer className="w-full gap-4 min-w-[18rem] max-w-[18rem] max-h-[90%] overflow-y-auto">
+                {textTemplates[selectedCategory].templates.filter((item: Templates) => item.favourited && item.favourited).length > 0
+                    &&
+                    <FlexColContainer className="gap-4">
+                        <FlexRowCenteredY className="gap-2 pt-2">
+                            <h2>Favourites</h2>
+                            <BsStarFill className="text-base text-green-500" />
+                        </FlexRowCenteredY>
+                        <FlexColContainer>
+                            {textTemplates[selectedCategory].templates.map((item: Templates, templateIndex: number) => {
+                                return item.favourited && <TemplateNavButton
+                                    template={item}
+                                    index={templateIndex}
+                                    categoryIndex={selectedCategory}
+                                    templateRefs={templateRefs}
+                                    key={`template-nav-button-${selectedCategory}-${templateIndex}`}
+                                    isEditing={isEditing}
+                                    favourited={item.favourited}
+                                />
+                            })}
+                        </FlexColContainer>
+                        <DividerHorizontal className="w-full border-1 border-gray-300" />
+                    </FlexColContainer>
+                }
                 {isEditing ?
                     <List
                         values={items}
@@ -126,14 +154,16 @@ const TemplatesNavCardList = (props: TemplateNavigationProps, isEditing: boolean
     } = props
 
     //console.log("isEditing CategoryList", isEditing)
-    return textTemplates[selectedCategory].templates.map((template: any, templateIndex: number) => (
-        <TemplateNavButton
-            template={template}
-            index={templateIndex}
-            categoryIndex={selectedCategory}
-            templateRefs={templateRefs}
-            key={`template-nav-button-${selectedCategory}-${templateIndex}`}
-            isEditing={isEditing}
-        />
-    ))
+    return textTemplates[selectedCategory].templates.map((template: any, templateIndex: number) => {
+        return !template.favourited
+            && <TemplateNavButton
+                template={template}
+                index={templateIndex}
+                categoryIndex={selectedCategory}
+                templateRefs={templateRefs}
+                key={`template-nav-button-${selectedCategory}-${templateIndex}`}
+                isEditing={isEditing}
+                favourited={template.favourited}
+            />
+    })
 }

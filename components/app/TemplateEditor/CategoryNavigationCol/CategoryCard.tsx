@@ -84,7 +84,7 @@ const CategoryCard = (props: CatType) => {
     return (
         <div>
             <CardBaseLightHover
-                className={`${isSelected ? "border-l-8 border-l-green-400 pe-2 ps-4" : "cursor-pointer ps-2 hover:border-l-green-400 hover:border-l-8 pe-4 hover:ps-4 hover:pe-2 transition-all ease-in-out duration-300 transition-delay-200"} py-2 w-full my-2  `}
+                className={`${isSelected ? "border-l-8 border-l-green-400 pe-2 ps-4" : "cursor-pointer ps-2 hover:border-l-green-400 hover:border-l-8 pe-4 hover:ps-4 hover:pe-2 transition-all ease-in-out duration-300 transition-delay-200"} py-2 w-full`}
                 id={`${index}`}
                 onClick={handleSelectCategory}
 

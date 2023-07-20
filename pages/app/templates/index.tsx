@@ -20,7 +20,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import { debounce } from 'lodash';
 import ForwardedRefTemplateCard from "@/components/app/TemplateEditor/EditorCard";
-import CategoryList, { CategoryHeaderButton } from "@/components/app/TemplateEditor/categories/CategoryList";
+import CategoryList, { CategoryHeaderButton } from "@/components/app/TemplateEditor/CategoryNavigationCol/CategoryList";
 import GuidingDescriptionText from "@/components/app/TemplateEditor/GuidingDescription";
 import cookie from 'cookie'
 import { LoadingContext } from '@/context/LoadingContext';
@@ -36,7 +36,7 @@ import {
   updateTemplate
 } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
-import TemplateNavigation from "@/components/app/TemplateEditor/templateNavigation"
+import TemplateNavigation from "@/components/app/TemplateEditor/TemplateNavigationCol"
 import { saveMessage } from "@/utils/helpers";
 import { ListAddButton } from "@/components/app/TemplateEditor/shared";
 import { Templates, TemplatesContainer } from "@/types/global"
@@ -328,6 +328,7 @@ const Page: NextPage<PageProps> = () => {
                             categoryIndex={selectedCategory}
                             index={templateIndex}
                             template={template}
+                            setTemplates={setTextTemplates}
                             handleRemoveTemplate={handleRemoveTemplate}
                             handleTextTemplateChange={handleTextTemplateChange}
                             ref={templateRefs[templateIndex]}

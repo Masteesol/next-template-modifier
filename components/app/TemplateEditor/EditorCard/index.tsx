@@ -25,6 +25,7 @@ import { Badge } from "flowbite-react";
 import Footer from "./subcomponents/Footer";
 import { objectsAreEqual, saveMessage } from "@/utils/helpers";
 
+
 const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count, setSaveStatus) => {
     const update = async () => {
         const response = await updateTemplateMetaData(template_id, userID, copy_count)
@@ -38,8 +39,18 @@ const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count,
     update()
 }, 2000);
 
+interface TemplateCardProps {
+    categoryIndex: number;
+    template: any;
+    index: number;
+    handleTextTemplateChange: any;
+    handleRemoveTemplate: any;
+    userID: string | undefined;
+    subscriptionLimits: any;
+    setTemplates: any;
+}
 
-const TemplateCard = (props: any, ref: any) => {
+const TemplateCard = (props: TemplateCardProps, ref: any) => {
     const {
         categoryIndex,
         template,
@@ -47,7 +58,8 @@ const TemplateCard = (props: any, ref: any) => {
         handleTextTemplateChange,
         handleRemoveTemplate,
         userID,
-        subscriptionLimits
+        subscriptionLimits,
+        setTemplates,
     } = props;
 
     const templateIndex = index
@@ -309,6 +321,10 @@ const TemplateCard = (props: any, ref: any) => {
                             placeholderCount={placeholderCount}
                             handleCopy={handleCopy}
                             hasBeenCopied={hasBeenCopied}
+                            setTemplates={setTemplates}
+                            textTemplate={textTemplate}
+                            categoryIndex={categoryIndex}
+                            userID={userID}
                         />
                     </FlexRowContainer>
                 }

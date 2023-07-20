@@ -141,6 +141,25 @@ export const updateCategoryFavourite = async (category_id: string, userID: strin
     }
 }
 
+export const updateTemplatesFavourite = async (template_id: string, userID: string, favourited: boolean) => {
+    try {
+        const { data, error } = await supabase
+            .from("templates")
+            .update({ favourited: favourited })
+            .eq("template_id", template_id)
+            .match({ user_id: userID })
+            .select();
+        if (error) {
+            return error
+        }
+        if (data) {
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 export const fetchTemplatesForUser = async (userId: string | undefined | null, setIsLoading: any) => {
     if (!userId) {

@@ -4,7 +4,7 @@ import {
     FlexColContainer,
     FlexRowCenteredY,
 } from "@/components/shared/styled-global-components";
-import TemplateNavButton from "@/components/app/TemplateEditor/templateNavigation/TemplateNavButton";
+import TemplateNavButton from "./TemplateNavButton";
 import { useState, useEffect, useContext } from "react";
 import { Accordion, ListAddButton } from "../shared";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
@@ -102,16 +102,14 @@ const SortingList = (props: TemplateNavigationProps) => {
                             <h2>Favourites</h2>
                             <BsStarFill className="text-base text-green-500" />
                         </FlexRowCenteredY>
-                        <FlexColContainer>
+                        <FlexColContainer className="gap-2">
                             {textTemplates[selectedCategory].templates.map((item: Templates, templateIndex: number) => {
                                 return item.favourited && <TemplateNavButton
                                     template={item}
                                     index={templateIndex}
-                                    categoryIndex={selectedCategory}
                                     templateRefs={templateRefs}
                                     key={`template-nav-button-${selectedCategory}-${templateIndex}`}
                                     isEditing={isEditing}
-                                    favourited={item.favourited}
                                 />
                             })}
                         </FlexColContainer>
@@ -159,11 +157,9 @@ const TemplatesNavCardList = (props: TemplateNavigationProps, isEditing: boolean
             && <TemplateNavButton
                 template={template}
                 index={templateIndex}
-                categoryIndex={selectedCategory}
                 templateRefs={templateRefs}
                 key={`template-nav-button-${selectedCategory}-${templateIndex}`}
                 isEditing={isEditing}
-                favourited={template.favourited}
             />
     })
 }

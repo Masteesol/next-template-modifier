@@ -10,7 +10,7 @@ import {
     FlexExpandable
 } from "@/components/shared/styled-global-components";
 
-import CategoryCard from "@/components/app/TemplateEditor/categories/CategoryCard";
+import CategoryCard from "./CategoryCard";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import GuidingDescriptionText from "../GuidingDescription";
 import { List, arrayMove } from 'react-movable';
@@ -137,7 +137,7 @@ const SortingList = (props: CateGoryListTypes) => {
                             <h2>Favourites</h2>
                             <BsStarFill className="text-base text-green-500" />
                         </FlexRowCenteredY>
-                        <FlexColContainer>
+                        <FlexColContainer className="gap-2">
                             {textTemplates.map((item: TemplatesContainer, index: number) => {
                                 return item.favourited && <CategoryCard
                                     key={item.category_id}
@@ -165,11 +165,11 @@ const SortingList = (props: CateGoryListTypes) => {
                         onChange={({ oldIndex, newIndex }) =>
                             handleNewListOrder(items, oldIndex, newIndex)
                         }
-                        renderList={({ children, props }) => <ul {...props}>{children}</ul>}
+                        renderList={({ children, props }) => <ul className="flex flex-col gap-2" {...props}>{children}</ul>}
                         renderItem={({ value, props }) => <li className="list-none" {...props} style={{ ...props.style, zIndex: 1000 }}>{value}</li>}
                     />
                     :
-                    <ul >
+                    <ul className="flex flex-col gap-1">
                         {items.map((item, index) =>
                             <li key={index}>{item}</li>
                         )}

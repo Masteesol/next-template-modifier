@@ -1,10 +1,18 @@
 
 import { FlexRowCenteredY } from "@/components/shared/styled-global-components";
+import { Templates } from "@/types/global";
 import { BsArrowRight, BsFillGrid3X2GapFill } from "react-icons/bs";
 
-const NavHollowButton = ({ index, templateRefs, template, isEditing, favourited }: any) => {
+interface ComponentProps {
+    index: number;
+    templateRefs: any;
+    template: Templates;
+    isEditing: boolean;
+}
 
-    if (!favourited && isEditing) {
+const NavButton = ({ index, templateRefs, template, isEditing }: ComponentProps) => {
+
+    if (!template.favourited && isEditing) {
         return <div
             className={`w-full pe-2`}
             id={`${index}`}
@@ -61,4 +69,4 @@ const NavHollowButton = ({ index, templateRefs, template, isEditing, favourited 
 
 }
 
-export default NavHollowButton;
+export default NavButton;

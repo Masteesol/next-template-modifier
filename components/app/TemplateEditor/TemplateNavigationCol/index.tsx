@@ -133,7 +133,7 @@ const SortingList = (props: TemplateNavigationProps) => {
                     </ul>
                 }
             </FlexColContainer>
-            <FlexColCentered className="mt-auto w-full mb-8 gap-4">
+            <FlexColCentered className="mt-8 w-full mb-8 gap-4">
                 <ListAddButton onClick={handleCreateTemplate} />
             </FlexColCentered>
         </FlexColContainer>

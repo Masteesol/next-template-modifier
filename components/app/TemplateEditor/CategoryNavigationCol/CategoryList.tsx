@@ -128,7 +128,7 @@ const SortingList = (props: CateGoryListTypes) => {
                 textTemplates={textTemplates}
             />
             <FlexColContainer
-                className="w-[18rem] lg:w-[19rem] relative h-full max-h-[90%] overflow-y-auto gap-4"
+                className="w-[18rem] lg:w-[19rem] relative max-h-[90%] overflow-y-auto gap-4"
             >
                 {textTemplates.filter((item: TemplatesContainer) => item.favourited && item.favourited).length > 0
                     &&
@@ -177,7 +177,7 @@ const SortingList = (props: CateGoryListTypes) => {
                 }
 
             </FlexColContainer>
-            <FlexColCentered className="mt-auto w-full mb-10 gap-4">
+            <FlexColCentered className="w-full mb-10 mt-4 gap-4">
                 {textTemplates.length === 0 && <GuidingDescriptionText>Add a new category to begin</GuidingDescriptionText>}
                 <FlexRowCenteredY className="w-full">
                     {!isEditing && <AddCategoryButton onClick={addCategory} />}

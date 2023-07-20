@@ -248,8 +248,8 @@ export const createCategory = async (
                 favourited: false,
                 templates: []
             }
-            const updatedTextTemplates = [newCategoryWithTemplates, ...textTemplates];
-
+            const updatedTextTemplates = [...textTemplates, newCategoryWithTemplates];
+            console.log("Create category - updatedTextTemplates", updatedTextTemplates)
             setTextTemplates(updatedTextTemplates);
             setSelectedCategory(0);
         } else {
@@ -285,7 +285,7 @@ export const createTemplate = async (
         }
         if (data) {
             const newTemplate = data[0]
-            const updatedTemplates = [newTemplate, ...textTemplates[selectedCategory].templates];
+            const updatedTemplates = [...textTemplates[selectedCategory].templates, newTemplate];
             const updatedTextTemplates = textTemplates.map((item, index) => {
                 if (index === selectedCategory) {
                     return {
@@ -299,7 +299,7 @@ export const createTemplate = async (
         }
 
 
-        console.log("new text templates", textTemplates)
+        console.log("New text templates created", textTemplates)
     } catch (error) {
         console.error("Failed to create template:", error);
     }
@@ -371,7 +371,7 @@ export const deletedCategory = async (
             updatedCategories.forEach((category, idx) => {
                 category.order = idx;
             });
-
+            console.log("Delete category updated list:", updatedCategories)
             setTextTemplates(updatedCategories);
 
             // Update the order for each category in the database
@@ -381,7 +381,7 @@ export const deletedCategory = async (
             await Promise.all(updatePromises);
 
             if (index === selectedCategory) {
-                setSelectedCategory(updatedCategories.length > 0 ? 0 : -1);
+                setSelectedCategory(0);
             }
         }
     } catch (error) {

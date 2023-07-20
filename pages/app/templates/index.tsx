@@ -264,7 +264,7 @@ const Page: NextPage<PageProps> = () => {
               </FlexRowCentered>
             }
             {textTemplates?.length > 0 &&
-              textTemplates[selectedCategory].templates.length > 0 && !viewNavigation &&
+              textTemplates[selectedCategory]?.templates.length > 0 && !viewNavigation &&
               <FlexRowCentered className="relative bg-slate-100 dark:bg-slate-700 rounded shadow">
                 <div className="absolute right-[10rem]">
                   <ListAddButton onClick={handleCreateTemplate} />
@@ -297,7 +297,7 @@ const Page: NextPage<PageProps> = () => {
             {viewCategories && <DividerPipe />}
             {
               textTemplates && textTemplates.length > 0 &&
-              textTemplates[selectedCategory].templates.length > 0 &&
+              textTemplates[selectedCategory]?.templates.length > 0 &&
               viewNavigation &&
               <TemplateNavigation
                 handleViewNavigationSelect={handleViewNavigationSelect}
@@ -310,7 +310,7 @@ const Page: NextPage<PageProps> = () => {
               />
             }
             {textTemplates.length > 0 &&
-              textTemplates[selectedCategory].templates.length > 0 &&
+              textTemplates[selectedCategory]?.templates.length > 0 &&
               viewNavigation && <DividerPipe />}
           </FlexRowContainer>
           {viewCategories
@@ -338,8 +338,8 @@ const Page: NextPage<PageProps> = () => {
                   <FlexColContainer className="h-full" >
                     <FlexColContainer className="gap-4">
                       {
-                        textTemplates[selectedCategory].templates.length > 0
-                        && textTemplates[selectedCategory].templates.map((template, templateIndex) => {
+                        textTemplates[selectedCategory]?.templates.length > 0
+                        && textTemplates[selectedCategory]?.templates.map((template, templateIndex) => {
                           return template.favourited && <ForwardedRefTemplateCard
                             key={template.template_id}
                             categoryIndex={selectedCategory}
@@ -357,8 +357,8 @@ const Page: NextPage<PageProps> = () => {
 
                       }
                       {
-                        textTemplates[selectedCategory].templates.length > 0
-                        && textTemplates[selectedCategory].templates.map((template, templateIndex) => {
+                        textTemplates[selectedCategory]?.templates.length > 0
+                        && textTemplates[selectedCategory]?.templates.map((template, templateIndex) => {
                           return !template.favourited && <ForwardedRefTemplateCard
                             key={template.template_id}
                             categoryIndex={selectedCategory}
@@ -376,11 +376,11 @@ const Page: NextPage<PageProps> = () => {
 
                       }
                       {/**If no templates have been created */}
-                      {textTemplates[selectedCategory].templates.length === 0 &&
+                      {textTemplates[selectedCategory]?.templates.length === 0 &&
                         <FlexColCentered className="h-full">
                           <FlexColCentered className="max-w-[400px] p-8 w-full gap-8 justify-center border-[1px] rounded border-gray-200">
                             <InputBase type="text"
-                              value={textTemplates[selectedCategory].category_name}
+                              value={textTemplates[selectedCategory]?.category_name}
                               className="text-center text-lg bg-white dark:bg-gray-800 w-full"
                               onChange={(e) => handleInputCatTitleChange(e, selectedCategory, textTemplates[selectedCategory].category_id)} />
                             <FlexRowCenteredY className="gap-4 w-full">
@@ -398,7 +398,7 @@ const Page: NextPage<PageProps> = () => {
                   <GuidingDescriptionText>Your templates will show up here, but first add a template category.</GuidingDescriptionText>
                 </FlexColContainer>
               }
-              {textTemplates[selectedCategory] && textTemplates[selectedCategory].templates.length > 1 && <div className="min-h-[30rem] w-full"></div>}
+              {textTemplates[selectedCategory] && textTemplates[selectedCategory]?.templates.length > 1 && <div className="min-h-[30rem] w-full"></div>}
             </FlexColContainer>
 
           </FlexRowContainer>

@@ -322,8 +322,8 @@ const Page: NextPage<PageProps> = () => {
                     <FlexColContainer className="gap-4">
                       {
                         textTemplates[selectedCategory].templates.length > 0
-                        && textTemplates[selectedCategory].templates.map((template, templateIndex) =>
-                          <ForwardedRefTemplateCard
+                        && textTemplates[selectedCategory].templates.map((template, templateIndex) => {
+                          return template.favourited && <ForwardedRefTemplateCard
                             key={template.template_id}
                             categoryIndex={selectedCategory}
                             index={templateIndex}
@@ -335,7 +335,28 @@ const Page: NextPage<PageProps> = () => {
                             userID={userID}
                             subscriptionLimits={subscriptionLimits}
                           />
-                        )
+
+                        })
+
+                      }
+                      {
+                        textTemplates[selectedCategory].templates.length > 0
+                        && textTemplates[selectedCategory].templates.map((template, templateIndex) => {
+                          return !template.favourited && <ForwardedRefTemplateCard
+                            key={template.template_id}
+                            categoryIndex={selectedCategory}
+                            index={templateIndex}
+                            template={template}
+                            setTemplates={setTextTemplates}
+                            handleRemoveTemplate={handleRemoveTemplate}
+                            handleTextTemplateChange={handleTextTemplateChange}
+                            ref={templateRefs[templateIndex]}
+                            userID={userID}
+                            subscriptionLimits={subscriptionLimits}
+                          />
+
+                        })
+
                       }
                       {/**If no templates have been created */}
                       {textTemplates[selectedCategory].templates.length === 0 &&

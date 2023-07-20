@@ -14,13 +14,10 @@ import {
 //import { translateOrDefault } from "@/utils/i18nUtils";
 import Image from "next/image";
 import logo from "@/public/logo.png"
-import { useContext } from "react";
-import { AuthContext } from "@/context/AuthContext";
 import textContent from "@/text/textContent.json"
 const LandingPageContent = () => {
     const text = textContent.landingPage
     //const { t } = useTranslation("common");
-    const { isAuthenticated } = useContext(AuthContext)
 
     return (
         <FlexColContainer>
@@ -35,25 +32,18 @@ const LandingPageContent = () => {
                             </FlexColContainer>
                         </FlexRowCenteredY>
                         <FlexRowContainer className="gap-4 flex-1 text-white justify-center md:justify-end">
-                            {!isAuthenticated ?
-                                <FlexRowCentered className="gap-4">
-                                    <FlexRowCentered>
-                                        <Link href={"/sign-in"} className="p-4 text-base rounded bg-green-400 border-[1px] border-transparent hover:opacity-70">
-                                            <h4>Sign In</h4>
-                                        </Link>
-                                    </FlexRowCentered>
-                                    <FlexRowCentered >
-                                        <Link href="/sign-up" className="p-4 text-base rounded bg-transparent border-[1px] border-white hover:opacity-70">
-                                            <h4>Sign Up</h4>
-                                        </Link>
-                                    </FlexRowCentered>
-                                </FlexRowCentered>
-                                : <FlexRowCentered className="gap-4">
-                                    <Link href={"/app"} className="p-4 text-base rounded bg-green-400 border-[1px] border-transparent hover:opacity-70">
-                                        <h4>To the app</h4>
+                            <FlexRowCentered className="gap-4">
+                                <FlexRowCentered>
+                                    <Link href={"/sign-in"} className="p-4 text-base rounded bg-green-400 border-[1px] border-transparent hover:opacity-70">
+                                        <h4>Sign In</h4>
                                     </Link>
                                 </FlexRowCentered>
-                            }
+                                <FlexRowCentered >
+                                    <Link href="/sign-up" className="p-4 text-base rounded bg-transparent border-[1px] border-white hover:opacity-70">
+                                        <h4>Sign Up</h4>
+                                    </Link>
+                                </FlexRowCentered>
+                            </FlexRowCentered>
                         </FlexRowContainer>
                     </FlexColRowContainer>
                 </FlexRowCentered>

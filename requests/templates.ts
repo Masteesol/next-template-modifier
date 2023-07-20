@@ -251,7 +251,7 @@ export const createCategory = async (
             const updatedTextTemplates = [...textTemplates, newCategoryWithTemplates];
             console.log("Create category - updatedTextTemplates", updatedTextTemplates)
             setTextTemplates(updatedTextTemplates);
-            setSelectedCategory(0);
+            setSelectedCategory(updatedTextTemplates && updatedTextTemplates.length - 1 | 0);
         } else {
             console.log("Error creating category", error)
         }

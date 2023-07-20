@@ -275,8 +275,8 @@ const Page: NextPage<PageProps> = () => {
           </FlexColContainer>
           {/**Categories List */}
           <FlexRowContainer className="absolute bg-gray-50 dark:bg-gray-800 z-[500] xl:static gap-2 h-full">
-            <FlexRowContainer className="h-full">
-              {viewCategories &&
+            {viewCategories &&
+              <div className="h-full flex">
                 <CategoryList
                   viewCategories={viewCategories}
                   handleViewCategorySelect={handleViewCategorySelect}
@@ -290,9 +290,9 @@ const Page: NextPage<PageProps> = () => {
                   userID={userID}
                   setSelectedCategory={setSelectedCategory}
                 />
-              }
 
-            </FlexRowContainer>
+              </div>
+            }
             {/**Template Navigation List */}
             {viewCategories && <DividerPipe />}
             {
@@ -313,6 +313,23 @@ const Page: NextPage<PageProps> = () => {
               textTemplates[selectedCategory].templates.length > 0 &&
               viewNavigation && <DividerPipe />}
           </FlexRowContainer>
+          {viewCategories
+            &&
+            <div
+              onClick={() => { setViewCategories(!viewCategories) }}
+              className="lg:hidden overlay-bg cursor-pointer"
+              style={{ zIndex: 200 }}
+            ></div>
+          }
+          {viewNavigation
+            &&
+            <div
+              onClick={() => { setViewNavigation(!viewNavigation) }}
+              className="lg:hidden overlay-bg cursor-pointer"
+              style={{ zIndex: 200 }}
+            ></div>
+          }
+
           {/**Templates Cards */}
           <FlexRowContainer className="gap-4 w-full justify-center overflow-y-auto h-full" id="templates-container">
             <FlexColContainer className="w-full max-w-[900px] gap-4 relative h-full p-2">
@@ -386,7 +403,7 @@ const Page: NextPage<PageProps> = () => {
 
           </FlexRowContainer>
         </FlexRowContainer>
-      </PageLayout>
+      </PageLayout >
     </>
   );
 }

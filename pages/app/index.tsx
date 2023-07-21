@@ -8,15 +8,19 @@ import { useState, useEffect, useContext } from "react";
 //import { translateOrDefault } from "@/utils/i18nUtils";
 
 import { AuthContext } from "@/context/AuthContext";
-import { CardBaseLightHover, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, FlexRowContainer, H1 } from "@/components/shared/styled-global-components";
+import { CardBaseLightHover, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, GridSm2Lg4, H1 } from "@/components/shared/styled-global-components";
 import {
     BsFileEarmarkText,
     BsPerson,
     BsCreditCard2Front,
+    BsStarFill,
 } from "react-icons/bs";
 import { fetchTemplatesForUser } from "@/requests/templates";
 import Cookies from "js-cookie";
 import { LoadingContext } from "@/context/LoadingContext";
+import Tables from "@/components/app/Dashboard/Tables";
+import Piechart from "@/components/app/Dashboard/PieChart";
+
 
 interface TemplateModified {
     title: string;
@@ -25,13 +29,15 @@ interface TemplateModified {
     category_name: string;
     char_limit: number | null
     text: string;
-    word_limit: number
+    word_limit: number;
+    favourited: boolean;
 }
 
 const Page = () => {
     //const { t } = useTranslation("common");
     const { isAuthenticated } = useContext(AuthContext)
     const [textTemplates, setTextTemplates] = useState<TemplateModified[]>([]);
+
     const { setIsLoading } = useContext(LoadingContext)
     const userID = Cookies.get("user_id")
 
@@ -70,13 +76,14 @@ const Page = () => {
             </Head>
             <PageLayout authenticated={isAuthenticated}>
                 <FlexColCenteredX className="p-4 md:p-8">
-                    <FlexColContainer className="w-full max-w-[1280px] gap-8">
+                    <FlexColContainer className="w-full max-w-[1580px] gap-8">
                         <H1>
                             Dashboard
                         </H1>
+                        <h2>Quick Links</h2>
                         <FlexColContainer className="gap-4">
-                            <h2>Quick Links</h2>
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                                 <Link href="/app/templates">
                                     <CardBaseLightHover className="rounded shadow bg-white p-4">
                                         <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
@@ -107,15 +114,67 @@ const Page = () => {
                                 </Link>
                             </div>
                         </FlexColContainer>
-                        <FlexColContainer className="gap-4">
-                            <h2>Statistics</h2>
-                            {/**Will be replaced with real data */}
-                            {textTemplates && textTemplates.length > 0
+                        <h2>Favourites</h2>
+                        {
+                            textTemplates && textTemplates.length > 0
+                            &&
+                            <GridSm2Lg4 className="gap-2">
+                                {textTemplates.map((item, index) => {
+                                    return item.favourited &&
+                                        <Link href={`/app/templates?template_id=${item.template_id}`}
+                                            key={`favourite-${index}`}
+                                        >
+                                            <CardBaseLightHover className="rounded shadow bg-white p-4">
+                                                <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
+                                                    <BsStarFill className="text-green-500" /> <h2 className="text-sm md:text-lg">{item.title}</h2>
+                                                </FlexRowCenteredY>
+                                                <p className="text-gray-500"> {`${item.text.substring(0, 80)}...`}</p>
+                                            </CardBaseLightHover>
+                                        </Link>
 
-                                ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                    {textTemplates.map((template, index) => {
-                                        //console.log("item", template)
-                                        return index < 5 && <FlexColContainer className="gap-2" key={`count-card-${index}`}>
+                                })}
+
+                            </GridSm2Lg4>
+                        }
+                        <h2>Statistics</h2>
+                        {textTemplates && textTemplates.length > 0
+                            ?
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                                <FlexColCentered className="gap-4">
+                                    <h3>Ratio</h3>
+                                    <Piechart textTemplates={textTemplates} />
+                                    <i>Total Copied: {`${textTemplates.reduce((acc, current) => acc + current.copy_count, 0)}`}</i>
+                                </FlexColCentered>
+                                <FlexColContainer className="gap-4 max-w-[100vh] overflow-x-auto">
+                                    <Tables textTemplates={textTemplates} />
+                                </FlexColContainer>
+
+                            </div>
+                            :
+                            <i>{`The app tracks your usage by counting how many times you've copied each template. The results will be displayed here.`}</i>
+                        }
+
+                    </FlexColContainer>
+                </FlexColCenteredX >
+                <div className="min-h-[30rem] w-full"></div>
+            </PageLayout >
+        </>
+    );
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    return {
+        props: {
+            ...(await serverSideTranslations(context.locale as string, ["common"]))
+        }
+    }
+}
+export default Page;
+
+
+
+{/* <FlexColContainer className="gap-2" key={`count-card-${index}`}>
                                             <h3 className="text-xl">#{index + 1}</h3>
                                             <FlexRowContainer className="gap-4 rounded shadow bg-white p-4">
                                                 <FlexColContainer className="w-full gap-2 truncate text-xs md:text-sm">
@@ -132,29 +191,4 @@ const Page = () => {
                                                     </span>
                                                 </FlexColCentered>
                                             </FlexRowContainer>
-                                        </FlexColContainer>
-                                    })
-                                    }
-                                </div>
-                                :
-                                <i>{`The app tracks your usage by counting how many times you've copied each template. The results will be displayed here.`}</i>
-                            }
-
-                        </FlexColContainer>
-                    </FlexColContainer>
-                </FlexColCenteredX >
-
-            </PageLayout >
-        </>
-    );
-}
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    return {
-        props: {
-            ...(await serverSideTranslations(context.locale as string, ["common"]))
-        }
-    }
-}
-export default Page;
-
+                                        </FlexColContainer> */}

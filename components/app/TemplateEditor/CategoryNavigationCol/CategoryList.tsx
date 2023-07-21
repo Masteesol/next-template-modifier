@@ -165,7 +165,7 @@ const SortingList = (props: CateGoryListTypes) => {
                         onChange={({ oldIndex, newIndex }) =>
                             handleNewListOrder(items, oldIndex, newIndex)
                         }
-                        renderList={({ children, props }) => <ul className="flex flex-col gap-2" {...props}>{children}</ul>}
+                        renderList={({ children, props }) => <ul className="flex flex-col gap-1" {...props}>{children}</ul>}
                         renderItem={({ value, props }) => <li className="list-none" {...props} style={{ ...props.style, zIndex: 1000 }}>{value}</li>}
                     />
                     :

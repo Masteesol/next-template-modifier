@@ -69,7 +69,7 @@ const CategoryCard = (props: CatType) => {
 
     if (!favourited && isEditing) {
         return <CardBaseLightHover
-            className={`${isSelected && "border-l-8 border-l-green-400"} w-full my-2 hover:border-l-green-400 hover:border-l-8 pe-2 hover:ps-2 hover:pe-0 transition-all ease-in-out duration-300 transition-delay-200`}
+            className={`${isSelected && "border-l-8 border-l-green-400"} w-full  hover:border-l-green-400 hover:border-l-8 pe-2 hover:ps-2 hover:pe-0 transition-all ease-in-out duration-300 transition-delay-200`}
             id={`${index}`}
         >
             <FlexRowCenteredY className="gap-4 justify-between p-4">

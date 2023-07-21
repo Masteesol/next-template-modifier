@@ -14,6 +14,7 @@ import {
     BsPerson,
     BsCreditCard2Front,
     BsStarFill,
+    BsLink,
 } from "react-icons/bs";
 import { fetchTemplatesForUser } from "@/requests/templates";
 import Cookies from "js-cookie";
@@ -85,29 +86,46 @@ const Page = () => {
                             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                                 <Link href="/app/templates">
                                     <CardBaseLightHover className="rounded shadow bg-white p-4">
-                                        <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
-                                            <BsFileEarmarkText /> <h2 className="text-sm md:text-lg">Template Editor</h2>
+                                        <FlexRowCenteredY className="justify-between">
+                                            <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
+                                                <BsFileEarmarkText />
+                                                <h2 className="text-sm md:text-lg">Template Editor</h2>
+                                            </FlexRowCenteredY>
+                                            <BsLink className="text-xl" />
                                         </FlexRowCenteredY>
+
                                     </CardBaseLightHover>
                                 </Link>
                                 <Link href="/app/templates/tutorial">
                                     <CardBaseLightHover className="rounded shadow bg-white p-4">
-                                        <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
-                                            <BsFileEarmarkText /> <h2 className="text-sm md:text-lg">Editor Tutorial</h2>
+                                        <FlexRowCenteredY className="justify-between">
+                                            <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
+                                                <BsFileEarmarkText />
+                                                <h2 className="text-sm md:text-lg">Editor Tutorial</h2>
+                                            </FlexRowCenteredY>
+                                            <BsLink className="text-xl" />
                                         </FlexRowCenteredY>
                                     </CardBaseLightHover>
                                 </Link>
                                 <Link href="/app/settings">
                                     <CardBaseLightHover className="rounded shadow bg-white p-4">
-                                        <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
-                                            <BsPerson /> <h2 className="text-sm md:text-lg">User Information</h2>
+                                        <FlexRowCenteredY className="justify-between">
+                                            <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
+                                                <BsPerson />
+                                                <h2 className="text-sm md:text-lg">User Information</h2>
+                                            </FlexRowCenteredY>
+                                            <BsLink className="text-xl" />
                                         </FlexRowCenteredY>
                                     </CardBaseLightHover>
                                 </Link>
                                 <Link href="/app/plans">
                                     <CardBaseLightHover className="rounded shadow bg-white p-4">
-                                        <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
-                                            <BsCreditCard2Front /> <h2 className="text-sm md:text-lg">Subscriptions</h2>
+                                        <FlexRowCenteredY className="justify-between">
+                                            <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
+                                                <BsCreditCard2Front />
+                                                <h2 className="text-sm md:text-lg">Subscriptions</h2>
+                                            </FlexRowCenteredY>
+                                            <BsLink className="text-xl" />
                                         </FlexRowCenteredY>
                                     </CardBaseLightHover>
                                 </Link>
@@ -139,7 +157,11 @@ const Page = () => {
                             }
                         </FlexColContainer>
                         <FlexColContainer className="gap-4 bg-slate-100 dark:bg-slate-900 rounded p-4">
-                            <h2>Statistics</h2>
+                            <FlexRowCenteredY className="gap-2 justify-between">
+                                <h2>Statistics</h2>
+                                <i className="text-sm text-gray-500">Viewing top 5</i>
+                            </FlexRowCenteredY>
+
                             {textTemplates && textTemplates.length > 0
                                 ?
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

@@ -40,7 +40,7 @@ import TemplateNavigation from "@/components/app/TemplateEditor/TemplateNavigati
 import { saveMessage } from "@/utils/helpers";
 import { ListAddButton } from "@/components/app/TemplateEditor/shared";
 import { Templates, TemplatesContainer } from "@/types/global"
-
+import { useRouter } from "next/router"
 
 type PageProps = {
   authenticated: boolean,
@@ -92,7 +92,7 @@ const Page: NextPage<PageProps> = () => {
   const { setIsLoading } = useContext(LoadingContext);
   const { setSaveStatus } = useContext(SaveStatusContext)
   const { isAuthenticated } = useContext(AuthContext)
-
+  const router = useRouter()
   const [subscriptionLimits, setSubscriptionLimits] = useState<tierLimit>()
 
   const userID = Cookies.get("user_id")
@@ -111,6 +111,23 @@ const Page: NextPage<PageProps> = () => {
         setTextTemplates(templatesContainers);
         //needs to come from DB
         setSubscriptionLimits(tierLimits)
+        const setSelectedCategoryAndTemplateFromUrl = () => {
+          const categoryID = router.query.category_id;
+          if (categoryID) {
+            console.log(categoryID)
+            const index = templatesContainers.findIndex((container: TemplatesContainer) => container.category_id === categoryID);
+            if (index !== -1) {
+              // Found the category in templatesContainers at the index
+              setSelectedCategory(index)
+              console.log('Category index:', index);
+            } else {
+              // Category was not found in templatesContainers
+              console.log('Category not found');
+
+            }
+          }
+        }
+        setSelectedCategoryAndTemplateFromUrl()
       }
     }).catch((error) => {
       console.error("Error fetching orders: ", error)

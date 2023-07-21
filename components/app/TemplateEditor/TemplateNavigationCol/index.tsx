@@ -16,7 +16,7 @@ import { BsStarFill } from "react-icons/bs";
 
 interface TemplateNavigationProps {
     handleViewNavigationSelect: any
-    textTemplates: any
+    textTemplates: any;
     selectedCategory: number
     handleCreateTemplate: any
     templateRefs: any;
@@ -49,10 +49,10 @@ const SortingList = (props: TemplateNavigationProps) => {
         handleViewNavigationSelect,
         textTemplates,
         handleCreateTemplate,
-        selectedCategory,
         setTextTemplates,
         userID,
-        templateRefs
+        templateRefs,
+        selectedCategory
     } = props
 
     const TemplatesCardList = TemplatesNavCardList(props, isEditing)
@@ -144,7 +144,7 @@ export default SortingList
 
 
 
-const TemplatesNavCardList = (props: TemplateNavigationProps, isEditing: boolean) => {
+const TemplatesNavCardList = (props: any, isEditing: boolean) => {
     const {
         textTemplates,
         selectedCategory,

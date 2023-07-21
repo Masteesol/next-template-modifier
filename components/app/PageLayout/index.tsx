@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useRef, useEffect, useContext, useState } from "react";
 import {
   FlexColCentered,
   FlexColContainer,
@@ -17,6 +17,7 @@ interface PageLayoutProps {
 }
 
 const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const { isLoading } = useContext(LoadingContext);
   const { saveStatus } = useContext(SaveStatusContext)
   const navRef = useRef<HTMLDivElement>(null);
@@ -40,13 +41,15 @@ const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
     <div className={`${darkMode ? "dark" : ""}`}>
       {authenticated &&
         <FlexRowContainer className="text-black dark:text-white w-full h-[100vh]">
-          <Sidebar />
+          <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
           <FlexColContainer className="w-full h-full relative">
             <TopBar
               ref={navRef}
               darkMode={darkMode}
               onDarkModeToggle={handleDarkModeToggle}
               authenticated={authenticated}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
             />
             <IdComponent ref={breadcrumbsRef} />
             <FlexColContainer

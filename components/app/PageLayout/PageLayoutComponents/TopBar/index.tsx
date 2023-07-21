@@ -7,6 +7,7 @@ import { FlexRowCenteredY } from "@/components/shared/styled-global-components";
 import NavDropdown from "./TopBarComponents/Dropdown";
 import Image from "next/image";
 import logo from "@/public/logo.png"
+import { BsList } from "react-icons/bs";
 
 //const mockCompanyInfo = "@/mockdata/companyData.json"
 //import mockData from "@/mockData/companyData.json"
@@ -23,15 +24,27 @@ interface NavProps {
   onDarkModeToggle: () => void;
   darkMode: boolean;
   authenticated: boolean;
+  isOpen: boolean;
+  setIsOpen: any
 }
 
 
 
 const Nav = forwardRef<HTMLDivElement, NavProps>((props, ref) => {
   //const router = useRouter();
+  const {
+    setIsOpen,
+    isOpen
+  } = props
   return (
     <div ref={ref}>
       <NavElement className="bg-white shadow dark:bg-gray-800">
+        <button className="text-2xl md:hidden"
+          onClick={() => { setIsOpen(!isOpen) }}
+        >
+          <BsList />
+        </button>
+
         <Link href="/" className="md:hidden">
           <FlexRowCenteredY className="gap-2 px-2 font-bold text-green-500 justify-between w-full">
             <Image src={logo} alt="logo" height={25} width={25} />

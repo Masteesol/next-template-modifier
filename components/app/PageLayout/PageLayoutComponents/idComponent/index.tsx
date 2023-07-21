@@ -14,9 +14,8 @@ const IdComponent = forwardRef<HTMLDivElement>((props, ref) => {
   const router = useRouter();
 
   const createBreadcrumbs = (): BreadcrumbPath[] => {
-    const pathSegments = router.asPath
-      .split("/")
-      .filter((segment) => segment);
+    // Use URL to parse the router's asPath, then get the pathname
+    const pathSegments = new URL(router.asPath, "http://example.com").pathname.split("/").filter(segment => segment);
 
     const breadcrumbPaths: BreadcrumbPath[] = [
       { name: t("paths.home"), url: "/app" },

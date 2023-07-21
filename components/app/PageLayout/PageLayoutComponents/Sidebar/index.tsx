@@ -5,8 +5,6 @@ import {
   BsFileEarmarkTextFill,
   BsPerson,
   BsPersonFill,
-  BsChevronRight,
-  BsChevronLeft,
   BsCreditCard2FrontFill,
   BsCreditCard2Front,
 } from "react-icons/bs";
@@ -42,29 +40,18 @@ const SideBarItemContainer = tw(FlexColCentered)`
   rounded
 `;
 
-const ToggleButton = tw.button`
-    border-none 
-    shadow 
-    p-2
-    bg-green-400
-    rounded-r-md
-    hover:bg-slate-400
-    absolute 
-    bottom-20
-    text-white
-    z-[7000]
-`;
+interface SideBarProps {
+  isOpen: boolean;
+  setIsOpen: any;
+}
 
-
-const SidebarElement = () => {
+const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
   //const { t } = useTranslation("common");
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+
   const [isMobile, setIsMobile] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+
   const closeSidebar = () => {
     setIsOpen(false);
   };
@@ -76,7 +63,7 @@ const SidebarElement = () => {
       setIsOpen(false);
       setIsMobile(true);
     }
-  }, []);
+  }, [setIsOpen]);
 
   useEffect(() => {
     handleResize();
@@ -149,14 +136,11 @@ const SidebarElement = () => {
       {
         isMobile && isOpen && (
           <div
-            className="fixed top-0 left-0 w-screen h-screen z-[7000] bg-overlay-dark"
+            className="fixed top-0 left-0 w-screen h-screen z-[7000] bg-overlay-dark cursor-pointer"
             onClick={closeSidebar}
           />
         )
       }
-      <ToggleButton onClick={toggleSidebar}>
-        {!isOpen ? <BsChevronRight size={25} /> : <BsChevronLeft size={25} />}
-      </ToggleButton>
     </div >
   );
 };

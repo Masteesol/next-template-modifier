@@ -18,6 +18,7 @@ const NavElement = tw.nav`
   flex
   items-center
   p-2
+  gap-2
 `;
 
 interface NavProps {
@@ -39,7 +40,7 @@ const Nav = forwardRef<HTMLDivElement, NavProps>((props, ref) => {
   return (
     <div ref={ref}>
       <NavElement className="bg-white shadow dark:bg-gray-800">
-        <button className="text-2xl md:hidden"
+        <button className="text-3xl md:hidden"
           onClick={() => { setIsOpen(!isOpen) }}
         >
           <BsList />

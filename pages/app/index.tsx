@@ -33,6 +33,7 @@ import { LoadingContext } from "@/context/LoadingContext";
 import Tables from "@/components/app/Dashboard/Tables";
 import Piechart from "@/components/app/Dashboard/PieChart";
 import { TemplatesContainer } from "@/types/global";
+import { GradientCard, GradientCardThree, GradientCardTwo, LargeCardText } from "@/components/app/Dashboard/styled-components";
 
 interface TemplateModified {
     title: string;
@@ -158,7 +159,7 @@ const Page = () => {
                                 </Link>
                             </div>
                         </FlexColContainer>
-                        <GridSm1Lg2 className="gap-2">
+                        <GridSm1Lg2 className="gap-8 lg:gap-2">
                             <CardBaseLight>
                                 <FlexColContainer className="gap-4 p-4 rounded shadow">
                                     <FlexRowCenteredY className="gap-2 justify-between border-b-2 border-gray-100 pb-2">
@@ -192,23 +193,29 @@ const Page = () => {
                                 </FlexColContainer>
                             </CardBaseLight>
                             <CardBaseLight>
-                                <FlexColContainer className="p-4 gap-2">
+                                <FlexColContainer className="p-4 gap-4">
                                     <FlexRowCenteredY className="gap-2 justify-between border-b-2 border-gray-100 pb-2">
                                         <h2 className="font-bold">Numbers</h2>
                                     </FlexRowCenteredY>
-                                    <GridSm2Lg4 className="text-center text-sm gap-2">
-                                        <FlexColCentered className="gap-2 bg-slate-50 dark:bg-slate-800 p-2 rounded">
-                                            <span className="text-6xl text-green-500 font-bold">{`${textTemplates.length}`}</span>
-                                            <p>Templates</p>
-                                        </FlexColCentered>
-                                        <FlexColCentered className="gap-2 bg-slate-50 dark:bg-slate-800 p-2 rounded">
-                                            <span className="text-6xl text-green-500 font-bold">{`${textTemplateFull.length}`}</span>
-                                            <p>Categories</p>
-                                        </FlexColCentered>
-                                        <FlexColCentered className="gap-2 col-span-2 bg-slate-50 dark:bg-slate-800 p-2 rounded">
-                                            <span className="text-6xl text-green-500 font-bold">{`${checkAverage()}`}</span>
-                                            <p>Average Char Length</p>
-                                        </FlexColCentered>
+                                    <GridSm2Lg4 className="text-center text-sm gap-2 text-white">
+                                        <GradientCard>
+                                            <FlexColCentered>
+                                                <LargeCardText>{`${textTemplates.length}`}</LargeCardText>
+                                                <p>Templates</p>
+                                            </FlexColCentered>
+                                        </GradientCard>
+                                        <GradientCardTwo>
+                                            <FlexColCentered>
+                                                <LargeCardText>{`${textTemplateFull.length}`}</LargeCardText>
+                                                <p>Categories</p>
+                                            </FlexColCentered>
+                                        </GradientCardTwo>
+                                        <GradientCardThree className="col-span-2">
+                                            <FlexColCentered>
+                                                <LargeCardText>{`${checkAverage()}`}</LargeCardText>
+                                                <p className="text-xs">Average characters per template</p>
+                                            </FlexColCentered>
+                                        </GradientCardThree>
                                     </GridSm2Lg4>
 
                                 </FlexColContainer>

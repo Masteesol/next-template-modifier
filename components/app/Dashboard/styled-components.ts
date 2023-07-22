@@ -1,5 +1,5 @@
 import tw from "tailwind-styled-components";
-import { FlexColCentered } from "@/components/shared/styled-global-components";
+import { CardBaseLightHover, FlexColCentered } from "@/components/shared/styled-global-components";
 
 export const GradientCard = tw(FlexColCentered)`
     bg-gradient-to-tr 
@@ -40,4 +40,13 @@ export const GradientCardThree = tw(FlexColCentered)`
 export const LargeCardText = tw.span`
     text-6xl 
     font-bold
+`
+
+export const QuickLinkCard = tw(CardBaseLightHover)`
+    transition
+    duration-150 
+    ease-in-out 
+    p-4 
+    border-b-4
+    border-transparent
 `

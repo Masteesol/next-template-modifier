@@ -10,7 +10,7 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import {
     CardBaseLight,
-    CardBaseLightHover,
+    DividerHorizontal,
     FlexColCentered,
     FlexColCenteredX,
     FlexColContainer,
@@ -33,7 +33,7 @@ import { LoadingContext } from "@/context/LoadingContext";
 import Tables from "@/components/app/Dashboard/Tables";
 import Piechart from "@/components/app/Dashboard/PieChart";
 import { TemplatesContainer } from "@/types/global";
-import { GradientCard, GradientCardThree, GradientCardTwo, LargeCardText } from "@/components/app/Dashboard/styled-components";
+import { GradientCard, GradientCardThree, GradientCardTwo, LargeCardText, QuickLinkCard } from "@/components/app/Dashboard/styled-components";
 
 interface TemplateModified {
     title: string;
@@ -113,7 +113,8 @@ const Page = () => {
                         <FlexColContainer className="gap-4">
                             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                                 <Link href="/app/templates">
-                                    <CardBaseLightHover className="rounded shadow bg-white p-4">
+                                    <QuickLinkCard
+                                        className="hover:border-green-500 hover:text-green-500">
                                         <FlexRowCenteredY className="justify-between">
                                             <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
                                                 <BsFileEarmarkText />
@@ -122,10 +123,11 @@ const Page = () => {
                                             <BsLink className="text-xl" />
                                         </FlexRowCenteredY>
 
-                                    </CardBaseLightHover>
+                                    </QuickLinkCard>
                                 </Link>
                                 <Link href="/app/templates/tutorial">
-                                    <CardBaseLightHover className="rounded shadow bg-white p-4">
+                                    <QuickLinkCard
+                                        className="hover:border-indigo-400 hover:text-indigo-400">
                                         <FlexRowCenteredY className="justify-between">
                                             <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
                                                 <BsFileEarmarkText />
@@ -133,10 +135,11 @@ const Page = () => {
                                             </FlexRowCenteredY>
                                             <BsLink className="text-xl" />
                                         </FlexRowCenteredY>
-                                    </CardBaseLightHover>
+                                    </QuickLinkCard>
                                 </Link>
                                 <Link href="/app/settings">
-                                    <CardBaseLightHover className="rounded shadow bg-white p-4">
+                                    <QuickLinkCard
+                                        className=" hover:border-blue-400 hover:text-blue-400">
                                         <FlexRowCenteredY className="justify-between">
                                             <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
                                                 <BsPerson />
@@ -144,10 +147,10 @@ const Page = () => {
                                             </FlexRowCenteredY>
                                             <BsLink className="text-xl" />
                                         </FlexRowCenteredY>
-                                    </CardBaseLightHover>
+                                    </QuickLinkCard>
                                 </Link>
                                 <Link href="/app/plans">
-                                    <CardBaseLightHover className="rounded shadow bg-white p-4">
+                                    <QuickLinkCard className="hover:border-orange-400 hover:text-orange-400">
                                         <FlexRowCenteredY className="justify-between">
                                             <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
                                                 <BsCreditCard2Front />
@@ -155,7 +158,7 @@ const Page = () => {
                                             </FlexRowCenteredY>
                                             <BsLink className="text-xl" />
                                         </FlexRowCenteredY>
-                                    </CardBaseLightHover>
+                                    </QuickLinkCard>
                                 </Link>
                             </div>
                         </FlexColContainer>
@@ -176,14 +179,31 @@ const Page = () => {
                                                     <Link href={`/app/templates?category_id=${item.category_id}`}
                                                         key={`favourite-${index}`}
                                                     >
-                                                        <CardBaseLightHover className="p-4 border-l-4 border-green-500">
+                                                        <div className="hidden lg:block group" style={{ zIndex: 300 }}>
+                                                            <CardBaseLight className="p-4 transition ease-in-out duration-300 border-l-4 border-transparent hover:border-green-500 ">
+                                                                <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
+                                                                    <BsStarFill className="text-green-500" />
+                                                                    <h2 className="text-sm md:text-lg group-hover:text-green-500">{item.title}</h2>
+                                                                    <BsLink className="text-xl ms-auto text-gray-500 group-hover:text-green-500" />
+                                                                </FlexRowCenteredY>
+                                                                <p
+                                                                    className="text-gray-500 text-xs md:text-sm"
+                                                                    style={{ zIndex: 300 }}
+                                                                >
+                                                                    {`${item.text.substring(0, 80)}...`}
+                                                                </p>
+                                                            </CardBaseLight>
+                                                        </div>
+                                                        <FlexColContainer className="gap-2 lg:hidden">
                                                             <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
                                                                 <BsStarFill className="text-green-500" />
                                                                 <h2 className="text-sm md:text-lg">{item.title}</h2>
                                                                 <BsLink className="text-xl ms-auto text-gray-500" />
                                                             </FlexRowCenteredY>
                                                             <p className="text-gray-500 text-xs md:text-sm"> {`${item.text.substring(0, 80)}...`}</p>
-                                                        </CardBaseLightHover>
+                                                            <DividerHorizontal className="border-gray-100" />
+                                                        </FlexColContainer>
+
                                                     </Link>
 
                                             })}

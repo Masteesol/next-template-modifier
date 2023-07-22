@@ -8,7 +8,18 @@ import { useState, useEffect, useContext } from "react";
 //import { translateOrDefault } from "@/utils/i18nUtils";
 
 import { AuthContext } from "@/context/AuthContext";
-import { CardBaseLightHover, FlexColCentered, FlexColCenteredX, FlexColContainer, FlexRowCenteredY, GridSm2Lg4, H1 } from "@/components/shared/styled-global-components";
+import {
+    CardBaseLight,
+    CardBaseLightHover,
+    FlexColCentered,
+    FlexColCenteredX,
+    FlexColContainer,
+    FlexRowCenteredY,
+    GridSm1Lg2,
+    GridSm2Lg4,
+    H1
+} from "@/components/shared/styled-global-components";
+
 import {
     BsFileEarmarkText,
     BsPerson,
@@ -21,6 +32,7 @@ import Cookies from "js-cookie";
 import { LoadingContext } from "@/context/LoadingContext";
 import Tables from "@/components/app/Dashboard/Tables";
 import Piechart from "@/components/app/Dashboard/PieChart";
+import { TemplatesContainer } from "@/types/global";
 
 interface TemplateModified {
     title: string;
@@ -38,7 +50,7 @@ const Page = () => {
     //const { t } = useTranslation("common");
     const { isAuthenticated } = useContext(AuthContext)
     const [textTemplates, setTextTemplates] = useState<TemplateModified[]>([]);
-
+    const [textTemplateFull, setTextTemplatesFull] = useState<TemplatesContainer[]>([]);
     const { setIsLoading } = useContext(LoadingContext)
     const userID = Cookies.get("user_id")
 
@@ -59,12 +71,28 @@ const Page = () => {
                     });
                 });
                 setTextTemplates(templatesModified.sort((a, b) => b.copy_count - a.copy_count));
+                setTextTemplatesFull(templatesContainer)
             }
         }).catch((error) => {
             console.error("Error fetching orders: ", error)
         });
     }, [userID, setIsLoading]);
 
+    const checkAverage = () => {
+        if (textTemplates) {
+            const sum = textTemplates.reduce((acc, currentIndex) => {
+                const text = currentIndex.text;
+                const length = text.length;
+                return acc + length;
+            }, 0);
+
+            const average = sum / textTemplates.length;
+
+            console.log('Average text length:', average);
+
+            return average;
+        }
+    }
 
     return (
         <>
@@ -82,7 +110,6 @@ const Page = () => {
                         </H1>
 
                         <FlexColContainer className="gap-4">
-                            <h2>Quick Links</h2>
                             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                                 <Link href="/app/templates">
                                     <CardBaseLightHover className="rounded shadow bg-white p-4">
@@ -131,60 +158,92 @@ const Page = () => {
                                 </Link>
                             </div>
                         </FlexColContainer>
-                        <FlexColContainer className="gap-4">
-                            <h2>Favourites</h2>
-                            {
-                                textTemplates && textTemplates.length > 0
-                                &&
-                                <GridSm2Lg4 className="gap-2">
-                                    {textTemplates.map((item, index) => {
-                                        console.log(item.favourited && item)
-                                        return item.favourited &&
-                                            <Link href={`/app/templates?category_id=${item.category_id}`}
-                                                key={`favourite-${index}`}
-                                            >
-                                                <CardBaseLightHover className="rounded shadow bg-white p-4">
-                                                    <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
-                                                        <BsStarFill className="text-green-500" /> <h2 className="text-sm md:text-lg">{item.title}</h2>
-                                                    </FlexRowCenteredY>
-                                                    <p className="text-gray-500 text-xs md:text-sm"> {`${item.text.substring(0, 80)}...`}</p>
-                                                </CardBaseLightHover>
-                                            </Link>
+                        <GridSm1Lg2 className="gap-2">
+                            <CardBaseLight>
+                                <FlexColContainer className="gap-4 p-4 rounded shadow">
+                                    <FlexRowCenteredY className="gap-2 justify-between border-b-2 border-gray-100 pb-2">
+                                        <h2 className="font-bold">Favourites</h2>
+                                        <i className="text-sm text-gray-500">Viewing top 5</i>
+                                    </FlexRowCenteredY>
+                                    {
+                                        textTemplates && textTemplates.length > 0
+                                        &&
+                                        <GridSm1Lg2 className="gap-2">
+                                            {textTemplates.map((item, index) => {
+                                                console.log(item.favourited && item)
+                                                return item.favourited && index < 5 &&
+                                                    <Link href={`/app/templates?category_id=${item.category_id}`}
+                                                        key={`favourite-${index}`}
+                                                    >
+                                                        <CardBaseLightHover className="p-4 border-l-4 border-green-500">
+                                                            <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
+                                                                <BsStarFill className="text-green-500" />
+                                                                <h2 className="text-sm md:text-lg">{item.title}</h2>
+                                                                <BsLink className="text-xl ms-auto text-gray-500" />
+                                                            </FlexRowCenteredY>
+                                                            <p className="text-gray-500 text-xs md:text-sm"> {`${item.text.substring(0, 80)}...`}</p>
+                                                        </CardBaseLightHover>
+                                                    </Link>
 
-                                    })}
+                                            })}
 
-                                </GridSm2Lg4>
-                            }
-                        </FlexColContainer>
-                        <FlexColContainer className="gap-4 bg-slate-100 dark:bg-slate-900 rounded p-4">
-                            <FlexRowCenteredY className="gap-2 justify-between">
-                                <h2>Statistics</h2>
-                                <i className="text-sm text-gray-500">Viewing top 5</i>
-                            </FlexRowCenteredY>
+                                        </GridSm1Lg2>
+                                    }
+                                </FlexColContainer>
+                            </CardBaseLight>
+                            <CardBaseLight>
+                                <FlexColContainer className="p-4 gap-2">
+                                    <FlexRowCenteredY className="gap-2 justify-between border-b-2 border-gray-100 pb-2">
+                                        <h2 className="font-bold">Numbers</h2>
+                                    </FlexRowCenteredY>
+                                    <GridSm2Lg4 className="text-center text-sm gap-2">
+                                        <FlexColCentered className="gap-2 bg-slate-50 dark:bg-slate-800 p-2 rounded">
+                                            <span className="text-6xl text-green-500 font-bold">{`${textTemplates.length}`}</span>
+                                            <p>Templates</p>
+                                        </FlexColCentered>
+                                        <FlexColCentered className="gap-2 bg-slate-50 dark:bg-slate-800 p-2 rounded">
+                                            <span className="text-6xl text-green-500 font-bold">{`${textTemplateFull.length}`}</span>
+                                            <p>Categories</p>
+                                        </FlexColCentered>
+                                        <FlexColCentered className="gap-2 col-span-2 bg-slate-50 dark:bg-slate-800 p-2 rounded">
+                                            <span className="text-6xl text-green-500 font-bold">{`${checkAverage()}`}</span>
+                                            <p>Average Char Length</p>
+                                        </FlexColCentered>
+                                    </GridSm2Lg4>
 
-                            {textTemplates && textTemplates.length > 0
-                                ?
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                </FlexColContainer>
+                            </CardBaseLight>
+                        </GridSm1Lg2>
+                        <CardBaseLight>
+                            <FlexColContainer className="gap-4  rounded p-4 shadow">
+                                <FlexRowCenteredY className="gap-2 justify-between border-b-2 border-gray-100 pb-2">
+                                    <h2 className="font-bold">Usage</h2>
+                                    <i className="text-sm text-gray-500">Viewing top 5</i>
+                                </FlexRowCenteredY>
 
-                                    <FlexColCentered className="gap-4">
-                                        <h3>Ratio</h3>
-                                        <Piechart textTemplates={textTemplates} />
-                                        <i>Total Copied: {`${textTemplates.reduce((acc, current) => acc + current.copy_count, 0)}`}</i>
-                                    </FlexColCentered>
-                                    <FlexColContainer className="gap-4 max-w-[100vh] overflow-x-auto">
-                                        <Tables textTemplates={textTemplates} />
-                                    </FlexColContainer>
+                                {textTemplates && textTemplates.length > 0
+                                    ?
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                                </div>
-                                :
-                                <i>{`The app tracks your usage by counting how many times you've copied each template. The results will be displayed here.`}</i>
-                            }
-                        </FlexColContainer>
+                                        <FlexColCentered className="gap-4">
+                                            <h3>Ratio</h3>
+                                            <Piechart textTemplates={textTemplates} />
+                                            <i>Total Copied: {`${textTemplates.reduce((acc, current) => acc + current.copy_count, 0)}`}</i>
+                                        </FlexColCentered>
 
+                                        <FlexColContainer className="gap-4 overflow-x-auto shadow">
+                                            <Tables textTemplates={textTemplates} />
+                                        </FlexColContainer>
 
+                                    </div>
+                                    :
+                                    <i>{`The app tracks your usage by counting how many times you've copied each template. The results will be displayed here.`}</i>
+                                }
+                            </FlexColContainer>
+                        </CardBaseLight>
                     </FlexColContainer>
                 </FlexColCenteredX >
-                <div className="min-h-[30rem] w-full"></div>
+                <div className="min-h-[20rem] w-full"></div>
             </PageLayout >
         </>
     );

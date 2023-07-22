@@ -363,6 +363,12 @@ export const GridSm1Md2Lg4 = tw.div`
     lg:grid-cols-4
 `
 
+export const GridSm1Lg2 = tw.div`
+    grid 
+    grid-cols-1 
+    lg:grid-cols-2
+`
+
 //Form styling
 
 export const FormWrapper = tw(FlexColContainer)`

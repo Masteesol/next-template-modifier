@@ -91,7 +91,7 @@ const Page = () => {
 
             console.log('Average text length:', average);
 
-            return average;
+            return average.toFixed(0);
         }
     }
 

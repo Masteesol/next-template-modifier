@@ -185,6 +185,9 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
             })
             .catch(err => console.log('Something went wrong', err));
     };
+    const handleRevertChanges = () => {
+        setStagedTemplate(textTemplate)
+    }
 
     let placeholderCount = 0; // this variable will track the number of placeholders encountered
     const regex = /#|\b\w+\b/g;
@@ -307,6 +310,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                 setExpandedTextSettings={setExpandedTextSettings}
                                 charLimitExceeded={charLimitExceeded}
                                 isUnSaved={isUnSaved}
+                                handleRevertChanges={handleRevertChanges}
                             />
                         </FlexRowContainer>
                     </FlexColContainer>

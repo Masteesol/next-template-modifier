@@ -32,8 +32,6 @@ const TemplatesSettingsSection = (props: props) => {
         setStagedTemplate,
     } = props
 
-
-
     const handleWordChange = (e: any) => {
         const value = e.target.value
         const valueChecked = value === "" ? null : parseInt(value)

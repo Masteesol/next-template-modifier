@@ -4,8 +4,8 @@ import {
     DividerHorizontal,
     FlexColCenteredX,
 } from "@/components/shared/styled-global-components";
-import { HoverLabel, IconContainerNormal, IconContainerWarning } from '../styles';
-import { BsArrowLeft, BsRobot, BsSliders } from 'react-icons/bs';
+import { HoverLabel, IconContainerNormal, IconContainerWarning, IconContainerYellow } from '../styles';
+import { BsArrowCounterclockwise, BsArrowLeft, BsRobot, BsSliders } from 'react-icons/bs';
 import { BiEraser } from 'react-icons/bi';
 import { FiSave } from "react-icons/fi"
 
@@ -18,7 +18,8 @@ interface ComponentProps {
     handleEditActive: any;
     setExpandedTextSettings: any;
     charLimitExceeded: boolean;
-    isUnSaved: boolean
+    isUnSaved: boolean;
+    handleRevertChanges: any
 }
 
 const EditModeToolbar = (props: ComponentProps) => {
@@ -31,8 +32,10 @@ const EditModeToolbar = (props: ComponentProps) => {
         handleApprove,
         handleEditActive,
         charLimitExceeded,
-        isUnSaved
+        isUnSaved,
+        handleRevertChanges
     } = props
+
     return (
         <FlexColCenteredX>
             <div className="group relative">
@@ -56,8 +59,19 @@ const EditModeToolbar = (props: ComponentProps) => {
                 </IconContainerNormal>
             </div>
 
+
+
             <FlexColContainer className="mt-auto">
                 <DividerHorizontal className="border-gray-100" />
+                <div className="group relative">
+                    <IconContainerYellow
+                        onClick={handleRevertChanges}
+                        disabled={!isUnSaved}
+                    >
+                        <BsArrowCounterclockwise className="text-2xl" />
+                        <HoverLabel className="w-[7rem] ">{isUnSaved ? "Revert changes" : "No changes made"}</HoverLabel>
+                    </IconContainerYellow>
+                </div>
                 <div className="group relative">
                     <IconContainerWarning
                         onClick={handleRemoveTextAreaText}

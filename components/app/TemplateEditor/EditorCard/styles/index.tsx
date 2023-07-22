@@ -38,7 +38,7 @@ export const IconContainer = tw.button`
 `
 
 interface IconContainerProps {
-    disabled: boolean;
+  disabled: boolean;
 }
 
 
@@ -59,6 +59,17 @@ export const IconContainerWarning = tw(IconContainer)`
   dark:hover:bg-red-500
   hover:text-red-800
   dark:hover:text-red-950
+`
+
+const IconContainerStylesYellow = `
+    hover:bg-yellow-200 
+    dark:hover:bg-yellow-500
+    hover:text-yellow-800
+    dark:hover:text-yellow-950
+  `
+
+export const IconContainerYellow = tw(IconContainer) <IconContainerProps>`
+  ${({ disabled }) => (!disabled ? IconContainerStylesYellow : "text-gray-300 cursor-not-allowed")}
 `
 
 export const HoverLabel = tw.label`

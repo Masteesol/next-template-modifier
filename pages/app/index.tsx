@@ -105,7 +105,7 @@ const Page = () => {
             </Head>
             <PageLayout authenticated={isAuthenticated}>
                 <FlexColCenteredX className="p-4 md:p-8">
-                    <FlexColContainer className="w-full max-w-[1580px] gap-8">
+                    <FlexColContainer className="w-full max-w-[1580px] gap-4 md:gap-8">
                         <H1>
                             Dashboard
                         </H1>
@@ -162,7 +162,7 @@ const Page = () => {
                                 </Link>
                             </div>
                         </FlexColContainer>
-                        <GridSm1Lg2 className="gap-8 lg:gap-2">
+                        <GridSm1Lg2 className="gap-4 md:gap8 lg:gap-2">
                             <CardBaseLight>
                                 <FlexColContainer className="gap-4 p-4 rounded shadow">
                                     <FlexRowCenteredY className="gap-2 justify-between border-b-2 border-gray-100 pb-2">

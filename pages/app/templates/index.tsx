@@ -111,10 +111,16 @@ const Page: NextPage<PageProps> = () => {
         setTextTemplates(templatesContainers);
         //needs to come from DB
         setSubscriptionLimits(tierLimits)
+        const findFirstFavourited = () => {
+          return data.filter(item => item.favourited && item)
+        }
+        if (findFirstFavourited()[0]?.order) {
+          setSelectedCategory(findFirstFavourited()[0].order)
+        }
         const setSelectedCategoryAndTemplateFromUrl = () => {
           const categoryID = router.query.category_id;
           if (categoryID) {
-            console.log(categoryID)
+            //console.log(categoryID)
             const index = templatesContainers.findIndex((container: TemplatesContainer) => container.category_id === categoryID);
             if (index !== -1) {
               // Found the category in templatesContainers at the index

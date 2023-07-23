@@ -1,6 +1,5 @@
 import Head from "next/head";
 import PageLayout from "@/components/app/PageLayout";
-import Link from "next/link"
 //import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
@@ -9,14 +8,10 @@ import { useState, useEffect, useContext } from "react";
 
 import { AuthContext } from "@/context/AuthContext";
 import {
-    CardBaseLight,
-    DividerHorizontal,
-    FlexColCentered,
     FlexColCenteredX,
     FlexColContainer,
     FlexRowCenteredY,
     GridSm1Lg2,
-    GridSm2Lg4,
     H1
 } from "@/components/shared/styled-global-components";
 
@@ -24,28 +19,41 @@ import {
     BsFileEarmarkText,
     BsPerson,
     BsCreditCard2Front,
-    BsStarFill,
-    BsLink,
 } from "react-icons/bs";
+
 import { fetchTemplatesForUser } from "@/requests/templates";
 import Cookies from "js-cookie";
 import { LoadingContext } from "@/context/LoadingContext";
-import Tables from "@/components/app/Dashboard/Tables";
-import Piechart from "@/components/app/Dashboard/PieChart";
 import { TemplatesContainer } from "@/types/global";
-import { GradientCard, GradientCardThree, GradientCardTwo, LargeCardText, QuickLinkCard } from "@/components/app/Dashboard/styled-components";
+import { FavouritesCard, NumbersCard, UsageCard, QuickLinkCard } from "@/components/app/Dashboard/Cards";
+import { TemplateModified } from "@/types/global";
 
-interface TemplateModified {
-    title: string;
-    template_id: string;
-    copy_count: number;
-    category_name: string;
-    char_limit: number | null
-    text: string;
-    word_limit: number;
-    favourited: boolean;
-    category_id: string;
-}
+const quickLinksData = [
+    {
+        path: "/app/templates",
+        text: "Template Editor",
+        icon: <BsFileEarmarkText />,
+        color: "hover:border-green-500 hover:text-green-500"
+    },
+    {
+        path: "/app/templates/tutorial",
+        text: "Template Tutorial",
+        icon: <BsFileEarmarkText />,
+        color: "hover:border-indigo-400 hover:text-indigo-400"
+    },
+    {
+        path: "/app/settings",
+        text: "User Information",
+        icon: <BsPerson />,
+        color: "hover:border-blue-400 hover:text-blue-400"
+    },
+    {
+        path: "/app/plans",
+        text: "Subscriptions",
+        icon: <BsCreditCard2Front />,
+        color: "hover:border-orange-400 hover:text-orange-400"
+    },
+]
 
 const Page = () => {
     //const { t } = useTranslation("common");
@@ -95,6 +103,14 @@ const Page = () => {
         }
     }
 
+    const checkFavouritedLength = () => {
+        return textTemplates.filter((item) => item.favourited && item).length
+    }
+    const checkTotalTruncatedArray = () => {
+        const total = textTemplates.slice(0, 5).reduce((acc, current) => acc + current.copy_count, 0);
+        return total;
+    }
+
     return (
         <>
             <Head>
@@ -106,168 +122,32 @@ const Page = () => {
             <PageLayout authenticated={isAuthenticated}>
                 <FlexColCenteredX className="p-4 md:p-8">
                     <FlexColContainer className="w-full max-w-[1580px] gap-4 md:gap-8">
-                        <H1>
-                            Dashboard
-                        </H1>
-
+                        <FlexRowCenteredY className="justify-between">
+                            <H1>App Dashboard</H1>
+                            <p className="font-bold">{`Basic Plan (Free)`}</p>
+                        </FlexRowCenteredY>
                         <FlexColContainer className="gap-4">
                             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-                                <Link href="/app/templates">
-                                    <QuickLinkCard
-                                        className="hover:border-green-500 hover:text-green-500">
-                                        <FlexRowCenteredY className="justify-between">
-                                            <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
-                                                <BsFileEarmarkText />
-                                                <h2 className="text-sm md:text-lg">Template Editor</h2>
-                                            </FlexRowCenteredY>
-                                            <BsLink className="text-xl" />
-                                        </FlexRowCenteredY>
-
-                                    </QuickLinkCard>
-                                </Link>
-                                <Link href="/app/templates/tutorial">
-                                    <QuickLinkCard
-                                        className="hover:border-indigo-400 hover:text-indigo-400">
-                                        <FlexRowCenteredY className="justify-between">
-                                            <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
-                                                <BsFileEarmarkText />
-                                                <h2 className="text-sm md:text-lg">Editor Tutorial</h2>
-                                            </FlexRowCenteredY>
-                                            <BsLink className="text-xl" />
-                                        </FlexRowCenteredY>
-                                    </QuickLinkCard>
-                                </Link>
-                                <Link href="/app/settings">
-                                    <QuickLinkCard
-                                        className=" hover:border-blue-400 hover:text-blue-400">
-                                        <FlexRowCenteredY className="justify-between">
-                                            <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
-                                                <BsPerson />
-                                                <h2 className="text-sm md:text-lg">User Information</h2>
-                                            </FlexRowCenteredY>
-                                            <BsLink className="text-xl" />
-                                        </FlexRowCenteredY>
-                                    </QuickLinkCard>
-                                </Link>
-                                <Link href="/app/plans">
-                                    <QuickLinkCard className="hover:border-orange-400 hover:text-orange-400">
-                                        <FlexRowCenteredY className="justify-between">
-                                            <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
-                                                <BsCreditCard2Front />
-                                                <h2 className="text-sm md:text-lg">Subscriptions</h2>
-                                            </FlexRowCenteredY>
-                                            <BsLink className="text-xl" />
-                                        </FlexRowCenteredY>
-                                    </QuickLinkCard>
-                                </Link>
+                                {quickLinksData.map((item, index) => {
+                                    return <QuickLinkCard item={item} key={`quicklink-card-${index}`} />
+                                })}
                             </div>
                         </FlexColContainer>
                         <GridSm1Lg2 className="gap-4 md:gap8 lg:gap-2">
-                            <CardBaseLight>
-                                <FlexColContainer className="gap-4 p-4 rounded shadow">
-                                    <FlexRowCenteredY className="gap-2 justify-between border-b-2 border-gray-100 pb-2">
-                                        <h2 className="font-bold">Favourites</h2>
-                                        <i className="text-sm text-gray-500">Viewing top 5</i>
-                                    </FlexRowCenteredY>
-                                    {
-                                        textTemplates && textTemplates.length > 0
-                                        &&
-                                        <GridSm1Lg2 className="gap-2">
-                                            {textTemplates.map((item, index) => {
-                                                console.log(item.favourited && item)
-                                                return item.favourited && index < 5 &&
-                                                    <Link href={`/app/templates?category_id=${item.category_id}`}
-                                                        key={`favourite-${index}`}
-                                                    >
-                                                        <div className="hidden lg:block group" style={{ zIndex: 300 }}>
-                                                            <CardBaseLight className="p-4 transition ease-in-out duration-300 border-l-4 border-transparent hover:border-green-500 ">
-                                                                <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
-                                                                    <BsStarFill className="text-green-500" />
-                                                                    <h2 className="text-sm md:text-lg group-hover:text-green-500">{item.title}</h2>
-                                                                    <BsLink className="text-xl ms-auto text-gray-500 group-hover:text-green-500" />
-                                                                </FlexRowCenteredY>
-                                                                <p
-                                                                    className="text-gray-500 text-xs md:text-sm"
-                                                                    style={{ zIndex: 300 }}
-                                                                >
-                                                                    {`${item.text.substring(0, 80)}...`}
-                                                                </p>
-                                                            </CardBaseLight>
-                                                        </div>
-                                                        <FlexColContainer className="gap-2 lg:hidden">
-                                                            <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
-                                                                <BsStarFill className="text-green-500" />
-                                                                <h2 className="text-sm md:text-lg">{item.title}</h2>
-                                                                <BsLink className="text-xl ms-auto text-gray-500" />
-                                                            </FlexRowCenteredY>
-                                                            <p className="text-gray-500 text-xs md:text-sm"> {`${item.text.substring(0, 80)}...`}</p>
-                                                            <DividerHorizontal className="border-gray-100" />
-                                                        </FlexColContainer>
-
-                                                    </Link>
-
-                                            })}
-
-                                        </GridSm1Lg2>
-                                    }
-                                </FlexColContainer>
-                            </CardBaseLight>
-                            <CardBaseLight>
-                                <FlexColContainer className="p-4 gap-4">
-                                    <FlexRowCenteredY className="gap-2 justify-between border-b-2 border-gray-100 pb-2">
-                                        <h2 className="font-bold">Numbers</h2>
-                                    </FlexRowCenteredY>
-                                    <GridSm2Lg4 className="text-center text-sm gap-2 text-white">
-                                        <GradientCard>
-                                            <FlexColCentered>
-                                                <LargeCardText>{`${textTemplates.length}`}</LargeCardText>
-                                                <p>Templates</p>
-                                            </FlexColCentered>
-                                        </GradientCard>
-                                        <GradientCardTwo>
-                                            <FlexColCentered>
-                                                <LargeCardText>{`${textTemplateFull.length}`}</LargeCardText>
-                                                <p>Categories</p>
-                                            </FlexColCentered>
-                                        </GradientCardTwo>
-                                        <GradientCardThree className="col-span-2">
-                                            <FlexColCentered>
-                                                <LargeCardText>{`${checkAverage()}`}</LargeCardText>
-                                                <p className="text-xs">Average characters per template</p>
-                                            </FlexColCentered>
-                                        </GradientCardThree>
-                                    </GridSm2Lg4>
-
-                                </FlexColContainer>
-                            </CardBaseLight>
+                            <FavouritesCard
+                                textTemplates={textTemplates}
+                                checkFavouritedLength={checkFavouritedLength}
+                            />
+                            <NumbersCard
+                                textTemplates={textTemplates}
+                                checkAverage={checkAverage}
+                                textTemplateFull={textTemplateFull}
+                            />
                         </GridSm1Lg2>
-                        <CardBaseLight>
-                            <FlexColContainer className="gap-4  rounded p-4 shadow">
-                                <FlexRowCenteredY className="gap-2 justify-between border-b-2 border-gray-100 pb-2">
-                                    <h2 className="font-bold">Usage</h2>
-                                    <i className="text-sm text-gray-500">Viewing top 5</i>
-                                </FlexRowCenteredY>
-
-                                {textTemplates && textTemplates.length > 0
-                                    ?
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-                                        <FlexColCentered className="gap-4">
-                                            <h3>Ratio</h3>
-                                            <Piechart textTemplates={textTemplates} />
-                                            <i>Total Copied: {`${textTemplates.reduce((acc, current) => acc + current.copy_count, 0)}`}</i>
-                                        </FlexColCentered>
-
-                                        <FlexColContainer className="gap-4 overflow-x-auto shadow">
-                                            <Tables textTemplates={textTemplates} />
-                                        </FlexColContainer>
-
-                                    </div>
-                                    :
-                                    <i>{`The app tracks your usage by counting how many times you've copied each template. The results will be displayed here.`}</i>
-                                }
-                            </FlexColContainer>
-                        </CardBaseLight>
+                        <UsageCard
+                            textTemplates={textTemplates}
+                            checkTotalTruncatedArray={checkTotalTruncatedArray}
+                        />
                     </FlexColContainer>
                 </FlexColCenteredX >
                 <div className="min-h-[20rem] w-full"></div>

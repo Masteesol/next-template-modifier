@@ -42,7 +42,7 @@ export const LargeCardText = tw.span`
     font-bold
 `
 
-export const QuickLinkCard = tw(CardBaseLightHover)`
+export const LinkCard = tw(CardBaseLightHover)`
     transition
     duration-150 
     ease-in-out 

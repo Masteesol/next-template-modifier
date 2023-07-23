@@ -58,10 +58,16 @@ const EditModeToolbar = (props: ComponentProps) => {
                     <HoverLabel className="w-[8rem] ">Template Settings</HoverLabel>
                 </IconContainerNormal>
             </div>
-
-
-
             <FlexColContainer className="mt-auto">
+                <DividerHorizontal className="border-gray-100" />
+                <div className="group relative">
+                    <IconContainerWarning
+                        onClick={handleRemoveTextAreaText}
+                    >
+                        <BiEraser className="text-2xl" />
+                        <HoverLabel className="w-[5rem] bg-red-200 text-red-700">Remove text</HoverLabel>
+                    </IconContainerWarning>
+                </div>
                 <DividerHorizontal className="border-gray-100" />
                 <div className="group relative">
                     <IconContainerYellow
@@ -72,15 +78,6 @@ const EditModeToolbar = (props: ComponentProps) => {
                         <HoverLabel className="w-[7rem] ">{isUnSaved ? "Revert changes" : "No changes made"}</HoverLabel>
                     </IconContainerYellow>
                 </div>
-                <div className="group relative">
-                    <IconContainerWarning
-                        onClick={handleRemoveTextAreaText}
-                    >
-                        <BiEraser className="text-2xl" />
-                        <HoverLabel className="w-[5rem] bg-red-200 text-red-700">Remove text</HoverLabel>
-                    </IconContainerWarning>
-                </div>
-                <DividerHorizontal className="border-gray-100" />
                 <div className="group relative">
                     <IconContainerNormal onClick={handleApprove} disabled={charLimitExceeded || !isUnSaved}>
                         <FiSave className="text-2xl" />

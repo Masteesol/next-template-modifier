@@ -17,3 +17,15 @@ export interface TemplatesContainer {
     favourited: boolean;
     templates: Templates[];
 }
+
+export interface TemplateModified {
+    title: string;
+    template_id: string;
+    copy_count: number;
+    category_name: string;
+    char_limit: number | null
+    text: string;
+    word_limit: number;
+    favourited: boolean;
+    category_id: string;
+}

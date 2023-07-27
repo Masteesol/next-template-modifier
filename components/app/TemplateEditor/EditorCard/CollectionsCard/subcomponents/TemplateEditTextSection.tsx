@@ -53,19 +53,27 @@ const TemplateEntry = (props: TemplateEntryProps) => {
         return <div
             className={`w-full`}
         >
-            <FlexRowContainer className="gap-4 justify-between border-l-2 border-green-200 px-4">
+            <FlexRowContainer
+                className="group hover:bg-slate-50 gap-4 justify-between border-green-200 border-l-2 hover:border-l-4 hover:border-green-400 transition-all ease-in-out duration-150 transition-delay-150 px-4 cursor-pointer hover:rounded"
+                onClick={handleCopyButton}
+            >
                 <p>
                     {`${collectionItem.text === "" ? "Empty" : collectionItem.text}`}
                 </p>
-                <div className="group relative">
-                    <IconContainerNormal disabled={false} onClick={handleCopyButton}>
+                <div className="relative">
+                    <IconContainerNormal
+                        disabled={false}
+                        onClick={handleCopyButton}
+                        className="group-hover:bg-green-300 duration-150 transition-delay-200"
+
+                    >
                         {!hasBeenCopied
                             ?
                             <FaRegCopy className="text-base" />
                             :
                             <BsCheckLg className="text-base" />
                         }
-                        <HoverLabel className="w-[7rem]">{!hasBeenCopied ? "Copy to clipboard" : "Copied to clipboard!"}</HoverLabel>
+                        <HoverLabel className="w-[8rem] cursor-pointer">{!hasBeenCopied ? "Copy to clipboard" : "Copied to clipboard!"}</HoverLabel>
                     </IconContainerNormal>
                 </div>
             </FlexRowContainer>

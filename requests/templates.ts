@@ -434,6 +434,48 @@ export const deletedTemplate = async (
     }
 }
 
+export const deleteCollectionTemplate = async (
+    userID: string,
+    textTemplates: TemplatesContainer[],
+    setTextTemplates: React.Dispatch<React.SetStateAction<TemplatesContainer[]>>,
+    selectedCategory: number,
+    template_id: string,
+    index: number
+) => {
+    try {
+        const { error: deleteCollectionpError } = await supabase
+            .from('template_collections')
+            .delete()
+            .match({ template_id });
+
+        const { error } = await supabase
+            .from('templates')
+            .delete()
+            .eq("template_id", template_id)
+            .match({ user_id: userID })
+        if (deleteCollectionpError) {
+            console.log("Error deleting collection", deleteCollectionpError)
+        }
+        else if (error) {
+            console.log("Error deleting template")
+        } else {
+            const updatedTemplates = textTemplates[selectedCategory].templates.filter((_, i) => i !== index);
+            const updatedTextTemplates = textTemplates.map((item, index) => {
+                if (index === selectedCategory) {
+                    return {
+                        ...item,
+                        templates: updatedTemplates,
+                    };
+                }
+                return item;
+            });
+            setTextTemplates(updatedTextTemplates);
+        }
+    } catch (error) {
+        console.error("Failed to create template:", error);
+    }
+}
+
 export const deletedCategory = async (
     userID: string,
     textTemplates: TemplatesContainer[],

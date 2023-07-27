@@ -69,14 +69,13 @@ const PageLayout = ({ children, authenticated }: PageLayoutProps) => {
             </FlexColContainer>
             {saveStatus !== ""
               &&
-              <span className="absolute top-[3rem] right-4 text-gray-500 bg-white dark:bg-gray-900 opacity-90 p-2 rounded">
+              <span className="text-sm absolute top-[3rem] right-4 md:fixed md:bottom-4 md:top-auto text-gray-600 bg-white dark:bg-gray-900 opacity-90 p-2 rounded">
                 {saveStatus}
               </span>
             }
           </FlexColContainer>
         </FlexRowContainer>
       }
-
     </div>
   );
 };

@@ -1,6 +1,13 @@
-import { AddButton, DividerHorizontal, DividerPipe, FlexColCentered, FlexColContainer, FlexExpandable, FlexRowCentered, FlexRowCenteredY, FlexRowContainer } from "@/components/shared/styled-global-components";
+import {
+    DividerHorizontal,
+    DividerPipe,
+    FlexColContainer,
+    FlexExpandable,
+    FlexRowCentered,
+    FlexRowCenteredY
+} from "@/components/shared/styled-global-components";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
-import { FaEyeSlash, FaPlus } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 import { useState } from "react"
 
 export const EditToggle = ({ isEditing, setIsEditing }: any) => {
@@ -71,3 +78,4 @@ export const Accordion = ({ handleView, isEditing, setIsEditing, title }: Accord
         </FlexColContainer>
     );
 };
+

@@ -32,7 +32,7 @@ const TemplateEntry = (props: TemplateEntryProps) => {
 
     useEffect(() => {
         setInputValue(collectionItem.text)
-    }, [])
+    }, [collectionItem.text])
 
     const handleCopyButton = () => {
         handleCopy(inputValue)

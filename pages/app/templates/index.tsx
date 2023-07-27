@@ -6,10 +6,8 @@ import {
   DividerPipe,
   FlexColCentered,
   FlexColContainer,
-  FlexRowCentered,
   FlexRowCenteredY,
   FlexRowContainer,
-  AddButton,
   InputBase,
   PlusButton,
   FlexRowCenteredX,
@@ -19,10 +17,9 @@ import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 //import { useTranslation } from "next-i18next";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { debounce } from 'lodash';
-import ForwardedRefTemplateCard from "@/components/app/TemplateEditor/EditorCard/SingleCard";
-import TemplateCollectionsCard from "@/components/app/TemplateEditor/EditorCard/CollectionsCard/CollectionCard"
+import TemplateSingleTemplateCard from "@/components/app/TemplateEditor/EditorCard/SingleCard";
+import TemplateCollectionsCard from "@/components/app/TemplateEditor/EditorCard/CollectionsCard"
 import CategoryManagerColumn from "@/components/app/TemplateEditor/ManagerInterface/CategoryManagerColumn";
 import TemplateManagerColumn from "@/components/app/TemplateEditor/ManagerInterface/TemplateManagerColumn"
 import GuidingDescriptionText from "@/components/app/TemplateEditor/GuidingDescription";
@@ -33,6 +30,7 @@ import Cookies from "js-cookie";
 import {
   createCategory,
   createTemplate,
+  deleteCollectionTemplate,
   deletedCategory,
   deletedTemplate,
   fetchTemplatesForUser,
@@ -256,7 +254,7 @@ const Page: NextPage<PageProps> = () => {
   }
 
 
-  const handleCreateTemplate = async (is_collection: boolean = false) => {
+  const handleCreateTemplate = async (is_collection = false) => {
     if (!userID) {
       console.error("User ID is null.");
       return;
@@ -264,12 +262,17 @@ const Page: NextPage<PageProps> = () => {
     createTemplate(userID, textTemplates, setTextTemplates, selectedCategory, is_collection)
   }
 
-  const handleRemoveTemplate = async (index: number, template_id: string) => {
+  const handleRemoveTemplate = async (index: number, template_id: string, is_collection = false) => {
     if (!userID) {
       console.error("User ID is null.");
       return;
     }
-    deletedTemplate(userID, textTemplates, setTextTemplates, selectedCategory, template_id, index)
+    if (is_collection) {
+      deleteCollectionTemplate(userID, textTemplates, setTextTemplates, selectedCategory, template_id, index)
+    } else {
+      deletedTemplate(userID, textTemplates, setTextTemplates, selectedCategory, template_id, index)
+    }
+
   };
 
   const handleRemoveCategory = async (index: number, category_id: string) => {
@@ -374,7 +377,7 @@ const Page: NextPage<PageProps> = () => {
                             textTemplates[selectedCategory]?.templates.map((template, templateIndex) => {
                               if (template.favourited) {
                                 if (!template.is_collection) {
-                                  return <ForwardedRefTemplateCard
+                                  return <TemplateSingleTemplateCard
                                     key={template.template_id}
                                     categoryIndex={selectedCategory}
                                     index={templateIndex}
@@ -408,7 +411,7 @@ const Page: NextPage<PageProps> = () => {
                             textTemplates[selectedCategory]?.templates.map((template, templateIndex) => {
                               if (!template.favourited) {
                                 if (!template.is_collection) {
-                                  return <ForwardedRefTemplateCard
+                                  return <TemplateSingleTemplateCard
                                     key={template.template_id}
                                     categoryIndex={selectedCategory}
                                     index={templateIndex}

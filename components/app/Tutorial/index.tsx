@@ -3,7 +3,7 @@ import { FlexColCentered, FlexColCenteredX, FlexColContainer, H1 } from "@/compo
 //import { useTranslation } from "next-i18next";
 
 //import { translateOrDefault } from "@/utils/i18nUtils";
-import TemplateCardStandAlone from "@/components/app/TemplateEditor/Homepage/TemplateCardStandAlone";
+import TemplateCardStandAlone from "@/components/app/TemplateEditor/Tutorial/TemplateCardStandAlone";
 
 const steps = [
     { title: "Intro", excerpt: "Getting Started", details: "This is a template modifier, created to simplify the job of creating and modifying text templates, and the copying them to the clipboard.", editorContentArray: ["Dear New User"] },

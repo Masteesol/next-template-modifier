@@ -6,6 +6,7 @@ import {
     CardBaseLight,
     DividerHorizontal,
     FlexRowContainer,
+    FlexColCentered,
 } from "@/components/shared/styled-global-components";
 
 import debounce from "lodash.debounce";
@@ -21,6 +22,7 @@ import { List, arrayMove } from 'react-movable';
 import CollectionsTemplateTextProductionToolbar from "./subcomponents/CollectionsTemplateTextProductionToolbar";
 import TemplatateEditTextSection from "./subcomponents/TemplateEditTextSection"
 import TemplatateEditOrderSection from "./subcomponents/TemplateEditOrderSection"
+import { FaArrowRight } from "react-icons/fa";
 
 interface TemplateCardProps {
     categoryIndex: number;
@@ -118,13 +120,13 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
     //const [isEditListActive, setIsEditListActive] = useState<boolean>(false)
     const [stagedCollections, setStagedCollections] = useState<StagedCollectionsType[] | []>([])
     const [copyCount, setCopyCount] = useState(template.copy_count)
-    const [charLimitExceeded, setCharLimitExceeded] = useState(false)
+    //const [charLimitExceeded, setCharLimitExceeded] = useState(false)
 
     const { setSaveStatus } = useContext(SaveStatusContext)
 
     useEffect(() => {
         setTextTemplate(template);
-        setCharLimitExceeded(false)
+        //setCharLimitExceeded(false)
     }, [template]);
 
     const handleEditInactive = () => {
@@ -170,10 +172,10 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                 setStagedCollections([...stagedCollections, stageChanges]);
             }
             delayedUpdateTemplateCollectionItem(stagedCollections, setSaveStatus, setStagedCollections);
-            setCharLimitExceeded(false);
+            //setCharLimitExceeded(false);
         } else {
             setTextTemplate(updatedTemplate);
-            setCharLimitExceeded(true);
+            //setCharLimitExceeded(true);
         }
         updateTemplatesState(categoryIndex, index, updatedTemplate);
     }
@@ -296,30 +298,44 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                     })}
                                 </FlexColContainer>
                                 :
-                                <i className="text-gray-500">No basic templates to be displayed. <span className="font-bold">Add a new basic template by clicking the edit button.</span> </i>
+                                <FlexColCentered className="h-full">
+                                    <i className="text-gray-500">No basic templates to be displayed. <span className="font-bold">Add a new template.</span> </i>
+                                </FlexColCentered>
+
                             }
                             {isEditTextActive &&
-                                <FlexRowContainer className="justify-between items-end mt-auto">
+                                <FlexRowContainer className="justify-between items-end mt-auto relative">
                                     <FlexColContainer>
                                         <p className="text-xs text-gray-400">Auto saving changes</p>
                                     </FlexColContainer>
                                     <button
                                         onClick={handleCreateNewLineItem}
-                                        className="rounded-full bg-green-200 p-1 hover:opacity-50">
+                                        className="rounded-full bg-green-200 p-1 hover:opacity-50 relative">
                                         <BsPlus className="text-2xl" />
                                     </button>
+                                    {textTemplate?.template_collections?.length === 0 &&
+                                        <FlexRowCenteredY className="absolute right-[3rem] top-2 text-sm group-hover:hidden text-green-600 font-bold animate-slide duration-500 ease-in-out">
+                                            <span className="w-[6rem] text-center ">Click to add</span>
+                                            <FaArrowRight />
+                                        </FlexRowCenteredY>
+                                    }
                                 </FlexRowContainer>
                             }
                         </FlexColContainer>
                         :
-                        <List
-                            values={items}
-                            onChange={({ oldIndex, newIndex }) =>
-                                handleNewListOrder(items, oldIndex, newIndex)
+                        <FlexColContainer className="w-full">
+                            {template.template_collections?.length > 0 &&
+                                <List
+                                    values={items}
+                                    onChange={({ oldIndex, newIndex }) =>
+                                        handleNewListOrder(items, oldIndex, newIndex)
+                                    }
+                                    renderList={({ children, props }) => <ul className="w-full flex flex-col gap-2" {...props}>{children}</ul>}
+                                    renderItem={({ value, props }) => <li className="list-none w-full" {...props} style={{ ...props.style, zIndex: 1000 }}>{value}</li>}
+                                />
                             }
-                            renderList={({ children, props }) => <ul className="w-full flex flex-col gap-2" {...props}>{children}</ul>}
-                            renderItem={({ value, props }) => <li className="list-none w-full" {...props} style={{ ...props.style, zIndex: 1000 }}>{value}</li>}
-                        />
+                        </FlexColContainer>
+
                     }
                     <FlexColContainer className="border-l-[1px] border-gray-200 ps-2">
                         {

@@ -6,7 +6,7 @@ import PageLayout from "@/components/app/PageLayout";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
-import Tutorial from "@/components/app/Tutorial";
+import Tutorial from "@/components/app/TemplateEditor/Tutorial/TemplateCardStandAlone";
 import { AuthContext } from "@/context/AuthContext";
 
 const Page = () => {

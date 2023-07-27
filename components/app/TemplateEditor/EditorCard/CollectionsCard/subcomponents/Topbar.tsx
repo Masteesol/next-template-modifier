@@ -37,13 +37,13 @@ const Topbar = (props: ComponentProps) => {
                 <InputBase
                     type="text"
                     value={stagedTemplate.title}
-                    className="text-2xl max-w-[70%]"
+                    className="text-xl max-w-[70%]"
                     onChange={handleTitleChange}
                     placeholder="Template Title..."
                 />
 
 
-                : <h3 className="text-2xl">
+                : <h3 className="text-xl">
                     {textTemplate.title}
                 </h3>
             }
@@ -58,7 +58,7 @@ const Topbar = (props: ComponentProps) => {
                 :
                 <div className="group relative">
                     <IconContainerWarning
-                        onClick={() => handleRemoveTemplate(index, template.template_id)}
+                        onClick={() => handleRemoveTemplate(index, template.template_id, true)}
                     >
                         <BsXLg />
                         <HoverLabel className="w-[7rem] bg-red-200 text-red-700">Delete template</HoverLabel>

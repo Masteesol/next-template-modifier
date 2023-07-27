@@ -10,7 +10,6 @@ interface ComponentProps {
     textTemplate: any
     index: number;
     template: any;
-    isUnSaved: boolean;
 }
 
 
@@ -25,7 +24,6 @@ const Topbar = (props: ComponentProps) => {
         handleRemoveTemplate,
         index,
         template,
-        isUnSaved
     } = props
 
     const [input, setInput] = useState(textTemplate.title)
@@ -37,7 +35,7 @@ const Topbar = (props: ComponentProps) => {
                 <InputBase
                     type="text"
                     value={input}
-                    className="text-xl max-w-[70%] bg-slate-50 dark:bg-slate-800"
+                    className="text-xl max-w-[70%] bg-slate-50 dark:bg-slate-800 px-2 py-1"
                     onChange={(e) => { handleTitleChange(e); setInput(e.target.value) }}
                     placeholder="Template Title..."
                 />
@@ -49,10 +47,6 @@ const Topbar = (props: ComponentProps) => {
             }
             {isEditActive ?
                 <FlexRowCenteredY className="gap-2">
-                    {isUnSaved &&
-                        <span className="text-gray-500">Unsaved Changes</span>
-                    }
-
                     <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">Editing Mode</span>
                 </FlexRowCenteredY>
                 :

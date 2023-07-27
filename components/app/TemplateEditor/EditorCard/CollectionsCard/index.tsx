@@ -84,7 +84,7 @@ const delayedUpdateCollectionOrder = debounce((collectionArray, template_id, set
         }
     }
     update()
-}, 2000);
+}, 1000);
 
 const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count, setSaveStatus) => {
     const update = async () => {
@@ -97,7 +97,7 @@ const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count,
         }
     }
     update()
-}, 2000);
+}, 1000);
 
 const delayedUpdateTemplateTitle = debounce((newTitle, template_id, userID, setSaveStatus) => {
     const update = async () => {
@@ -112,7 +112,7 @@ const delayedUpdateTemplateTitle = debounce((newTitle, template_id, userID, setS
         }
     }
     update()
-}, 2000);
+}, 1000);
 
 
 
@@ -291,7 +291,6 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                     textTemplate={textTemplate}
                     index={index}
                     template={template}
-                    isUnSaved={false}
                 />
                 <DividerHorizontal />
                 <FlexRowContainer className="gap-4 flex-1">

@@ -10,7 +10,7 @@ import {
 
 import { Badge, RangeSlider } from "flowbite-react";
 import { BsArrowCounterclockwise, BsXLg } from 'react-icons/bs';
-import { CardInput } from '../styles';
+import { CardInput } from '../../styles'
 import { BiEraser } from 'react-icons/bi';
 
 interface props {

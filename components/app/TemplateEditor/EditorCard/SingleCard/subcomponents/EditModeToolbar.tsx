@@ -4,7 +4,7 @@ import {
     DividerHorizontal,
     FlexColCenteredX,
 } from "@/components/shared/styled-global-components";
-import { HoverLabel, IconContainerNormal, IconContainerWarning, IconContainerYellow } from '../styles';
+import { HoverLabel, IconContainerNormal, IconContainerWarning, IconContainerYellow } from '../../styles'
 import { BsArrowCounterclockwise, BsArrowLeft, BsRobot, BsSliders } from 'react-icons/bs';
 import { BiEraser } from 'react-icons/bi';
 import { FiSave } from "react-icons/fi"

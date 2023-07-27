@@ -12,7 +12,7 @@ import {
 import debounce from "lodash.debounce";
 import { updateTemplateMetaData } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
-import { CardInput, TextArea } from "./styles";
+import { CardInput, TextArea } from "../styles";
 
 import TemplateSettingsSection from "./subcomponents/TemplateSettingsSection"
 import AITextGenerationSection from "./subcomponents/AITextGenerationSection"

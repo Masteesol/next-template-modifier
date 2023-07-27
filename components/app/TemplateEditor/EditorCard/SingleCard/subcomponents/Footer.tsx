@@ -61,6 +61,7 @@ const Footer = (props: FooterProps) => {
                 </div>
                 <span>words</span>
             </FlexRowCenteredY>
+            <p className="py-1 px-2 rounded bg-gray-200 text-gray-800 ms-auto">Single</p>
         </FlexRowCenteredY>
     )
 }

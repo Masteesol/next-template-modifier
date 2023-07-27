@@ -7,7 +7,7 @@ import {
 } from "@/components/shared/styled-global-components";
 
 import { BsXLg } from 'react-icons/bs';
-import { CardInput, TextArea } from '../styles';
+import { CardInput, TextArea } from '../../styles'
 
 interface props {
     expandedAI: boolean;

@@ -19,7 +19,8 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 //import { useTranslation } from "next-i18next";
 import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
 import { debounce } from 'lodash';
-import ForwardedRefTemplateCard from "@/components/app/TemplateEditor/EditorCard";
+import ForwardedRefTemplateCard from "@/components/app/TemplateEditor/EditorCard/SingleCard";
+import TemplateCollectionsCard from "@/components/app/TemplateEditor/EditorCard/CollectionsCard/CollectionCard"
 import CategoryList, { CategoryHeaderButton } from "@/components/app/TemplateEditor/CategoryNavigationCol/CategoryList";
 import GuidingDescriptionText from "@/components/app/TemplateEditor/GuidingDescription";
 import cookie from 'cookie'
@@ -105,8 +106,14 @@ const Page: NextPage<PageProps> = () => {
           .sort((a, b) => a.order - b.order)
           .map(container => ({
             ...container,
-            templates: container.templates.sort((a, b) => a.order - b.order)
+            templates: container.templates
+              .sort((a, b) => a.order - b.order)
+              .map(template => ({
+                ...template,
+                template_collections: template.template_collections.sort((a, b) => a.order - b.order),
+              })),
           }));
+
 
         setTextTemplates(templatesContainers);
         //needs to come from DB
@@ -208,16 +215,7 @@ const Page: NextPage<PageProps> = () => {
     setTextTemplates(newTextTemplates);
   };
 
-  const handleTextTemplateChange = async (categoryIndex: number, templateIndex: number, newTemplate: Templates) => {
-    if (!userID) {
-      console.error("User ID is null.");
-      return;
-    }
-    const { template_id, text, title, char_limit, word_limit, limiter_active } = newTemplate
-    await updateTemplate(title, text, userID, template_id, char_limit, word_limit, limiter_active)
-    saveMessage(setSaveStatus, "Saved Changes")
-    console.log(("Saved Changes"))
-
+  const updateTemplatesState = (categoryIndex: number, templateIndex: number, newTemplate: Templates) => {
     setTextTemplates(prevTemplates => {
       const newTemplates = [...prevTemplates];
       // Copy the templates array of the category
@@ -231,6 +229,18 @@ const Page: NextPage<PageProps> = () => {
       };
       return newTemplates;
     });
+  }
+
+  const handleTextTemplateChange = async (categoryIndex: number, templateIndex: number, newTemplate: Templates) => {
+    if (!userID) {
+      console.error("User ID is null.");
+      return;
+    }
+    const { template_id, text, title, char_limit, word_limit, limiter_active } = newTemplate
+    await updateTemplate(title, text, userID, template_id, char_limit, word_limit, limiter_active)
+    saveMessage(setSaveStatus, "Saved Changes")
+    console.log(("Saved Changes"))
+    updateTemplatesState(categoryIndex, templateIndex, newTemplate)
   };
 
   const handleCreateCategory = async () => {
@@ -359,61 +369,96 @@ const Page: NextPage<PageProps> = () => {
               {textTemplates.length > 0 && textTemplates[0].category_name !== undefined ?
                 <FlexColContainer className="gap-4">
                   <FlexColContainer className="h-full" >
-                    <FlexColContainer className="gap-4">
-                      {
-                        textTemplates[selectedCategory]?.templates.length > 0
-                        && textTemplates[selectedCategory]?.templates.map((template, templateIndex) => {
-                          return template.favourited && <ForwardedRefTemplateCard
-                            key={template.template_id}
-                            categoryIndex={selectedCategory}
-                            index={templateIndex}
-                            template={template}
-                            setTemplates={setTextTemplates}
-                            handleRemoveTemplate={handleRemoveTemplate}
-                            handleTextTemplateChange={handleTextTemplateChange}
-                            ref={templateRefs[templateIndex]}
-                            userID={userID}
-                            subscriptionLimits={subscriptionLimits}
-                          />
+                    {textTemplates[selectedCategory]?.templates.length > 0 &&
+                      <FlexColContainer className="gap-4">
+                        <FlexColContainer className="gap-4">
+                          {/**RENDERING FAVOURITES ON TOP */}
+                          {
+                            textTemplates[selectedCategory]?.templates.map((template, templateIndex) => {
+                              if (template.favourited) {
+                                if (!template.is_collection) {
+                                  return <ForwardedRefTemplateCard
+                                    key={template.template_id}
+                                    categoryIndex={selectedCategory}
+                                    index={templateIndex}
+                                    template={template}
+                                    setTemplates={setTextTemplates}
+                                    handleRemoveTemplate={handleRemoveTemplate}
+                                    handleTextTemplateChange={handleTextTemplateChange}
+                                    ref={templateRefs[templateIndex]}
+                                    userID={userID}
+                                    subscriptionLimits={subscriptionLimits}
+                                  />
+                                } else {
+                                  return <TemplateCollectionsCard
+                                    key={template.template_id}
+                                    categoryIndex={selectedCategory}
+                                    index={templateIndex}
+                                    template={template}
+                                    setTemplates={setTextTemplates}
+                                    handleRemoveTemplate={handleRemoveTemplate}
+                                    updateTemplatesState={updateTemplatesState}
+                                    ref={templateRefs[templateIndex]}
+                                    userID={userID}
+                                    subscriptionLimits={subscriptionLimits} />
+                                }
+                              }
+                            })
 
-                        })
+                          }
+                          {/**THE REST OF THE TEMPLATES GOES HERE */}
+                          {
+                            textTemplates[selectedCategory]?.templates.map((template, templateIndex) => {
+                              if (!template.favourited) {
+                                if (!template.is_collection) {
+                                  return <ForwardedRefTemplateCard
+                                    key={template.template_id}
+                                    categoryIndex={selectedCategory}
+                                    index={templateIndex}
+                                    template={template}
+                                    setTemplates={setTextTemplates}
+                                    handleRemoveTemplate={handleRemoveTemplate}
+                                    handleTextTemplateChange={handleTextTemplateChange}
+                                    ref={templateRefs[templateIndex]}
+                                    userID={userID}
+                                    subscriptionLimits={subscriptionLimits}
+                                  />
+                                } else {
+                                  return <TemplateCollectionsCard
+                                    key={template.template_id}
+                                    categoryIndex={selectedCategory}
+                                    index={templateIndex}
+                                    template={template}
+                                    setTemplates={setTextTemplates}
+                                    handleRemoveTemplate={handleRemoveTemplate}
+                                    updateTemplatesState={updateTemplatesState}
+                                    ref={templateRefs[templateIndex]}
+                                    userID={userID}
+                                    subscriptionLimits={subscriptionLimits} />
+                                }
+                              }
 
-                      }
-                      {
-                        textTemplates[selectedCategory]?.templates.length > 0
-                        && textTemplates[selectedCategory]?.templates.map((template, templateIndex) => {
-                          return !template.favourited && <ForwardedRefTemplateCard
-                            key={template.template_id}
-                            categoryIndex={selectedCategory}
-                            index={templateIndex}
-                            template={template}
-                            setTemplates={setTextTemplates}
-                            handleRemoveTemplate={handleRemoveTemplate}
-                            handleTextTemplateChange={handleTextTemplateChange}
-                            ref={templateRefs[templateIndex]}
-                            userID={userID}
-                            subscriptionLimits={subscriptionLimits}
-                          />
-
-                        })
-
-                      }
-                      {/**If no templates have been created */}
-                      {textTemplates[selectedCategory]?.templates.length === 0 &&
-                        <FlexColCentered className="h-full">
-                          <FlexColCentered className="max-w-[400px] p-8 w-full gap-8 justify-center border-[1px] rounded border-gray-200">
-                            <InputBase type="text"
-                              value={textTemplates[selectedCategory]?.category_name}
-                              className="text-center text-lg bg-white dark:bg-gray-800 w-full"
-                              onChange={(e) => handleInputCatTitleChange(e, selectedCategory, textTemplates[selectedCategory].category_id)} />
-                            <FlexRowCenteredY className="gap-4 w-full">
-                              <i className="w-full text-right text-gray-500">Add Template</i>
-                              <AddTemplateButtonEmpty onClick={handleCreateTemplate} />
-                            </FlexRowCenteredY>
+                            })
+                          }
+                        </FlexColContainer>
+                        {/**If no templates have been created */}
+                        {textTemplates[selectedCategory]?.templates.length === 0 &&
+                          <FlexColCentered className="h-full">
+                            <FlexColCentered className="max-w-[400px] p-8 w-full gap-8 justify-center border-[1px] rounded border-gray-200">
+                              <InputBase type="text"
+                                value={textTemplates[selectedCategory]?.category_name}
+                                className="text-center text-lg bg-white dark:bg-gray-800 w-full"
+                                onChange={(e) => handleInputCatTitleChange(e, selectedCategory, textTemplates[selectedCategory].category_id)} />
+                              <FlexRowCenteredY className="gap-4 w-full">
+                                <i className="w-full text-right text-gray-500">Add Template</i>
+                                <AddTemplateButtonEmpty onClick={handleCreateTemplate} />
+                              </FlexRowCenteredY>
+                            </FlexColCentered>
                           </FlexColCentered>
-                        </FlexColCentered>
-                      }
-                    </FlexColContainer>
+                        }
+                      </FlexColContainer>
+                    }
+
                   </FlexColContainer>
                 </FlexColContainer>
                 :

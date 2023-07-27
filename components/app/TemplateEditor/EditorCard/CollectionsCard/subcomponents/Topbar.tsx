@@ -1,5 +1,5 @@
 import { FlexRowCenteredY } from '@/components/shared/styled-global-components'
-import { HoverLabel, IconContainerWarning, InputBase } from '../styles'
+import { HoverLabel, IconContainerWarning, InputBase } from '../../styles'
 import { BsXLg } from 'react-icons/bs'
 
 

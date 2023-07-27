@@ -1,5 +1,5 @@
 import React from 'react'
-import { HoverLabel, IconContainerNormal } from '../styles'
+import { HoverLabel, IconContainerNormal } from '../../styles'
 import { BsCheckLg, BsPencilSquare, BsStar, BsStarFill } from 'react-icons/bs'
 import { FlexColContainer, FlexRowCenteredY } from '@/components/shared/styled-global-components'
 import { FaArrowRight, FaRegCopy } from 'react-icons/fa'

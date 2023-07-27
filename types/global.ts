@@ -1,3 +1,9 @@
+export interface CollectionItem {
+    text: string;
+    id: string;
+    order: number;
+}
+
 export interface Templates {
     title: string;
     text: string;
@@ -7,7 +13,9 @@ export interface Templates {
     word_limit: number | null;
     limiter_active: boolean;
     order: number;
-    favourited: boolean
+    favourited: boolean;
+    is_collection: boolean;
+    template_collections: CollectionItem[]
 }
 
 export interface TemplatesContainer {

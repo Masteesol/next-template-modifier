@@ -4,7 +4,7 @@ import {
     FlexRowContainer,
     GridSm2Lg4,
 } from "@/components/shared/styled-global-components";
-import { HoverLabel, IconContainerWarning } from '../styles';
+import { HoverLabel, IconContainerWarning } from '../../styles'
 import { BiEraser } from 'react-icons/bi';
 
 interface ComponentProps {

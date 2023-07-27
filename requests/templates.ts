@@ -4,6 +4,78 @@ const supabase = createClientComponentClient()
 import { v4 as uuidv4 } from 'uuid';
 import { TemplatesContainer } from "@/types/global"
 
+
+export const fetchTemplatesForUser = async (userId: string | undefined | null, setIsLoading: any) => {
+    if (!userId) {
+        return Promise.resolve(null); // or some other default value
+    }
+    //console.log("userId", userId)
+    try {
+        setIsLoading(true)
+        const { data, error } = await supabase
+            .from('categories')
+            .select(`
+            category_id,
+            category_name,
+            order,
+            favourited,
+            templates (
+              template_id, 
+              title, 
+              text, 
+              copy_count, 
+              word_limit, 
+              char_limit, 
+              limiter_active, 
+              order, 
+              favourited,
+              is_collection,
+              template_collections (text, id, order)
+            )
+          `)
+            .eq('user_id', userId)
+
+        if (error) {
+            console.log("Fetch templates error", error)
+            setIsLoading(false)
+        }
+        setIsLoading(false)
+        return data;
+    } catch (error) {
+        console.log("error", error)
+    }
+};
+
+export const fetchOnlyTemplatesForUser = async (userId: string | undefined | null, setIsLoading: any) => {
+    if (!userId) {
+        return Promise.resolve(null); // or some other default value
+    }
+    //console.log("userId", userId)
+    try {
+        setIsLoading(true)
+        const { data, error } = await supabase
+            .from('templates')
+            .select(`
+            template_id,
+            text,
+            copy_count,
+            category_id
+          `)
+            .eq('user_id', userId)
+
+
+        if (error) {
+            console.log("Fetch templates error", error)
+            setIsLoading(false)
+        }
+        setIsLoading(false)
+        return data;
+    } catch (error) {
+        console.log("error", error)
+    }
+};
+
+
 export const updateCategory = async (newCatTitle: string, category_id: string, userID: string, order = null) => {
     try {
         let updateObject: { category_name: string; order?: number } = { category_name: newCatTitle };
@@ -160,65 +232,86 @@ export const updateTemplatesFavourite = async (template_id: string, userID: stri
     }
 }
 
-
-export const fetchTemplatesForUser = async (userId: string | undefined | null, setIsLoading: any) => {
-    if (!userId) {
-        return Promise.resolve(null); // or some other default value
-    }
-    //console.log("userId", userId)
+export const updateTemplateCollectionItem = async (template_id: string, collectionItemID: string, text: string, order: number) => {
     try {
-        setIsLoading(true)
         const { data, error } = await supabase
-            .from('categories')
-            .select(`
-            category_id,
-            category_name,
-            order,
-            favourited,
-            templates (template_id, title, text, copy_count, word_limit, char_limit, limiter_active, order, favourited)
-          `)
-            .eq('user_id', userId)
-
+            .from("template_collections")
+            .update({
+                text: text,
+                order: order
+            })
+            .eq("id", collectionItemID)
+            .match({ template_id: template_id })
+            .select()
         if (error) {
-            console.log("Fetch templates error", error)
-            setIsLoading(false)
+            return error
         }
-        setIsLoading(false)
-        return data;
+        if (data) {
+            return data
+        }
     } catch (error) {
-        console.log("error", error)
+        console.log(error)
     }
-};
+}
 
-export const fetchOnlyTemplatesForUser = async (userId: string | undefined | null, setIsLoading: any) => {
-    if (!userId) {
-        return Promise.resolve(null); // or some other default value
-    }
-    //console.log("userId", userId)
+export const updateTemplatesCollectionOrder = async (collectionItemID: string, template_id: string, order: number) => {
     try {
-        setIsLoading(true)
         const { data, error } = await supabase
-            .from('templates')
-            .select(`
-            template_id,
-            text,
-            copy_count,
-            category_id
-          `)
-            .eq('user_id', userId)
-
-
+            .from("template_collections")
+            .update({ order: order })
+            .eq("id", collectionItemID)
+            .match({ template_id: template_id })
+            .select();
         if (error) {
-            console.log("Fetch templates error", error)
-            setIsLoading(false)
+            return error
         }
-        setIsLoading(false)
-        return data;
+        if (data) {
+            return data
+        }
     } catch (error) {
-        console.log("error", error)
+        console.log(error)
     }
-};
+}
 
+
+export const createTemplateCollectionItem = async (template_id: string, id: string) => {
+    try {
+        const { data, error } = await supabase
+            .from("template_collections")
+            .insert([{
+                id: id,
+                text: "",
+                order: 0,
+                template_id: template_id
+            }])
+            .select()
+        if (error) {
+            return error
+        }
+        if (data) {
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const removeTemplateCollectionItem = async (id: string) => {
+    try {
+        const { data, error } = await supabase
+            .from("template_collections")
+            .delete()
+            .eq("id", id)
+        if (error) {
+            return error
+        }
+        if (data) {
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 export const createCategory = async (
     userID: string,

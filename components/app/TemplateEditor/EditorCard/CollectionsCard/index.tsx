@@ -360,7 +360,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                     </FlexColContainer>
                 </FlexRowContainer>
                 <DividerHorizontal />
-                <FlexRowCenteredY className="text-gray-500 justify-between">
+                <FlexRowCenteredY className="text-gray-500 justify-between text-xs">
                     <p>{`Templates: ${template.template_collections?.length}`}</p>
                     <p className="py-1 px-2 rounded bg-violet-200 text-violet-800">Collection</p>
                 </FlexRowCenteredY>

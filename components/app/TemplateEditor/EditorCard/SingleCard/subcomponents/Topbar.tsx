@@ -44,7 +44,7 @@ const Topbar = (props: ComponentProps) => {
 
 
                 : <h3 className="text-xl">
-                    {template.title.length > 25 ? `${template.title.substring(0, 25)}...` : `${template.title}`}
+                    {textTemplate.title.length > 25 ? `${textTemplate.title.substring(0, 25)}...` : `${textTemplate.title}`}
                 </h3>
             }
             {isEditActive ?

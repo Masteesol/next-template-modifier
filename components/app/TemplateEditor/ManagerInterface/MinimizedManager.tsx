@@ -26,17 +26,17 @@ const MinimizedManager = (props: MinimizedManagerProps) => {
         handleCreateTemplate
     } = props
     return (
-        <FlexRowContainer className="gap-1 text-xs">
+        <FlexRowContainer className="gap-1 text-sm md:text-xs">
             {!viewCategories &&
                 <FlexRowCentered className=" bg-slate-50 dark:bg-slate-700 rounded shadow px-4 py-2 gap-2">
                     <div>
-                        <PlusButton onClick={handleCreateCategory} className="text-sm p-1">
+                        <PlusButton onClick={handleCreateCategory} className="text-base md:text-sm p-2 md:p-1">
                             <BsPlusLg />
                         </PlusButton>
                     </div>
                     <FlexRowCenteredY
                         onClick={handleViewCategorySelect}
-                        className={`gap-2 group cursor-pointer text-xs`}>
+                        className={`gap-2 group cursor-pointer`}>
                         <h2>Categories</h2>
                         <FaEye className="text-base" />
 
@@ -49,11 +49,11 @@ const MinimizedManager = (props: MinimizedManagerProps) => {
                     <FlexRowContainer className="gap-2">
                         <PlusButton
                             onClick={() => handleCreateTemplate(true)}
-                            className="bg-purple-200 text-purple-900 text-sm p-1"
+                            className="bg-purple-200 text-purple-900 text-base md:text-sm p-2 md:p-1"
                         >
                             <BsPlusLg />
                         </PlusButton>
-                        <PlusButton onClick={() => handleCreateTemplate} className="text-sm p-1">
+                        <PlusButton onClick={() => handleCreateTemplate()} className="text-base md:text-sm p-2 md:p-1">
                             <BsPlusLg />
                         </PlusButton>
                     </FlexRowContainer>

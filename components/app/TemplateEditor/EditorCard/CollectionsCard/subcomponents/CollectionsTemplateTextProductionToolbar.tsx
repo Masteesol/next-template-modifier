@@ -55,17 +55,3 @@ const CollectionsTemplateTextEditToolbar = (props: CollectionsTemplateTextEditTo
 }
 
 export default CollectionsTemplateTextEditToolbar
-
-
-{/* <div className="group relative">
-<IconContainerNormal onClick={handleEditActive} disabled={false}>
-    <BsPencilSquare className="text-xl" />
-    <HoverLabel className="w-[4rem]">Edit text</HoverLabel>
-</IconContainerNormal>
-{placeholderCount === 0 &&
-    <FlexRowCenteredY className="absolute right-[3rem] top-2 text-sm group-hover:hidden text-green-600 font-bold animate-slide duration-500 ease-in-out">
-        <span className="w-[5rem] text-center ">Click Edit</span>
-        <FaArrowRight />
-    </FlexRowCenteredY>
-}
-</div> */}

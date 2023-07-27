@@ -37,7 +37,7 @@ const Topbar = (props: ComponentProps) => {
                 <InputBase
                     type="text"
                     value={stagedTemplate.title}
-                    className="text-xl max-w-[70%]"
+                    className="text-xl max-w-[70%] bg-slate-50 dark:bg-slate-800"
                     onChange={handleTitleChange}
                     placeholder="Template Title..."
                 />
@@ -53,7 +53,7 @@ const Topbar = (props: ComponentProps) => {
                         <span className="text-gray-500">Unsaved Changes</span>
                     }
 
-                    <span className="bg-yellow-100 text-yellow-800 p-2 rounded text-xs font-bold">Editing Mode</span>
+                    <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">Editing Mode</span>
                 </FlexRowCenteredY>
                 :
                 <div className="group relative">

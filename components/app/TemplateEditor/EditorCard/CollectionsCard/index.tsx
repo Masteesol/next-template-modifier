@@ -10,7 +10,7 @@ import {
 } from "@/components/shared/styled-global-components";
 
 import debounce from "lodash.debounce";
-import { createTemplateCollectionItem, removeTemplateCollectionItem, updateTemplateCollectionItem, updateTemplateMetaData, updateTemplatesCollectionOrder } from "@/requests/templates";
+import { createTemplateCollectionItem, removeTemplateCollectionItem, updateTemplateCollectionItem, updateTemplateMetaData, updateTemplateTitle, updateTemplatesCollectionOrder } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import { HoverLabel, IconContainerNormal } from "../styles";
 
@@ -99,6 +99,23 @@ const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count,
     update()
 }, 2000);
 
+const delayedUpdateTemplateTitle = debounce((newTitle, template_id, userID, setSaveStatus) => {
+    const update = async () => {
+        try {
+            updateTemplateTitle(newTitle, userID, template_id)
+            setSaveStatus("Auto-saved Changes")
+            setTimeout(() => { setSaveStatus("") }, 2000)
+        } catch (error) {
+            setSaveStatus("Erro saving changes")
+            setTimeout(() => { setSaveStatus("") }, 2000)
+            console.log(error);
+        }
+    }
+    update()
+}, 2000);
+
+
+
 
 const TemplateCard = (props: TemplateCardProps, ref: any) => {
     const {
@@ -113,7 +130,6 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
 
 
     const [textTemplate, setTextTemplate] = useState(template);
-    const [stagedTemplate, setStagedTemplate] = useState(template);
     const [isEditActive, setIsEditActive] = useState<boolean>(false);
     const [isEditTextActive, setIsEditTextActive] = useState<boolean>(false);
     const [isEditListActive, setIsEditListActive] = useState<boolean>(false);
@@ -196,9 +212,11 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
         await removeTemplateCollectionItem(itemId)
     }
 
-    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newTemplate = { title: e.target.value, text: stagedTemplate.text, template_id: template.template_id };
-        setStagedTemplate(newTemplate);
+    const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newTemplate = { ...textTemplate, title: e.target.value };
+        await delayedUpdateTemplateTitle(e.target.value, template.template_id, userID, setSaveStatus)
+        updateTemplatesState(categoryIndex, index, newTemplate);
+
     };
     const handleCreateNewLineItem = async () => {
         const newCollectionItem: CollectionItem = {
@@ -268,7 +286,6 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
             <FlexColContainer className="w-full min-h-[20rem] p-4 gap-4 md:min-w-[30rem] text-sm">
                 <Topbar
                     isEditActive={isEditActive}
-                    stagedTemplate={stagedTemplate}
                     handleTitleChange={handleTitleChange}
                     handleRemoveTemplate={handleRemoveTemplate}
                     textTemplate={textTemplate}

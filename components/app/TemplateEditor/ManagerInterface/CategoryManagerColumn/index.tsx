@@ -11,7 +11,7 @@ import {
 } from "@/components/shared/styled-global-components";
 
 import CategoryCard from "./CategoryCard";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 import GuidingDescriptionText from "../../GuidingDescription";
 import { List, arrayMove } from 'react-movable';
 import { useState, useLayoutEffect, useContext } from "react";
@@ -21,15 +21,6 @@ import debounce from "lodash.debounce";
 import { BsChevronDown, BsChevronUp, BsPlusLg, BsStarFill } from "react-icons/bs";
 import { EditToggle } from "../../shared";
 import { TemplatesContainer } from "@/types/global";
-
-export const CategoryHeaderButton = ({ viewCategories, handleViewCategorySelect }: any) => {
-    return <FlexRowCenteredY className={`p-4 gap-4 rounded relative`}>
-        <h2>Categories</h2>
-        <FlexRowCenteredY className="text-lg cursor-pointer" onClick={handleViewCategorySelect}>
-            {!viewCategories ? <FaEye /> : <FaEyeSlash />}
-        </FlexRowCenteredY>
-    </FlexRowCenteredY>
-}
 
 interface CateGoryListTypes {
     viewCategories: any;

@@ -173,6 +173,33 @@ export const updateTemplate = async (
     }
 }
 
+export const updateTemplateTitle = async (
+    newTitle: string,
+    userID: string,
+    template_id: string,
+
+) => {
+    try {
+        const { data, error } = await supabase
+            .from("templates")
+            .update({
+                title: newTitle,
+            })
+            .eq("template_id", template_id)
+            .match({ user_id: userID })
+            .select()
+        if (error) {
+            return error
+        }
+        if (data) {
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 export const updateTemplateMetaData = async (template_id: string, userID: string, copy_count: number) => {
     try {
         const { data, error } = await supabase

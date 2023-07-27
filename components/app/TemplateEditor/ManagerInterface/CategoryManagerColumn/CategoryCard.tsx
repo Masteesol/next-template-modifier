@@ -74,7 +74,7 @@ const CategoryCard = (props: CatType) => {
         >
             <FlexRowCenteredY className="gap-4 justify-between p-4">
                 <h3 className={"font-bold"}>
-                    {textTemplate.category_name}
+                    {textTemplate.category_name.length > 25 ? `${textTemplate.category_name.substring(0, 25)}...` : `${textTemplate.category_name}`}
                 </h3>
                 <BsFillGrid3X2GapFill className="text-2xl cursor-grab" />
             </FlexRowCenteredY>
@@ -92,7 +92,7 @@ const CategoryCard = (props: CatType) => {
                 <FlexRowCenteredY className={`${!isSelected ? "p-2" : "pe-2"}`}>
                     {!isSelected ?
                         <h3 className={"font-bold "}>
-                            {textTemplate.category_name}
+                            {textTemplate.category_name.length > 22 ? `${textTemplate.category_name.substring(0, 22)}...` : `${textTemplate.category_name}`}
                         </h3>
                         :
                         <InputBase

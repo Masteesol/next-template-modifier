@@ -19,7 +19,7 @@ const NavButton = ({ index, templateRefs, template, isEditing }: ComponentProps)
         >
             <FlexRowCenteredY className="gap-4 justify-between cursor-grab">
                 <h3>
-                    {template.title}
+                    {template.title.length > 25 ? `${template.title.substring(0, 25)}...` : `${template.title}`}
                 </h3>
                 <BsFillGrid3X2GapFill className="text-xl" />
             </FlexRowCenteredY>
@@ -59,7 +59,7 @@ const NavButton = ({ index, templateRefs, template, isEditing }: ComponentProps)
                 }
             }}
         >
-            {template.title}
+            {template.title.length > 25 ? `${template.title.substring(0, 25)}...` : `${template.title}`}
             <BsArrowRight
                 className="text-2xl cursor-pointer hover:text-green-800 dark:hover:text-green-100 ms-auto"
             />

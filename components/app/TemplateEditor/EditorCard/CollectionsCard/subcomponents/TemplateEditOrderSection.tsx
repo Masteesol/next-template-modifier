@@ -9,7 +9,7 @@ const TemplateEditable = (template: Templates) => {
             id={`editable-${collectionItem.id}`}
             key={`editable-${collectionItem.id}`}
         >
-            <FlexRowCenteredY className="gap-4 justify-between cursor-grab bg-slate-50 rounded shadow px-2 text-sm">
+            <FlexRowCenteredY className="gap-4 justify-between cursor-grab bg-slate-50 rounded shadow px-2 text-sm hover:bg-transparent">
                 <h3>
                     {`${collectionItem.text.substring(0, 50)}...`}
                 </h3>

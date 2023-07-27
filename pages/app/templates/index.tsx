@@ -12,17 +12,19 @@ import {
   AddButton,
   InputBase,
   PlusButton,
+  FlexRowCenteredX,
 } from "@/components/shared/styled-global-components";
 
 import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 //import { useTranslation } from "next-i18next";
-import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { debounce } from 'lodash';
 import ForwardedRefTemplateCard from "@/components/app/TemplateEditor/EditorCard/SingleCard";
 import TemplateCollectionsCard from "@/components/app/TemplateEditor/EditorCard/CollectionsCard/CollectionCard"
-import CategoryList, { CategoryHeaderButton } from "@/components/app/TemplateEditor/CategoryNavigationCol/CategoryList";
+import CategoryManagerColumn from "@/components/app/TemplateEditor/ManagerInterface/CategoryManagerColumn";
+import TemplateManagerColumn from "@/components/app/TemplateEditor/ManagerInterface/TemplateManagerColumn"
 import GuidingDescriptionText from "@/components/app/TemplateEditor/GuidingDescription";
 import cookie from 'cookie'
 import { LoadingContext } from '@/context/LoadingContext';
@@ -38,11 +40,12 @@ import {
   updateTemplate
 } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
-import TemplateNavigation from "@/components/app/TemplateEditor/TemplateNavigationCol"
+
 import { saveMessage } from "@/utils/helpers";
 import { Templates, TemplatesContainer } from "@/types/global"
 import { useRouter } from "next/router"
 import { BsPlusLg } from "react-icons/bs";
+import MinimizedManager from "@/components/app/TemplateEditor/ManagerInterface/MinimizedManager";
 
 type PageProps = {
   authenticated: boolean,
@@ -288,35 +291,23 @@ const Page: NextPage<PageProps> = () => {
       <PageLayout authenticated={isAuthenticated}>
         <FlexRowContainer className="gap-2 relative h-full">
           {/**Toggle View */}
-          <FlexColContainer className="absolute bottom-[5vh] gap-4 right-0 z-50 ">
-            {!viewCategories &&
-              <FlexRowCentered className="relative bg-slate-100 dark:bg-slate-700 rounded shadow">
-                <div className="absolute right-[10rem]">
-                  <PlusButton onClick={handleCreateCategory}>
-                    <BsPlusLg />
-                  </PlusButton>
-                </div>
-                <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
-              </FlexRowCentered>
-            }
-            {textTemplates?.length > 0 &&
-              textTemplates[selectedCategory]?.templates.length > 0 && !viewNavigation &&
-              <FlexRowCentered className="relative bg-slate-100 dark:bg-slate-700 rounded shadow">
-                <div className="absolute right-[10rem]">
-                  <PlusButton onClick={() => handleCreateTemplate}>
-                    <BsPlusLg />
-                  </PlusButton>
-
-                </div>
-                <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
-              </FlexRowCentered>
-            }
-          </FlexColContainer>
+          <FlexRowCenteredX className="w-full md:w-[fit-content] h-[fit-content] fixed bottom-0 md:top-[3rem] md:right-0 z-50">
+            <MinimizedManager
+              viewCategories={viewCategories}
+              handleCreateCategory={handleCreateCategory}
+              handleViewCategorySelect={handleViewCategorySelect}
+              handleViewNavigationSelect={handleViewNavigationSelect}
+              textTemplates={textTemplates}
+              selectedCategory={selectedCategory}
+              viewNavigation={viewNavigation}
+              handleCreateTemplate={handleCreateTemplate}
+            />
+          </FlexRowCenteredX>
           {/**Categories List */}
           <FlexRowContainer className="absolute bg-gray-50 dark:bg-gray-800 z-[500] xl:static gap-2 h-full">
             {viewCategories &&
               <div className="h-full flex">
-                <CategoryList
+                <CategoryManagerColumn
                   viewCategories={viewCategories}
                   handleViewCategorySelect={handleViewCategorySelect}
                   textTemplates={textTemplates}
@@ -338,7 +329,7 @@ const Page: NextPage<PageProps> = () => {
               textTemplates && textTemplates.length > 0 &&
               textTemplates[selectedCategory]?.templates.length > 0 &&
               viewNavigation &&
-              <TemplateNavigation
+              <TemplateManagerColumn
                 handleViewNavigationSelect={handleViewNavigationSelect}
                 textTemplates={textTemplates}
                 setTextTemplates={setTextTemplates}
@@ -483,27 +474,6 @@ const Page: NextPage<PageProps> = () => {
     </>
   );
 }
-
-const NavigationHeaderButton = ({ viewNavigation, handleViewNavigationSelect }: any) => {
-  return <FlexRowCentered className={`p-4 gap-4 rounded`}>
-    <h2>Templates</h2>
-    <FlexRowCenteredY className="text-lg cursor-pointer" onClick={handleViewNavigationSelect}>
-      {!viewNavigation ? <FaEye /> : <FaEyeSlash />}
-    </FlexRowCenteredY>
-  </FlexRowCentered>
-}
-
-
-const AddTemplateButtonEmpty = ({ onClick }: any) => {
-  return <AddButton onClick={onClick}>
-    <FlexColCentered>
-      <FaPlus />
-    </FlexColCentered>
-  </AddButton>
-}
-
-
-
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookies = context.req ? cookie.parse(context.req.headers.cookie || '') : undefined

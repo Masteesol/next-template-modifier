@@ -8,7 +8,7 @@ import {
 } from "@/components/shared/styled-global-components";
 import TemplateNavButton from "./TemplateNavButton";
 import { useState, useEffect, useContext } from "react";
-import { Accordion } from "../shared";
+import { Accordion } from "../../shared";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import { List, arrayMove } from "react-movable";
 import debounce from "lodash.debounce";

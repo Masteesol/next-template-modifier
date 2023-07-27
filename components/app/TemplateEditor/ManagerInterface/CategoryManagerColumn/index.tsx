@@ -13,15 +13,15 @@ import {
 } from "@/components/shared/styled-global-components";
 
 import CategoryCard from "./CategoryCard";
-import { FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
-import GuidingDescriptionText from "../GuidingDescription";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import GuidingDescriptionText from "../../GuidingDescription";
 import { List, arrayMove } from 'react-movable';
 import { useState, useLayoutEffect, useContext } from "react";
 import { updateCategoryOrder } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import debounce from "lodash.debounce";
 import { BsChevronDown, BsChevronUp, BsPlusLg, BsStarFill } from "react-icons/bs";
-import { EditToggle } from "../shared";
+import { EditToggle } from "../../shared";
 import { TemplatesContainer } from "@/types/global";
 
 export const CategoryHeaderButton = ({ viewCategories, handleViewCategorySelect }: any) => {

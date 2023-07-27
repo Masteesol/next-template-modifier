@@ -11,6 +11,7 @@ import {
   FlexRowContainer,
   AddButton,
   InputBase,
+  PlusButton,
 } from "@/components/shared/styled-global-components";
 
 import { GetServerSideProps } from 'next';
@@ -39,9 +40,9 @@ import {
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import TemplateNavigation from "@/components/app/TemplateEditor/TemplateNavigationCol"
 import { saveMessage } from "@/utils/helpers";
-import { ListAddButton } from "@/components/app/TemplateEditor/shared";
 import { Templates, TemplatesContainer } from "@/types/global"
 import { useRouter } from "next/router"
+import { BsPlusLg } from "react-icons/bs";
 
 type PageProps = {
   authenticated: boolean,
@@ -252,12 +253,12 @@ const Page: NextPage<PageProps> = () => {
   }
 
 
-  const handleCreateTemplate = async () => {
+  const handleCreateTemplate = async (is_collection: boolean = false) => {
     if (!userID) {
       console.error("User ID is null.");
       return;
     }
-    createTemplate(userID, textTemplates, setTextTemplates, selectedCategory)
+    createTemplate(userID, textTemplates, setTextTemplates, selectedCategory, is_collection)
   }
 
   const handleRemoveTemplate = async (index: number, template_id: string) => {
@@ -291,7 +292,9 @@ const Page: NextPage<PageProps> = () => {
             {!viewCategories &&
               <FlexRowCentered className="relative bg-slate-100 dark:bg-slate-700 rounded shadow">
                 <div className="absolute right-[10rem]">
-                  <ListAddButton onClick={handleCreateCategory} />
+                  <PlusButton onClick={handleCreateCategory}>
+                    <BsPlusLg />
+                  </PlusButton>
                 </div>
                 <CategoryHeaderButton viewCategories={viewCategories} handleViewCategorySelect={handleViewCategorySelect} />
               </FlexRowCentered>
@@ -300,7 +303,10 @@ const Page: NextPage<PageProps> = () => {
               textTemplates[selectedCategory]?.templates.length > 0 && !viewNavigation &&
               <FlexRowCentered className="relative bg-slate-100 dark:bg-slate-700 rounded shadow">
                 <div className="absolute right-[10rem]">
-                  <ListAddButton onClick={handleCreateTemplate} />
+                  <PlusButton onClick={() => handleCreateTemplate}>
+                    <BsPlusLg />
+                  </PlusButton>
+
                 </div>
                 <NavigationHeaderButton viewNavigation={viewNavigation} handleViewNavigationSelect={handleViewNavigationSelect} />
               </FlexRowCentered>
@@ -441,24 +447,26 @@ const Page: NextPage<PageProps> = () => {
                             })
                           }
                         </FlexColContainer>
-                        {/**If no templates have been created */}
-                        {textTemplates[selectedCategory]?.templates.length === 0 &&
-                          <FlexColCentered className="h-full">
-                            <FlexColCentered className="max-w-[400px] p-8 w-full gap-8 justify-center border-[1px] rounded border-gray-200">
-                              <InputBase type="text"
-                                value={textTemplates[selectedCategory]?.category_name}
-                                className="text-center text-lg bg-white dark:bg-gray-800 w-full"
-                                onChange={(e) => handleInputCatTitleChange(e, selectedCategory, textTemplates[selectedCategory].category_id)} />
-                              <FlexRowCenteredY className="gap-4 w-full">
-                                <i className="w-full text-right text-gray-500">Add Template</i>
-                                <AddTemplateButtonEmpty onClick={handleCreateTemplate} />
-                              </FlexRowCenteredY>
-                            </FlexColCentered>
-                          </FlexColCentered>
-                        }
+
                       </FlexColContainer>
                     }
-
+                    {/**If no templates have been created */}
+                    {textTemplates[selectedCategory]?.templates.length === 0 &&
+                      <FlexColCentered className="h-full">
+                        <FlexColCentered className="max-w-[400px] p-8 w-full gap-8 justify-center border-[1px] rounded border-gray-200">
+                          <InputBase type="text"
+                            value={textTemplates[selectedCategory]?.category_name}
+                            className="text-center text-lg bg-white dark:bg-gray-800 w-full"
+                            onChange={(e) => handleInputCatTitleChange(e, selectedCategory, textTemplates[selectedCategory].category_id)} />
+                          <FlexRowCenteredY className="gap-4 w-full">
+                            <i className="w-full text-right text-gray-500">Add Template</i>
+                            <PlusButton onClick={() => handleCreateTemplate}>
+                              <BsPlusLg />
+                            </PlusButton>
+                          </FlexRowCenteredY>
+                        </FlexColCentered>
+                      </FlexColCentered>
+                    }
                   </FlexColContainer>
                 </FlexColContainer>
                 :

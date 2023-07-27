@@ -19,7 +19,6 @@ const TemplateEditable = (template: Templates) => {
             </FlexRowCenteredY>
         </div >
     })
-
 }
 
 export default TemplateEditable

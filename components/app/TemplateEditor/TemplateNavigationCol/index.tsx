@@ -3,16 +3,18 @@ import {
     FlexColCentered,
     FlexColContainer,
     FlexRowCenteredY,
+    FlexRowEnd,
+    PlusButton,
 } from "@/components/shared/styled-global-components";
 import TemplateNavButton from "./TemplateNavButton";
 import { useState, useEffect, useContext } from "react";
-import { Accordion, ListAddButton } from "../shared";
+import { Accordion } from "../shared";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import { List, arrayMove } from "react-movable";
 import debounce from "lodash.debounce";
 import { updateTemplatesOrder } from "@/requests/templates";
 import { Templates } from "@/types/global";
-import { BsStarFill } from "react-icons/bs";
+import { BsArrowLeft, BsPlusLg, BsStarFill } from "react-icons/bs";
 
 interface TemplateNavigationProps {
     handleViewNavigationSelect: any
@@ -44,6 +46,7 @@ const delayedUpdateCategory = debounce((textTemplates, categoryID, setSaveStatus
 
 const SortingList = (props: TemplateNavigationProps) => {
     const [isEditing, setIsEditing] = useState(false);
+    const [addTemplateClickedOnce, setAddTemplateClickedOnce] = useState(false)
     const { setSaveStatus } = useContext(SaveStatusContext)
     const {
         handleViewNavigationSelect,
@@ -84,7 +87,6 @@ const SortingList = (props: TemplateNavigationProps) => {
         setTextTemplates(newTextTemplates)
         delayedUpdateCategory(sortedTextTemplatesArray, textTemplates[selectedCategory].category_id, setSaveStatus, userID)
     }
-
 
     return (
         <FlexColContainer className="px-2">
@@ -134,11 +136,54 @@ const SortingList = (props: TemplateNavigationProps) => {
                 }
             </FlexColContainer>
             <FlexColCentered className="mt-8 w-full mb-8 gap-4">
-                <ListAddButton onClick={handleCreateTemplate} />
+                {/* <ListAddButton onClick={handleCreateTemplate} /> */}
+                <FlexRowEnd className="w-full">
+                    {
+                        addTemplateClickedOnce ?
+                            <FlexColContainer className="gap-4 items-end">
+                                <div className="flex items-center gap-2 hover:text-green-800 cursor-pointer"
+                                    onClick={() => handleCreateTemplate()}
+                                >
+                                    Single Template
+                                    <PlusButton
+
+                                        className="text-base"
+                                    >
+                                        <BsPlusLg />
+                                    </PlusButton>
+                                </div>
+                                <div className="flex items-center gap-2 hover:text-purple-800 cursor-pointer"
+                                    onClick={() => handleCreateTemplate(true)}
+                                >
+                                    Template Collection
+                                    <PlusButton
+
+                                        className="bg-purple-200 text-purple-800 text-base"
+                                    >
+                                        <BsPlusLg />
+                                    </PlusButton>
+                                </div>
+                                <button
+                                    className="text-2xl transition ease-in-out duration-300 hover:translate-x-[-0.3rem]"
+                                    onClick={() => { setAddTemplateClickedOnce(false) }}
+                                >
+                                    <BsArrowLeft />
+                                </button>
+                            </FlexColContainer>
+                            :
+                            <PlusButton
+                                onClick={() => { setAddTemplateClickedOnce(true) }}
+                            >
+                                <BsPlusLg />
+                            </PlusButton>
+                    }
+
+                </FlexRowEnd>
             </FlexColCentered>
         </FlexColContainer>
     )
 }
+
 
 export default SortingList
 

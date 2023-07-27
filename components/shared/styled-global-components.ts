@@ -73,6 +73,16 @@ export const AddButton = tw.button`
   hover:dark:opacity-50
 `
 
+export const PlusButton = tw.button`
+    bg-green-300 
+    p-2 
+    text-xl 
+    rounded-full 
+    cursor-pointer 
+    shadow 
+    hover:opacity-50
+`
+
 export const InputBase = tw.input`
   border-1 
   border-transparent

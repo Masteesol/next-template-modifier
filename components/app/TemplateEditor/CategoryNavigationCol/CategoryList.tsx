@@ -7,7 +7,9 @@ import {
     DividerPipe,
     FlexRowCentered,
     DividerHorizontal,
-    FlexExpandable
+    FlexExpandable,
+    FlexRowEnd,
+    PlusButton
 } from "@/components/shared/styled-global-components";
 
 import CategoryCard from "./CategoryCard";
@@ -18,7 +20,7 @@ import { useState, useLayoutEffect, useContext } from "react";
 import { updateCategoryOrder } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import debounce from "lodash.debounce";
-import { BsChevronDown, BsChevronUp, BsStarFill } from "react-icons/bs";
+import { BsChevronDown, BsChevronUp, BsPlusLg, BsStarFill } from "react-icons/bs";
 import { EditToggle } from "../shared";
 import { TemplatesContainer } from "@/types/global";
 
@@ -30,17 +32,6 @@ export const CategoryHeaderButton = ({ viewCategories, handleViewCategorySelect 
         </FlexRowCenteredY>
     </FlexRowCenteredY>
 }
-
-const AddCategoryButton = ({ onClick }: any) => {
-    return <FlexRowContainer className="justify-end w-full">
-        <AddButton onClick={onClick}>
-            <FlexColCentered>
-                <FaPlus />
-            </FlexColCentered>
-        </AddButton>
-    </FlexRowContainer>
-}
-
 
 interface CateGoryListTypes {
     viewCategories: any;
@@ -177,15 +168,22 @@ const SortingList = (props: CateGoryListTypes) => {
                 }
 
             </FlexColContainer>
-            <FlexColCentered className="w-full mb-10 mt-4 gap-4">
+            <FlexColCentered className="w-full mb-10 mt-8 gap-4">
                 {textTemplates.length === 0 && <GuidingDescriptionText>Add a new category to begin</GuidingDescriptionText>}
-                <FlexRowCenteredY className="w-full">
-                    {!isEditing && <AddCategoryButton onClick={addCategory} />}
-                </FlexRowCenteredY>
+
+                {!isEditing &&
+                    <FlexRowEnd className="w-full">
+                        <PlusButton
+                            onClick={addCategory}
+                        >
+                            <BsPlusLg />
+                        </PlusButton>
+                    </FlexRowEnd>}
             </FlexColCentered>
         </FlexColContainer >
     );
 };
+
 
 
 const CategoryList = (props: any, isEditing: boolean) => {

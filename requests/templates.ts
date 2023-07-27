@@ -358,7 +358,8 @@ export const createTemplate = async (
     userID: string,
     textTemplates: TemplatesContainer[],
     setTextTemplates: React.Dispatch<React.SetStateAction<TemplatesContainer[]>>,
-    selectedCategory: number
+    selectedCategory: number,
+    is_collection: boolean
 ) => {
     try {
         const newID = uuidv4()
@@ -369,7 +370,8 @@ export const createTemplate = async (
                 title: "New Template",
                 text: "Template text...",
                 category_id: textTemplates[selectedCategory].category_id,
-                user_id: userID
+                user_id: userID,
+                is_collection: is_collection
             }])
             .select()
         console.log(data)

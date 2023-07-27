@@ -71,13 +71,3 @@ export const Accordion = ({ handleView, isEditing, setIsEditing, title }: Accord
         </FlexColContainer>
     );
 };
-
-export const ListAddButton = ({ onClick }: any) => {
-    return <FlexRowContainer className="justify-end w-full ">
-        <AddButton onClick={onClick}>
-            <FlexColCentered>
-                <FaPlus />
-            </FlexColCentered>
-        </AddButton>
-    </FlexRowContainer>
-}

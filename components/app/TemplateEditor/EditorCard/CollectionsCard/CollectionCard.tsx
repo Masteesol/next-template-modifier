@@ -234,9 +234,12 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
     };
 
 
-    const [items, setItems] = useState<JSX.Element[]>(TemplatateEditOrderSection(template));
+    const [items, setItems] = useState<JSX.Element[]>(template.template_collections && TemplatateEditOrderSection(template));
+
     useLayoutEffect(() => {
-        setItems(TemplatateEditOrderSection(template))
+        if (template.template_collections) {
+            setItems(TemplatateEditOrderSection(template))
+        }
     }, [template, isEditListActive]);
 
     const handleNewListOrder = async (items: JSX.Element[], oldIndex: number, newIndex: number) => {
@@ -276,10 +279,10 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                     {!isEditListActive
                         ?
                         <FlexColContainer className="gap-4 w-full">
-                            {template.template_collections.length > 0
+                            {template.template_collections?.length > 0
                                 ?
                                 <FlexColContainer className="gap-4">
-                                    {template.template_collections.map((collectionItem: CollectionItem, index: number) => {
+                                    {template.template_collections?.map((collectionItem: CollectionItem, index: number) => {
                                         return <div key={`collectionItem-${index}-${collectionItem.id}`}>
                                             <TemplatateEditTextSection
                                                 collectionItem={collectionItem}
@@ -342,7 +345,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                 </FlexRowContainer>
                 <DividerHorizontal />
                 <FlexRowCenteredY className="text-gray-500 justify-between">
-                    <p>{`Templates: ${template.template_collections.length}`}</p>
+                    <p>{`Templates: ${template.template_collections?.length}`}</p>
                     <p className="py-1 px-2 rounded bg-violet-200 text-violet-800">Collection</p>
                 </FlexRowCenteredY>
             </FlexColContainer>

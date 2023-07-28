@@ -3,6 +3,7 @@ import { BsArrowRight, BsChevronDown, BsChevronUp, BsFillGrid3X2GapFill, BsStar,
 import { useEffect, useState } from "react"
 import { TemplatesContainer } from "@/types/global";
 import { updateCategoryFavourite } from "@/requests/templates";
+import { generalInputCountRestrictions } from "@/utils/generalCountRestrictions";
 
 
 interface CatType {
@@ -101,6 +102,7 @@ const CategoryCard = (props: CatType) => {
                             className={"font-bold max-w-[80%] p-2"}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputCatTitleChange(e, index, textTemplate.category_id)}
                             placeholder={"Input Category Name"}
+                            maxLength={generalInputCountRestrictions.titles}
                         />
                     }
                     < FlexRowCenteredY className="ms-auto">

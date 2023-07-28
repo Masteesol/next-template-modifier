@@ -81,6 +81,7 @@ export const PlusButton = tw.button`
     cursor-pointer 
     shadow 
     hover:opacity-50
+    ${({ disabled }) => (disabled && "bg-gray-200 text-gray-500 cursor-not-allowed")}
 `
 
 export const InputBase = tw.input`

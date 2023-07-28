@@ -18,7 +18,7 @@ const CollectionsTemplateTextEditToolbar = (props: CollectionsTemplateTextEditTo
         setIsEditListActive,
         setIsEditTextActive
     } = props
-    return <FlexColContainer >
+    return <FlexColContainer className="h-full">
         <div className="group relative">
             <IconContainerNormal disabled={false}>
                 {!textTemplate.favourited

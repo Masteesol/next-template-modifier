@@ -1,6 +1,7 @@
 import { FlexRowCenteredY } from '@/components/shared/styled-global-components'
 import { HoverLabel, IconContainerWarning, InputBase } from '../../styles'
 import { BsXLg } from 'react-icons/bs'
+import { generalInputCountRestrictions } from '@/utils/generalCountRestrictions';
 
 
 interface ComponentProps {
@@ -39,6 +40,7 @@ const Topbar = (props: ComponentProps) => {
                     value={stagedTemplate.title}
                     className="text-xl max-w-[70%] bg-slate-50 dark:bg-slate-800 px-2 py-1"
                     onChange={handleTitleChange}
+                    maxLength={generalInputCountRestrictions.titles}
                     placeholder="Template Title..."
                 />
 

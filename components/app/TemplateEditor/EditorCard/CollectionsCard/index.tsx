@@ -7,22 +7,31 @@ import {
     DividerHorizontal,
     FlexRowContainer,
     FlexColCentered,
+    PlusButton,
 } from "@/components/shared/styled-global-components";
 
 import debounce from "lodash.debounce";
-import { createTemplateCollectionItem, removeTemplateCollectionItem, updateTemplateCollectionItem, updateTemplateMetaData, updateTemplateTitle, updateTemplatesCollectionOrder } from "@/requests/templates";
+import {
+    createTemplateCollectionItem,
+    removeTemplateCollectionItem,
+    updateTemplateCollectionItem,
+    updateTemplateMetaData,
+    updateTemplateTitle,
+    updateTemplatesCollectionOrder
+} from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 import { HoverLabel, IconContainerNormal } from "../styles";
 
 import Topbar from "./subcomponents/Topbar";
-import { saveMessage } from "@/utils/helpers";
+import { getColorForCount, saveMessage } from "@/utils/helpers";
 import { BsArrowLeft, BsPlus } from "react-icons/bs";
 import { CollectionItem } from "@/types/global";
 import { List, arrayMove } from 'react-movable';
-import CollectionsTemplateTextProductionToolbar from "./subcomponents/CollectionsTemplateTextProductionToolbar";
+import CollectionsTemplateTextProductionToolbar from "./subcomponents/ProductionToolbar";
 import TemplatateEditTextSection from "./subcomponents/TemplateEditTextSection"
 import TemplatateEditOrderSection from "./subcomponents/TemplateEditOrderSection"
 import { FaArrowRight } from "react-icons/fa";
+import { templateCollectionItemCountLimit } from "@/utils/generalCountRestrictions";
 
 interface TemplateCardProps {
     categoryIndex: number;
@@ -62,7 +71,7 @@ const delayedUpdateTemplateCollectionItem = debounce((stagedCollections: StagedC
         }
     }
     update()
-}, 1000);
+}, 2000);
 
 
 const delayedUpdateCollectionOrder = debounce((collectionArray, template_id, setSaveStatus) => {
@@ -324,11 +333,13 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                     <FlexColContainer>
                                         <p className="text-xs text-gray-400">Auto saving changes</p>
                                     </FlexColContainer>
-                                    <button
+                                    <PlusButton
                                         onClick={handleCreateNewLineItem}
-                                        className="rounded-full bg-green-200 p-1 hover:opacity-50 relative">
+                                        disabled={template.template_collections?.length === templateCollectionItemCountLimit}
+                                        className="p-1"
+                                    >
                                         <BsPlus className="text-2xl" />
-                                    </button>
+                                    </PlusButton>
                                     {textTemplate?.template_collections?.length === 0 &&
                                         <FlexRowCenteredY className="absolute right-[3rem] top-2 text-sm group-hover:hidden text-green-600 font-bold animate-slide duration-500 ease-in-out">
                                             <span className="w-[6rem] text-center ">Click to add</span>
@@ -377,7 +388,13 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                 </FlexRowContainer>
                 <DividerHorizontal />
                 <FlexRowCenteredY className="text-gray-500 justify-between text-xs">
-                    <p>{`Templates: ${template.template_collections?.length}`}</p>
+                    <p >
+                        {`Templates: `}
+                        <span className={`${isEditTextActive && getColorForCount(template.template_collections?.length, templateCollectionItemCountLimit)}`}>
+                            {template.template_collections?.length}{isEditTextActive && `/${templateCollectionItemCountLimit}`}
+                        </span>
+
+                    </p>
                     <p className="py-1 px-2 rounded bg-violet-200 text-violet-800">Collection</p>
                 </FlexRowCenteredY>
             </FlexColContainer>

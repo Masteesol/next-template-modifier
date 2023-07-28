@@ -24,6 +24,7 @@ import Topbar from "./subcomponents/Topbar";
 import { Badge } from "flowbite-react";
 import Footer from "./subcomponents/Footer";
 import { objectsAreEqual, saveMessage } from "@/utils/helpers";
+import { generalInputCountRestrictions } from "@/utils/generalCountRestrictions";
 
 
 const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count, setSaveStatus) => {
@@ -119,7 +120,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
     };
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newTemplate = { title: e.target.value, text: stagedTemplate.text, template_id: template.template_id };
+        const newTemplate = { ...stagedTemplate, title: e.target.value };
         setStagedTemplate(newTemplate);
     };
 
@@ -210,6 +211,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                         onBlur={() => setFocusedInput(null)}
                         disabled={isEditActive}
                         className={`${isEditActive && "bg-gray-300 dark:bg-gray-700 cursor-not-allowed"} w-full`}
+                        maxLength={generalInputCountRestrictions.inputGrid}
                     />
                     <button
                         disabled={isEditActive}

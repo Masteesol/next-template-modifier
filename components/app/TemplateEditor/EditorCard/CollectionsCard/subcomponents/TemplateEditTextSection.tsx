@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { BiEraser } from "react-icons/bi";
 
 import {
+    DividerHorizontal,
+    FlexColContainer,
+    FlexRowCenteredY,
     FlexRowContainer,
 } from "@/components/shared/styled-global-components";
 
@@ -10,6 +13,8 @@ import { HoverLabel, IconContainerNormal, IconContainerYellow, TextArea } from "
 import { FaRegCopy } from "react-icons/fa";
 import { BsCheckLg, BsXLg } from "react-icons/bs";
 import { CollectionItem } from "@/types/global";
+import { generalInputCountRestrictions } from "@/utils/generalCountRestrictions";
+import { getColorForCount } from "@/utils/helpers";
 
 interface TemplateEntryProps {
     handleCopy: any
@@ -49,6 +54,9 @@ const TemplateEntry = (props: TemplateEntryProps) => {
         setInputValue("")
         handleTextChange("", collectionItem)
     }
+
+    const charLimit = generalInputCountRestrictions.templateCollectionItem
+
     if (!isEditTextActive) {
         return <div
             className={`w-full`}
@@ -80,36 +88,48 @@ const TemplateEntry = (props: TemplateEntryProps) => {
         </div >
     }
 
-    return <FlexRowContainer
-        className="gap-2"
-    >
-        <FlexRowContainer className="w-full bg-slate-50 rounded">
-            <TextArea
-                className="bg-transparent w-full bg-slate-50 rounded min-h-[5rem]"
-                placeholder="Template text goes here..."
-                value={`${inputValue}`}
-                onChange={(e) => { handleInputChange(e) }}
-            />
-            <div>
-                <button
-                    onClick={handleEmptyInput}
-                    className={`hover:bg-slate-100 dark:hover:bg-gray-900 p-2 border-1 text-lg text-gray-500 rounded `}
-                >
-                    <BiEraser />
-                </button>
-            </div>
+    return <FlexColContainer className="gap-2">
+        <FlexRowContainer
+            className="gap-2"
+        >
+            <FlexRowContainer className="w-full bg-slate-50 rounded">
+                <TextArea
+                    className="bg-transparent w-full bg-slate-50 rounded min-h-[5rem]"
+                    placeholder="Template text goes here..."
+                    value={`${inputValue}`}
+                    onChange={(e) => { handleInputChange(e) }}
+                    maxLength={charLimit}
+                />
+                <div>
+                    <button
+                        onClick={handleEmptyInput}
+                        className={`hover:bg-slate-100 dark:hover:bg-gray-900 p-2 border-1 text-lg text-gray-500 rounded `}
+                    >
+                        <BiEraser />
+                    </button>
+                </div>
 
+            </FlexRowContainer>
+            <div className="group relative">
+                <IconContainerYellow
+                    disabled={false}
+                    onClick={() => { handleRemoveCollectionItem(collectionItem.id) }}
+                >
+                    <BsXLg className="text-xs" />
+                    <HoverLabel className="w-[7rem]">{"Remove Template"}</HoverLabel>
+                </IconContainerYellow>
+            </div>
         </FlexRowContainer>
-        <div className="group relative">
-            <IconContainerYellow
-                disabled={false}
-                onClick={() => { handleRemoveCollectionItem(collectionItem.id) }}
-            >
-                <BsXLg className="text-xs" />
-                <HoverLabel className="w-[7rem]">{"Remove Template"}</HoverLabel>
-            </IconContainerYellow>
-        </div>
-    </FlexRowContainer>
+        <DividerHorizontal />
+        <FlexRowCenteredY className="gap-1 text-xs text-gray-400 justify-end">
+            <div id="words-count" className={`${getColorForCount(inputValue.length, charLimit)}`}>
+                <span>{`${inputValue.length}`}</span>
+                <span>{`/${charLimit}`}</span>
+            </div>
+            <span>characters</span>
+        </FlexRowCenteredY>
+    </FlexColContainer>
+
 }
 
 export default TemplateEntry

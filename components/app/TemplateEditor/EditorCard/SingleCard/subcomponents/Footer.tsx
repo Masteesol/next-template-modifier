@@ -1,4 +1,5 @@
 import { FlexRowCenteredY } from '@/components/shared/styled-global-components'
+import { getColorForCount } from '@/utils/helpers';
 import React from 'react'
 import wordCounter from "word-count"
 
@@ -9,13 +10,7 @@ interface FooterProps {
     finalText: any;
 }
 
-const getColorForCount = (count: number, limit: number): string => {
-    const ratio = count / limit;
-    if (ratio >= 1) return 'text-red-600'; // Adjust color for 100% and above
-    if (ratio >= 0.90) return 'text-yellow-400'; // Adjust color for 80% to 99%
-    if (ratio < 0.90) return 'text-green-500'; // Adjust color for 80% to 99%
-    return 'text-gray-500'; // Default color
-};
+
 
 const Footer = (props: FooterProps) => {
     const {

@@ -35,7 +35,7 @@ import {
   deletedTemplate,
   fetchTemplatesForUser,
   updateCategory,
-  updateTemplate
+  updateTemplate,
 } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 
@@ -283,6 +283,7 @@ const Page: NextPage<PageProps> = () => {
     deletedCategory(userID, textTemplates, setTextTemplates, setSelectedCategory, selectedCategory, category_id, index)
 
   };
+
   return (
     <>
       <Head>

@@ -2,25 +2,67 @@ import { FlexColContainer, FlexRowCenteredY } from "@/components/shared/styled-g
 import { HoverLabel, IconContainerNormal } from "../../styles";
 import { BsListUl, BsPencilSquare, BsStar, BsStarFill } from "react-icons/bs";
 import { FaArrowRight } from "react-icons/fa";
+import { updateTemplatesFavourite } from "@/requests/templates";
+import { saveMessage } from "@/utils/helpers";
+import { useContext } from "react"
+import { SaveStatusContext } from "@/context/SavedStatusContext";
+import { Templates, TemplatesContainer } from "@/types/global";
 
 interface CollectionsTemplateTextEditToolbarProps {
     setIsEditActive: any;
     textTemplate: any
     setIsEditListActive: any;
-    setIsEditTextActive: any
+    setIsEditTextActive: any;
+    userID: any;
+    setTemplates: any;
+    categoryIndex: number
 }
 
 
 const CollectionsTemplateTextEditToolbar = (props: CollectionsTemplateTextEditToolbarProps) => {
+    const { setSaveStatus } = useContext(SaveStatusContext)
     const {
         setIsEditActive,
         textTemplate,
         setIsEditListActive,
-        setIsEditTextActive
+        setIsEditTextActive,
+        userID,
+        setTemplates,
+        categoryIndex
     } = props
+
+    const handleSetFavourited = async () => {
+        try {
+            const res = await updateTemplatesFavourite(textTemplate.template_id, userID, !textTemplate.favourited)
+            if (res) {
+                saveMessage(setSaveStatus, "Changes saved!")
+                setTemplates((prevTemplates: any) => {
+                    return prevTemplates.map((templateContainer: TemplatesContainer, index: number) => {
+                        if (index === categoryIndex) {
+                            const updatedTemplates = templateContainer.templates.map((template: Templates) => {
+                                if (template.template_id === textTemplate.template_id) {
+                                    return { ...template, favourited: !template.favourited }
+                                }
+                                return template;  // return unmodified template if condition is not true
+                            })
+                            return { ...templateContainer, templates: updatedTemplates };  // return the whole templateContainer with updated templates
+                        }
+                        return templateContainer;  // return unmodified templateContainer if condition is not true
+                    })
+                });
+            } else {
+                saveMessage(setSaveStatus, "Error saving changes")
+                console.log("Error updating favourites status", res)
+            }
+        } catch (error) {
+            console.log("Error message:", error)
+        }
+    }
     return <FlexColContainer className="h-full">
         <div className="group relative">
-            <IconContainerNormal disabled={false}>
+            <IconContainerNormal
+                onClick={handleSetFavourited}
+                disabled={false}>
                 {!textTemplate.favourited
                     ?
                     <BsStar className="text-xl" />

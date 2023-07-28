@@ -36,26 +36,30 @@ const ProductionModeToolbar = (props: ComponentProps) => {
 
 
     const handleSetFavourited = async () => {
-        const res = await updateTemplatesFavourite(textTemplate.template_id, userID, !textTemplate.favourited)
-        if (res) {
-            saveMessage(setSaveStatus, "Changes saved!")
-            setTemplates((prevTemplates: any) => {
-                return prevTemplates.map((templateContainer: TemplatesContainer, index: number) => {
-                    if (index === categoryIndex) {
-                        const updatedTemplates = templateContainer.templates.map((template: Templates) => {
-                            if (template.template_id === textTemplate.template_id) {
-                                return { ...template, favourited: !template.favourited }
-                            }
-                            return template;  // return unmodified template if condition is not true
-                        })
-                        return { ...templateContainer, templates: updatedTemplates };  // return the whole templateContainer with updated templates
-                    }
-                    return templateContainer;  // return unmodified templateContainer if condition is not true
-                })
-            });
-        } else {
-            saveMessage(setSaveStatus, "Error saving changes")
-            console.log("Error updating status", res)
+        try {
+            const res = await updateTemplatesFavourite(textTemplate.template_id, userID, !textTemplate.favourited)
+            if (res) {
+                saveMessage(setSaveStatus, "Changes saved!")
+                setTemplates((prevTemplates: any) => {
+                    return prevTemplates.map((templateContainer: TemplatesContainer, index: number) => {
+                        if (index === categoryIndex) {
+                            const updatedTemplates = templateContainer.templates.map((template: Templates) => {
+                                if (template.template_id === textTemplate.template_id) {
+                                    return { ...template, favourited: !template.favourited }
+                                }
+                                return template;  // return unmodified template if condition is not true
+                            })
+                            return { ...templateContainer, templates: updatedTemplates };  // return the whole templateContainer with updated templates
+                        }
+                        return templateContainer;  // return unmodified templateContainer if condition is not true
+                    })
+                });
+            } else {
+                saveMessage(setSaveStatus, "Error saving changes")
+                console.log("Error updating favourites status", res)
+            }
+        } catch (error) {
+            console.log("Error message:", error)
         }
 
     }

@@ -381,6 +381,17 @@ export const createCategory = async (
     }
 }
 
+interface TemplateData {
+    template_id: string,
+    title: string,
+    text: string,
+    category_id: string,
+    user_id: string,
+    is_collection: boolean,
+    order: number
+}
+
+
 export const createTemplate = async (
     userID: string,
     textTemplates: TemplatesContainer[],
@@ -388,25 +399,33 @@ export const createTemplate = async (
     selectedCategory: number,
     is_collection: boolean
 ) => {
+    const newID = uuidv4()
+
+    const dataObject: TemplateData = {
+        template_id: newID,
+        title: `${is_collection ? "New Template Collection" : "New Template"}`,
+        text: `${is_collection ? "Text Placeholder" : "Template text..."}`,
+        category_id: textTemplates[selectedCategory].category_id,
+        user_id: userID,
+        is_collection: is_collection,
+        order: textTemplates[selectedCategory].templates.length
+    }
     try {
-        const newID = uuidv4()
         const { data, error } = await supabase
             .from('templates')
-            .insert([{
-                template_id: newID,
-                title: "New Template",
-                text: "Template text...",
-                category_id: textTemplates[selectedCategory].category_id,
-                user_id: userID,
-                is_collection: is_collection
-            }])
+            .insert([
+                dataObject
+            ])
             .select()
         console.log(data)
         if (error) {
             console.log("Error creating template", error)
         }
         if (data) {
-            const newTemplate = data[0]
+            const newTemplate = data[0];
+            if (is_collection) {
+                newTemplate.template_collections = []
+            }
             const updatedTemplates = [...textTemplates[selectedCategory].templates, newTemplate];
             const updatedTextTemplates = textTemplates.map((item, index) => {
                 if (index === selectedCategory) {
@@ -418,10 +437,11 @@ export const createTemplate = async (
                 return item;
             });
             setTextTemplates(updatedTextTemplates);
+            console.log("New text templates created", updatedTextTemplates[selectedCategory])
         }
 
 
-        console.log("New text templates created", textTemplates)
+
     } catch (error) {
         console.error("Failed to create template:", error);
     }

@@ -1,8 +1,8 @@
 import { FlexRowCenteredY } from '@/components/shared/styled-global-components'
-import { HoverLabel, IconContainerWarning, InputBase } from '../../styles'
-import { BsXLg } from 'react-icons/bs'
+import { InputBase } from '../../styles'
 import { generalInputCountRestrictions } from '@/utils/generalCountRestrictions';
-
+import { useState } from "react"
+import { DeleteTemplateButton } from '../../shared';
 
 interface ComponentProps {
     isEditActive: boolean;
@@ -17,6 +17,8 @@ interface ComponentProps {
 
 
 const Topbar = (props: ComponentProps) => {
+
+    const [clickedOnce, setClickedOnce] = useState(false)
 
     const {
         isEditActive,
@@ -58,14 +60,13 @@ const Topbar = (props: ComponentProps) => {
                     <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">Editing Mode</span>
                 </FlexRowCenteredY>
                 :
-                <div className="group relative">
-                    <IconContainerWarning
-                        onClick={() => handleRemoveTemplate(index, template.template_id)}
-                    >
-                        <BsXLg />
-                        <HoverLabel className="w-[7rem] bg-red-200 text-red-700">Delete template</HoverLabel>
-                    </IconContainerWarning>
-                </div>
+                <DeleteTemplateButton
+                    clickedOnce={clickedOnce}
+                    setClickedOnce={setClickedOnce}
+                    template={template}
+                    handleRemoveTemplate={handleRemoveTemplate}
+                    index={index}
+                />
             }
         </FlexRowCenteredY>
     )

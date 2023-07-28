@@ -1,8 +1,8 @@
 import { FlexRowCenteredY } from '@/components/shared/styled-global-components'
-import { HoverLabel, IconContainerWarning, InputBase } from '../../styles'
-import { BsXLg } from 'react-icons/bs'
+import { InputBase } from '../../styles'
 import { useState } from "react"
 import { generalInputCountRestrictions } from '@/utils/generalCountRestrictions';
+import { DeleteTemplateButton } from '../../shared';
 
 interface ComponentProps {
     isEditActive: boolean;
@@ -28,7 +28,7 @@ const Topbar = (props: ComponentProps) => {
     } = props
 
     const [input, setInput] = useState(textTemplate.title)
-
+    const [clickedOnce, setClickedOnce] = useState(false)
     return (
         <FlexRowCenteredY className="justify-between gap-4">
             {isEditActive
@@ -52,14 +52,13 @@ const Topbar = (props: ComponentProps) => {
                     <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">Editing Mode</span>
                 </FlexRowCenteredY>
                 :
-                <div className="group relative">
-                    <IconContainerWarning
-                        onClick={() => handleRemoveTemplate(index, template.template_id, true)}
-                    >
-                        <BsXLg />
-                        <HoverLabel className="w-[7rem] bg-red-200 text-red-700">Delete template</HoverLabel>
-                    </IconContainerWarning>
-                </div>
+                <DeleteTemplateButton
+                    clickedOnce={clickedOnce}
+                    setClickedOnce={setClickedOnce}
+                    template={template}
+                    handleRemoveTemplate={handleRemoveTemplate}
+                    index={index}
+                />
             }
         </FlexRowCenteredY>
     )

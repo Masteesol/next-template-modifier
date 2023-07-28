@@ -135,6 +135,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
         userID,
         subscriptionLimits,
         updateTemplatesState,
+        setTemplates
     } = props;
 
 
@@ -231,11 +232,11 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
         const newCollectionItem: CollectionItem = {
             id: uuidv4(),
             text: "",
-            order: textTemplate.template_collections.length,
+            order: textTemplate.template_collections ? textTemplate.template_collections.length : 0,
             // Add other fields as necessary...
         };
         await createTemplateCollectionItem(textTemplate.template_id, newCollectionItem.id)
-        const updatedTemplateCollections = [...textTemplate.template_collections, newCollectionItem];
+        const updatedTemplateCollections = [...textTemplate?.template_collections, newCollectionItem];
         const updatedTemplate = {
             ...textTemplate,
             template_collections: updatedTemplateCollections
@@ -372,6 +373,9 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                     setIsEditListActive={setIsEditListActive}
                                     setIsEditTextActive={setIsEditTextActive}
                                     textTemplate={textTemplate}
+                                    setTemplates={setTemplates}
+                                    userID={userID}
+                                    categoryIndex={categoryIndex}
                                 />
                                 :
                                 <FlexColContainer>

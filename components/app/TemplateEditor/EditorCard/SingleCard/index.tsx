@@ -25,6 +25,7 @@ import { Badge } from "flowbite-react";
 import Footer from "./subcomponents/Footer";
 import { objectsAreEqual, saveMessage } from "@/utils/helpers";
 import { generalInputCountRestrictions } from "@/utils/generalCountRestrictions";
+import { TemplatesContext } from "@/context/TemplatesContext";
 
 
 const delayedUpdateTemplateMetaData = debounce((template_id, userID, copy_count, setSaveStatus) => {
@@ -48,10 +49,10 @@ interface TemplateCardProps {
     handleRemoveTemplate: any;
     userID: string | undefined;
     subscriptionLimits: any;
-    setTemplates: any;
 }
 
 const TemplateCard = (props: TemplateCardProps, ref: any) => {
+    const { setTextTemplates } = useContext(TemplatesContext);
     const {
         categoryIndex,
         template,
@@ -60,7 +61,6 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
         handleRemoveTemplate,
         userID,
         subscriptionLimits,
-        setTemplates,
     } = props;
 
     const templateIndex = index
@@ -258,6 +258,8 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                     index={index}
                     template={template}
                     isUnSaved={isUnSaved}
+                    userID={userID}
+                    categoryIndex={categoryIndex}
                 />
                 <DividerHorizontal />
                 {isEditActive &&
@@ -327,7 +329,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                             placeholderCount={placeholderCount}
                             handleCopy={handleCopy}
                             hasBeenCopied={hasBeenCopied}
-                            setTemplates={setTemplates}
+                            setTemplates={setTextTemplates}
                             textTemplate={textTemplate}
                             categoryIndex={categoryIndex}
                             userID={userID}

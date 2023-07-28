@@ -23,7 +23,7 @@ import { SaveStatusContext } from "@/context/SavedStatusContext";
 import { HoverLabel, IconContainerNormal } from "../styles";
 
 import Topbar from "./subcomponents/Topbar";
-import { getColorForCount, saveMessage } from "@/utils/helpers";
+import { getColorForCount, saveMessage, updateTemplatesState } from "@/utils/helpers";
 import { BsArrowLeft, BsPlus } from "react-icons/bs";
 import { CollectionItem } from "@/types/global";
 import { List, arrayMove } from 'react-movable';
@@ -32,16 +32,15 @@ import TemplatateEditTextSection from "./subcomponents/TemplateEditTextSection"
 import TemplatateEditOrderSection from "./subcomponents/TemplateEditOrderSection"
 import { FaArrowRight } from "react-icons/fa";
 import { templateCollectionItemCountLimit } from "@/utils/generalCountRestrictions";
+import { TemplatesContext } from "@/context/TemplatesContext";
 
 interface TemplateCardProps {
     categoryIndex: number;
     template: any;
     index: number;
-    updateTemplatesState: any;
     handleRemoveTemplate: any;
     userID: string | undefined;
     subscriptionLimits: any;
-    setTemplates: any;
 }
 
 interface StagedCollectionsType {
@@ -134,11 +133,9 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
         handleRemoveTemplate,
         userID,
         subscriptionLimits,
-        updateTemplatesState,
-        setTemplates
     } = props;
 
-
+    const { setTextTemplates } = useContext(TemplatesContext);
     const [textTemplate, setTextTemplate] = useState(template);
     const [isEditActive, setIsEditActive] = useState<boolean>(false);
     const [isEditTextActive, setIsEditTextActive] = useState<boolean>(false);
@@ -203,7 +200,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
             setTextTemplate(updatedTemplate);
             //setCharLimitExceeded(true);
         }
-        updateTemplatesState(categoryIndex, index, updatedTemplate);
+        updateTemplatesState(categoryIndex, index, updatedTemplate, setTextTemplates);
     }
 
     const handleTextChange = (value: string, collectionItem: CollectionItem) => {
@@ -218,14 +215,14 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
             ...textTemplate,
             template_collections: updatedTemplateCollections
         };
-        updateTemplatesState(categoryIndex, index, updatedTemplate);
+        updateTemplatesState(categoryIndex, index, updatedTemplate, setTextTemplates);
         await removeTemplateCollectionItem(itemId)
     }
 
     const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTemplate = { ...textTemplate, title: e.target.value };
         await delayedUpdateTemplateTitle(e.target.value, template.template_id, userID, setSaveStatus)
-        updateTemplatesState(categoryIndex, index, newTemplate);
+        updateTemplatesState(categoryIndex, index, newTemplate, setTextTemplates);
 
     };
     const handleCreateNewLineItem = async () => {
@@ -242,7 +239,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
             template_collections: updatedTemplateCollections
         };
         setTextTemplate(updatedTemplate);
-        updateTemplatesState(categoryIndex, index, updatedTemplate);
+        updateTemplatesState(categoryIndex, index, updatedTemplate, setTextTemplates);
     }
 
     const handleCopy = (text: string) => {
@@ -262,7 +259,6 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
             })
             .catch(err => console.log('Something went wrong', err));
     };
-
 
     const [items, setItems] = useState<JSX.Element[]>(template.template_collections && TemplatateEditOrderSection(template));
 
@@ -288,7 +284,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
             template_collections: sortedTextTemplatesArray
         };
         //console.log("updatedTemplate", updatedTemplate)
-        updateTemplatesState(categoryIndex, index, updatedTemplate);
+        updateTemplatesState(categoryIndex, index, updatedTemplate, setTextTemplates);
         delayedUpdateCollectionOrder(sortedTextTemplatesArray, textTemplate.template_id, setSaveStatus)
     }
     return (
@@ -301,6 +297,8 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                     textTemplate={textTemplate}
                     index={index}
                     template={template}
+                    categoryIndex={categoryIndex}
+                    userID={userID}
                 />
                 <DividerHorizontal />
                 <FlexRowContainer className="gap-4 flex-1">
@@ -373,7 +371,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                     setIsEditListActive={setIsEditListActive}
                                     setIsEditTextActive={setIsEditTextActive}
                                     textTemplate={textTemplate}
-                                    setTemplates={setTemplates}
+                                    setTemplates={setTextTemplates}
                                     userID={userID}
                                     categoryIndex={categoryIndex}
                                 />

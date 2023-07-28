@@ -25,7 +25,6 @@ import CategoryManagerColumn from "@/components/app/TemplateEditor/ManagerInterf
 import TemplateManagerColumn from "@/components/app/TemplateEditor/ManagerInterface/TemplateManagerColumn"
 import GuidingDescriptionText from "@/components/app/TemplateEditor/GuidingDescription";
 import cookie from 'cookie'
-import { LoadingContext } from '@/context/LoadingContext';
 import { AuthContext } from "@/context/AuthContext";
 import Cookies from "js-cookie";
 import {
@@ -34,17 +33,17 @@ import {
   deleteCollectionTemplate,
   deletedCategory,
   deletedTemplate,
-  fetchTemplatesForUser,
   updateCategory,
   updateTemplate,
 } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
 
-import { saveMessage } from "@/utils/helpers";
+import { saveMessage, updateTemplatesState } from "@/utils/helpers";
 import { Templates, TemplatesContainer } from "@/types/global"
 import { useRouter } from "next/router"
 import { BsPlusLg, BsStarFill } from "react-icons/bs";
 import MinimizedManager from "@/components/app/TemplateEditor/ManagerInterface/MinimizedManager";
+import { TemplatesContext } from "@/context/TemplatesContext";
 
 type PageProps = {
   authenticated: boolean,
@@ -89,11 +88,10 @@ interface tierLimit {
 const Page: NextPage<PageProps> = () => {
   //const { t } = useTranslation("common");
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [textTemplates, setTextTemplates] = useState<TemplatesContainer[]>([]);
+  const { textTemplates, setTextTemplates } = useContext(TemplatesContext);
   const [templateRefs, setTemplateRefs] = useState<React.RefObject<HTMLDivElement>[]>([]);
   const [viewCategories, setViewCategories] = useState(true);
   const [viewNavigation, setViewNavigation] = useState(true);
-  const { setIsLoading } = useContext(LoadingContext);
   const { setSaveStatus } = useContext(SaveStatusContext)
   const { isAuthenticated } = useContext(AuthContext)
   const router = useRouter()
@@ -102,27 +100,13 @@ const Page: NextPage<PageProps> = () => {
   const userID = Cookies.get("user_id")
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    fetchTemplatesForUser(userID, setIsLoading).then((data) => {
-      if (data) {
-        console.log("Templates", data)
-        const templatesContainers: TemplatesContainer[] = data
-          .sort((a, b) => a.order - b.order)
-          .map(container => ({
-            ...container,
-            templates: container.templates
-              .sort((a, b) => a.order - b.order)
-              .map(template => ({
-                ...template,
-                template_collections: template.template_collections.sort((a, b) => a.order - b.order),
-              })),
-          }));
-
-
-        setTextTemplates(templatesContainers);
+    console.log(textTemplates)
+    const setData = () => {
+      if (textTemplates) {
         //needs to come from DB
         setSubscriptionLimits(tierLimits)
         const findFirstFavourited = () => {
-          return data.filter(item => item.favourited && item)
+          return textTemplates.filter(item => item.favourited && item)
         }
         if (findFirstFavourited()[0]?.order) {
           setSelectedCategory(findFirstFavourited()[0].order)
@@ -131,7 +115,7 @@ const Page: NextPage<PageProps> = () => {
           const categoryID = router.query.category_id;
           if (categoryID) {
             //console.log(categoryID)
-            const index = templatesContainers.findIndex((container: TemplatesContainer) => container.category_id === categoryID);
+            const index = textTemplates.findIndex((container: TemplatesContainer) => container.category_id === categoryID);
             if (index !== -1) {
               // Found the category in templatesContainers at the index
               setSelectedCategory(index)
@@ -145,10 +129,9 @@ const Page: NextPage<PageProps> = () => {
         }
         setSelectedCategoryAndTemplateFromUrl()
       }
-    }).catch((error) => {
-      console.error("Error fetching orders: ", error)
-    });
-  }, [userID]);
+    }
+    setData()
+  }, [userID, textTemplates]);
 
   useEffect(() => {
     const getViewCategories = () => {
@@ -218,22 +201,6 @@ const Page: NextPage<PageProps> = () => {
     setTextTemplates(newTextTemplates);
   };
 
-  const updateTemplatesState = (categoryIndex: number, templateIndex: number, newTemplate: Templates) => {
-    setTextTemplates(prevTemplates => {
-      const newTemplates = [...prevTemplates];
-      // Copy the templates array of the category
-      const categoryTemplates = [...newTemplates[categoryIndex].templates];
-      // Replace the specific template with the new template
-      categoryTemplates[templateIndex] = newTemplate;
-      // Replace the category's templates array with the modified templates array
-      newTemplates[categoryIndex] = {
-        ...newTemplates[categoryIndex],
-        templates: categoryTemplates,
-      };
-      return newTemplates;
-    });
-  }
-
   const handleTextTemplateChange = async (categoryIndex: number, templateIndex: number, newTemplate: Templates) => {
     if (!userID) {
       console.error("User ID is null.");
@@ -243,7 +210,7 @@ const Page: NextPage<PageProps> = () => {
     await updateTemplate(title, text, userID, template_id, char_limit, word_limit, limiter_active)
     saveMessage(setSaveStatus, "Saved Changes")
     console.log(("Saved Changes"))
-    updateTemplatesState(categoryIndex, templateIndex, newTemplate)
+    updateTemplatesState(categoryIndex, templateIndex, newTemplate, setTextTemplates)
   };
 
   const handleCreateCategory = async () => {
@@ -282,7 +249,6 @@ const Page: NextPage<PageProps> = () => {
       return;
     }
     deletedCategory(userID, textTemplates, setTextTemplates, setSelectedCategory, selectedCategory, category_id, index)
-
   };
 
   return (
@@ -396,7 +362,6 @@ const Page: NextPage<PageProps> = () => {
                                         categoryIndex={selectedCategory}
                                         index={templateIndex}
                                         template={template}
-                                        setTemplates={setTextTemplates}
                                         handleRemoveTemplate={handleRemoveTemplate}
                                         handleTextTemplateChange={handleTextTemplateChange}
                                         ref={templateRefs[templateIndex]}
@@ -409,9 +374,8 @@ const Page: NextPage<PageProps> = () => {
                                         categoryIndex={selectedCategory}
                                         index={templateIndex}
                                         template={template}
-                                        setTemplates={setTextTemplates}
                                         handleRemoveTemplate={handleRemoveTemplate}
-                                        updateTemplatesState={updateTemplatesState}
+
                                         ref={templateRefs[templateIndex]}
                                         userID={userID}
                                         subscriptionLimits={subscriptionLimits} />
@@ -435,7 +399,6 @@ const Page: NextPage<PageProps> = () => {
                                     categoryIndex={selectedCategory}
                                     index={templateIndex}
                                     template={template}
-                                    setTemplates={setTextTemplates}
                                     handleRemoveTemplate={handleRemoveTemplate}
                                     handleTextTemplateChange={handleTextTemplateChange}
                                     ref={templateRefs[templateIndex]}
@@ -448,9 +411,8 @@ const Page: NextPage<PageProps> = () => {
                                     categoryIndex={selectedCategory}
                                     index={templateIndex}
                                     template={template}
-                                    setTemplates={setTextTemplates}
                                     handleRemoveTemplate={handleRemoveTemplate}
-                                    updateTemplatesState={updateTemplatesState}
+
                                     ref={templateRefs[templateIndex]}
                                     userID={userID}
                                     subscriptionLimits={subscriptionLimits} />

@@ -221,6 +221,27 @@ export const updateTemplateMetaData = async (template_id: string, userID: string
     }
 }
 
+export const updateTemplateCategoryLink = async (template_id: string, userID: string, newCategoryID: string) => {
+    try {
+        const { data, error } = await supabase
+            .from("templates")
+            .update({
+                category_id: newCategoryID,  // Here is the updated category_id
+            })
+            .eq("template_id", template_id)
+            .match({ user_id: userID })
+            .select();
+        if (error) {
+            return error;
+        }
+        if (data) {
+            return data;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const updateCategoryFavourite = async (category_id: string, userID: string, favourited: boolean) => {
     try {
         const { data, error } = await supabase

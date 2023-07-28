@@ -14,7 +14,7 @@ interface ComponentProps {
     handleCopy: any;
     hasBeenCopied: boolean;
     textTemplate: any;
-    setTemplates: React.Dispatch<React.SetStateAction<TemplatesContainer>>
+    setTemplates: any;
     categoryIndex: number;
     userID: any
 }

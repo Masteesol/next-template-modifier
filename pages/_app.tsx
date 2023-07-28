@@ -5,13 +5,16 @@ import { AppProps } from "next/app";
 import { LoadingProvider } from '@/context/LoadingContext';
 import { AuthProvider } from "@/context/AuthContext";
 import { SaveStatusProvider } from "@/context/SavedStatusContext";
+import { TextTemplatesProvider } from "@/context/TemplatesContext";
 
 function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       <SaveStatusProvider>
         <LoadingProvider>
-          <Component {...pageProps} />
+          <TextTemplatesProvider>
+            <Component {...pageProps} />
+          </TextTemplatesProvider>
         </LoadingProvider>
       </SaveStatusProvider>
     </AuthProvider>

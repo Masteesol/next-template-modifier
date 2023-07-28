@@ -11,6 +11,7 @@ import {
   InputBase,
   PlusButton,
   FlexRowCenteredX,
+  DividerHorizontal,
 } from "@/components/shared/styled-global-components";
 
 import { GetServerSideProps } from 'next';
@@ -42,7 +43,7 @@ import { SaveStatusContext } from "@/context/SavedStatusContext";
 import { saveMessage } from "@/utils/helpers";
 import { Templates, TemplatesContainer } from "@/types/global"
 import { useRouter } from "next/router"
-import { BsPlusLg } from "react-icons/bs";
+import { BsPlusLg, BsStarFill } from "react-icons/bs";
 import MinimizedManager from "@/components/app/TemplateEditor/ManagerInterface/MinimizedManager";
 
 type PageProps = {
@@ -372,41 +373,58 @@ const Page: NextPage<PageProps> = () => {
                   <FlexColContainer className="h-full" >
                     {textTemplates[selectedCategory]?.templates.length > 0 &&
                       <FlexColContainer className="gap-4">
+
+                        <FlexColContainer className="gap-2">
+                          <h2 className="text-sm lg:text-base">{`${textTemplates[selectedCategory].category_name}`}</h2>
+                          <DividerHorizontal className=" border-gray-200" />
+                        </FlexColContainer>
                         <FlexColContainer className="gap-4">
                           {/**RENDERING FAVOURITES ON TOP */}
-                          {
-                            textTemplates[selectedCategory]?.templates.map((template, templateIndex) => {
-                              if (template.favourited) {
-                                if (!template.is_collection) {
-                                  return <TemplateSingleTemplateCard
-                                    key={template.template_id}
-                                    categoryIndex={selectedCategory}
-                                    index={templateIndex}
-                                    template={template}
-                                    setTemplates={setTextTemplates}
-                                    handleRemoveTemplate={handleRemoveTemplate}
-                                    handleTextTemplateChange={handleTextTemplateChange}
-                                    ref={templateRefs[templateIndex]}
-                                    userID={userID}
-                                    subscriptionLimits={subscriptionLimits}
-                                  />
-                                } else {
-                                  return <TemplateCollectionsCard
-                                    key={template.template_id}
-                                    categoryIndex={selectedCategory}
-                                    index={templateIndex}
-                                    template={template}
-                                    setTemplates={setTextTemplates}
-                                    handleRemoveTemplate={handleRemoveTemplate}
-                                    updateTemplatesState={updateTemplatesState}
-                                    ref={templateRefs[templateIndex]}
-                                    userID={userID}
-                                    subscriptionLimits={subscriptionLimits} />
-                                }
-                              }
-                            })
+                          {textTemplates[selectedCategory]?.templates.filter(template => template.favourited).length > 0
+                            &&
+                            <FlexColContainer className="gap-4">
+                              <FlexRowCenteredY className="gap-2">
+                                <h3 className="font-bold text-base md:text-xl">Favourites</h3>
+                                <BsStarFill className="text-base md:text-lg text-green-500" />
+                              </FlexRowCenteredY>
+                              {
+                                textTemplates[selectedCategory]?.templates.map((template, templateIndex) => {
+                                  if (template.favourited) {
+                                    if (!template.is_collection) {
+                                      return <TemplateSingleTemplateCard
+                                        key={template.template_id}
+                                        categoryIndex={selectedCategory}
+                                        index={templateIndex}
+                                        template={template}
+                                        setTemplates={setTextTemplates}
+                                        handleRemoveTemplate={handleRemoveTemplate}
+                                        handleTextTemplateChange={handleTextTemplateChange}
+                                        ref={templateRefs[templateIndex]}
+                                        userID={userID}
+                                        subscriptionLimits={subscriptionLimits}
+                                      />
+                                    } else {
+                                      return <TemplateCollectionsCard
+                                        key={template.template_id}
+                                        categoryIndex={selectedCategory}
+                                        index={templateIndex}
+                                        template={template}
+                                        setTemplates={setTextTemplates}
+                                        handleRemoveTemplate={handleRemoveTemplate}
+                                        updateTemplatesState={updateTemplatesState}
+                                        ref={templateRefs[templateIndex]}
+                                        userID={userID}
+                                        subscriptionLimits={subscriptionLimits} />
+                                    }
+                                  }
+                                })
 
+                              }
+                              <DividerHorizontal className=" border-gray-200" />
+                            </FlexColContainer>
                           }
+
+
                           {/**THE REST OF THE TEMPLATES GOES HERE */}
                           {
                             textTemplates[selectedCategory]?.templates.map((template, templateIndex) => {

@@ -62,8 +62,7 @@ export const IconContainerWarning = tw(IconContainer)`
 `
 
 const IconContainerStylesYellow = `
-    hover:bg-yellow-200 
-    dark:hover:bg-yellow-500
+    hover:bg-yellow-100 
     hover:text-yellow-800
     dark:hover:text-yellow-950
   `

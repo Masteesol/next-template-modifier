@@ -1,8 +1,8 @@
 import React from 'react'
 import { HoverLabel, IconContainerWarning } from '../styles'
 import { BsXLg } from 'react-icons/bs'
-import { FlexRowCenteredY, HollowButton } from '@/components/shared/styled-global-components'
-import { Templates } from '@/types/global';
+import { FlexColContainer, FlexRowCenteredY, HollowButton } from '@/components/shared/styled-global-components'
+import { Templates, TemplatesContainer } from '@/types/global';
 
 interface DeleteTemplateButtonProps {
     clickedOnce: boolean;
@@ -49,4 +49,40 @@ export const DeleteTemplateButton = (props: DeleteTemplateButtonProps) => {
             }
         </div>
     )
+}
+
+interface CategorySelectorProps {
+    textTemplates: TemplatesContainer[];
+    changeCategoryForTemplate: any
+    categoryIndex: number;
+    theme: string
+}
+
+export const CategorySelector = (props: CategorySelectorProps) => {
+    const {
+        textTemplates,
+        changeCategoryForTemplate,
+        categoryIndex,
+        theme
+    } = props
+    const focusColor = theme === "primary" ? "focus:ring-green-300" : "focus:ring-purple-300"
+    return <FlexColContainer className="text-xs gap-2 w-full">
+        <h4 className="text-gray-500">Category</h4>
+        <select
+            value={textTemplates[categoryIndex]?.category_id}
+            onChange={changeCategoryForTemplate}
+            className={`text-xs border-0 rounded bg-slate-50 ${focusColor}`}
+        >
+            {textTemplates.map((template: TemplatesContainer, index: number) => {
+                return (
+                    <option
+                        key={`select-option-${index}`}
+                        value={template.category_id}
+                    >
+                        {template.category_name}
+                    </option>
+                );
+            })}
+        </select>
+    </FlexColContainer>
 }

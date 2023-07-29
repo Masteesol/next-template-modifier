@@ -8,6 +8,7 @@ import {
     FlexRowContainer,
     FlexColCentered,
     PlusButton,
+    IconContainerSecondary,
 } from "@/components/shared/styled-global-components";
 
 import debounce from "lodash.debounce";
@@ -20,7 +21,7 @@ import {
     updateTemplatesCollectionOrder
 } from "@/requests/templates";
 import { SaveStatusContext } from "@/context/SavedStatusContext";
-import { HoverLabel, IconContainerNormal } from "../styles";
+import { HoverLabel } from "../styles";
 
 import Topbar from "./subcomponents/Topbar";
 import { getColorForCount, saveMessage, updateTemplatesState } from "@/utils/helpers";
@@ -335,7 +336,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                     <PlusButton
                                         onClick={handleCreateNewLineItem}
                                         disabled={template.template_collections?.length === templateCollectionItemCountLimit}
-                                        className="p-1"
+                                        className="p-1 bg-purple-200 text-purple-900"
                                     >
                                         <BsPlus className="text-2xl" />
                                     </PlusButton>
@@ -378,10 +379,10 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                 :
                                 <FlexColContainer>
                                     <div className="group relative">
-                                        <IconContainerNormal onClick={handleEditInactive} disabled={false}>
+                                        <IconContainerSecondary onClick={handleEditInactive} disabled={false}>
                                             <BsArrowLeft className="text-2xl " />
                                             <HoverLabel className="w-[4rem]">Go back</HoverLabel>
-                                        </IconContainerNormal>
+                                        </IconContainerSecondary>
                                     </div>
                                 </FlexColContainer>
                         }

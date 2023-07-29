@@ -1,5 +1,5 @@
-import { FlexColContainer, FlexRowCenteredY } from "@/components/shared/styled-global-components";
-import { HoverLabel, IconContainerNormal } from "../../styles";
+import { FlexColContainer, FlexRowCenteredY, IconContainerSecondary } from "@/components/shared/styled-global-components";
+import { HoverLabel } from "../../styles";
 import { BsListUl, BsPencilSquare, BsStar, BsStarFill } from "react-icons/bs";
 import { FaArrowRight } from "react-icons/fa";
 import { updateTemplatesFavourite } from "@/requests/templates";
@@ -60,24 +60,24 @@ const CollectionsTemplateTextEditToolbar = (props: CollectionsTemplateTextEditTo
     }
     return <FlexColContainer className="h-full">
         <div className="group relative">
-            <IconContainerNormal
+            <IconContainerSecondary
                 onClick={handleSetFavourited}
                 disabled={false}>
                 {!textTemplate.favourited
                     ?
                     <BsStar className="text-xl" />
                     :
-                    <BsStarFill className="text-xl text-green-500" />
+                    <BsStarFill className="text-xl text-purple-600" />
                 }
                 <HoverLabel className={!textTemplate.favourited ? "w-[7rem]" : "w-[4rem]"}>{!textTemplate.favourited ? "Add to favourites" : "Remove"}</HoverLabel>
-            </IconContainerNormal>
+            </IconContainerSecondary>
         </div>
         <FlexColContainer className="mt-auto">
             <div className="group relative">
-                <IconContainerNormal onClick={() => { setIsEditActive(true); setIsEditTextActive(true) }} disabled={false}>
+                <IconContainerSecondary onClick={() => { setIsEditActive(true); setIsEditTextActive(true) }} disabled={false}>
                     <BsPencilSquare className="text-xl" />
                     <HoverLabel className="w-[7rem]">Add and Edit Texts</HoverLabel>
-                </IconContainerNormal>
+                </IconContainerSecondary>
                 {textTemplate?.template_collections?.length === 0 &&
                     <FlexRowCenteredY className="absolute right-[3rem] top-2 text-sm group-hover:hidden text-green-600 font-bold animate-slide duration-500 ease-in-out">
                         <span className="w-[5rem] text-center ">Click Edit</span>
@@ -86,10 +86,10 @@ const CollectionsTemplateTextEditToolbar = (props: CollectionsTemplateTextEditTo
                 }
             </div>
             <div className="group relative">
-                <IconContainerNormal onClick={() => { setIsEditActive(true); setIsEditListActive(true) }} disabled={textTemplate?.template_collections?.length === 0}>
+                <IconContainerSecondary onClick={() => { setIsEditActive(true); setIsEditListActive(true) }} disabled={textTemplate?.template_collections?.length === 0}>
                     <BsListUl className="text-xl" />
                     <HoverLabel className="w-[6rem]">Edit List Order</HoverLabel>
-                </IconContainerNormal>
+                </IconContainerSecondary>
             </div>
         </FlexColContainer>
 

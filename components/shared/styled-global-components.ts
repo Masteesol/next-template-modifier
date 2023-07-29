@@ -108,6 +108,14 @@ const IconContainerStyles = `
     dark:hover:text-green-900
 `
 
+const IconContainerStylesSecondary = `
+    dark:text-white
+    hover:bg-purple-200
+    dark:hover:bg-purple-400
+    hover:text-purple-900
+    dark:hover:text-purple-900
+`
+
 export const IconContainer = tw.button`
   flex
   items-center
@@ -119,6 +127,10 @@ export const IconContainer = tw.button`
 
 export const IconContainerNormal = tw(IconContainer) <IconContainerProps>`
   ${({ disabled }) => (!disabled ? IconContainerStyles : "text-gray-300 cursor-not-allowed")}
+`
+
+export const IconContainerSecondary = tw(IconContainer) <IconContainerProps>`
+  ${({ disabled }) => (!disabled ? IconContainerStylesSecondary : "text-gray-300 cursor-not-allowed")}
 `
 
 //Card styles-----------------------------------------------------------------

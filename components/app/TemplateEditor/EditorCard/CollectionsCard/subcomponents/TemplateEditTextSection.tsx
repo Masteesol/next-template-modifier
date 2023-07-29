@@ -6,9 +6,10 @@ import {
     FlexColContainer,
     FlexRowCenteredY,
     FlexRowContainer,
+    IconContainerSecondary,
 } from "@/components/shared/styled-global-components";
 
-import { HoverLabel, IconContainerNormal, IconContainerYellow, TextArea } from "@/components/app/TemplateEditor/EditorCard/styles";
+import { HoverLabel, IconContainerYellow, TextArea } from "@/components/app/TemplateEditor/EditorCard/styles";
 
 import { FaRegCopy } from "react-icons/fa";
 import { BsCheckLg, BsXLg } from "react-icons/bs";
@@ -62,17 +63,17 @@ const TemplateEntry = (props: TemplateEntryProps) => {
             className={`w-full`}
         >
             <FlexRowContainer
-                className="group hover:bg-slate-50 gap-4 justify-between border-green-200 border-l-2 hover:border-l-4 hover:border-green-400 transition-all ease-in-out duration-150 transition-delay-150 px-4 cursor-pointer hover:rounded"
+                className="group hover:bg-slate-50 dark:hover:bg-slate-700 gap-4 justify-between border-purple-200 border-l-2 hover:border-l-4 hover:border-purple-400 transition-all ease-in-out duration-150 transition-delay-150 px-4 cursor-pointer hover:rounded"
                 onClick={handleCopyButton}
             >
                 <p>
                     {`${collectionItem.text === "" ? "Empty" : collectionItem.text}`}
                 </p>
                 <div className="relative">
-                    <IconContainerNormal
+                    <IconContainerSecondary
                         disabled={false}
                         onClick={handleCopyButton}
-                        className="group-hover:bg-green-300 duration-150 transition-delay-200"
+                        className="group-hover:bg-purple-200 group-hover:text-purple-800"
 
                     >
                         {!hasBeenCopied
@@ -82,7 +83,7 @@ const TemplateEntry = (props: TemplateEntryProps) => {
                             <BsCheckLg className="text-base" />
                         }
                         <HoverLabel className="w-[8rem] cursor-pointer">{!hasBeenCopied ? "Copy to clipboard" : "Copied to clipboard!"}</HoverLabel>
-                    </IconContainerNormal>
+                    </IconContainerSecondary>
                 </div>
             </FlexRowContainer>
         </div >

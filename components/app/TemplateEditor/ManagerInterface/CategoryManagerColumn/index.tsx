@@ -12,7 +12,6 @@ import {
 
 import CategoryCard from "./CategoryCard";
 import { FaEyeSlash } from "react-icons/fa";
-import GuidingDescriptionText from "../../GuidingDescription";
 import { List, arrayMove } from 'react-movable';
 import { useState, useLayoutEffect, useContext } from "react";
 import { updateCategoryOrder } from "@/requests/templates";
@@ -158,7 +157,7 @@ const SortingList = (props: CateGoryListTypes) => {
 
             </FlexColContainer>
             <FlexColCentered className="w-full mb-10 mt-8 gap-4">
-                {textTemplates.length === 0 && <GuidingDescriptionText>Add a new category to begin</GuidingDescriptionText>}
+                {textTemplates.length === 0 && <i>Add a new category to begin</i>}
 
                 {!isEditing &&
                     <FlexRowEnd className="w-full">

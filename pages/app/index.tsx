@@ -88,7 +88,7 @@ const Page = () => {
     }, [userID, setIsLoading]);
 
     const checkAverage = () => {
-        if (textTemplates) {
+        if (textTemplates.length > 0) {
             const sum = textTemplates.reduce((acc, currentIndex) => {
                 const text = currentIndex.text;
                 const length = text.length;
@@ -99,7 +99,9 @@ const Page = () => {
 
             console.log('Average text length:', average);
 
-            return average.toFixed(0);
+            return typeof average === "number" ? average.toFixed(0) : 0;
+        } else {
+            return 0
         }
     }
 

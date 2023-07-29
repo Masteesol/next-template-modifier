@@ -46,7 +46,7 @@ const Nav = forwardRef<HTMLDivElement, NavProps>((props, ref) => {
           <BsList />
         </button>
 
-        <Link href="/" className="md:hidden">
+        <Link href="/app" className="md:hidden">
           <FlexRowCenteredY className="gap-2 px-2 font-bold text-green-500 justify-between w-full">
             <Image src={logo} alt="logo" height={25} width={25} />
             <span>Templify</span>

@@ -4,7 +4,7 @@ import {
     FlexColContainer,
     FlexExpandable,
     FlexRowCentered,
-    FlexRowCenteredY
+    FlexRowCenteredY,
 } from "@/components/shared/styled-global-components";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { FaEyeSlash } from "react-icons/fa";
@@ -78,4 +78,3 @@ export const Accordion = ({ handleView, isEditing, setIsEditing, title }: Accord
         </FlexColContainer>
     );
 };
-

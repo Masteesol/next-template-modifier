@@ -4,12 +4,9 @@ import { NextPage } from 'next';
 import PageLayout from "@/components/app/PageLayout";
 import {
   DividerPipe,
-  FlexColCentered,
   FlexColContainer,
   FlexRowCenteredY,
   FlexRowContainer,
-  InputBase,
-  PlusButton,
   FlexRowCenteredX,
   DividerHorizontal,
 } from "@/components/shared/styled-global-components";
@@ -23,7 +20,6 @@ import TemplateSingleTemplateCard from "@/components/app/TemplateEditor/EditorCa
 import TemplateCollectionsCard from "@/components/app/TemplateEditor/EditorCard/CollectionsCard"
 import CategoryManagerColumn from "@/components/app/TemplateEditor/ManagerInterface/CategoryManagerColumn";
 import TemplateManagerColumn from "@/components/app/TemplateEditor/ManagerInterface/TemplateManagerColumn"
-import GuidingDescriptionText from "@/components/app/TemplateEditor/GuidingDescription";
 import cookie from 'cookie'
 import { AuthContext } from "@/context/AuthContext";
 import Cookies from "js-cookie";
@@ -41,9 +37,11 @@ import { SaveStatusContext } from "@/context/SavedStatusContext";
 import { saveMessage, updateTemplatesState } from "@/utils/helpers";
 import { Templates, TemplatesContainer } from "@/types/global"
 import { useRouter } from "next/router"
-import { BsPlusLg, BsStarFill } from "react-icons/bs";
+import { BsStarFill } from "react-icons/bs";
 import MinimizedManager from "@/components/app/TemplateEditor/ManagerInterface/MinimizedManager";
 import { TemplatesContext } from "@/context/TemplatesContext";
+import CreateFirstTemplateCard from "@/components/app/TemplateEditor/CreateFirstTemplateCard";
+import CreateFirstCategoryCard from "@/components/app/TemplateEditor/CreateFirstCategoryCard";
 
 type PageProps = {
   authenticated: boolean,
@@ -100,7 +98,7 @@ const Page: NextPage<PageProps> = () => {
   const userID = Cookies.get("user_id")
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    console.log(textTemplates)
+    //console.log(textTemplates)
     const setData = () => {
       if (textTemplates) {
         //needs to come from DB
@@ -213,12 +211,12 @@ const Page: NextPage<PageProps> = () => {
     updateTemplatesState(categoryIndex, templateIndex, newTemplate, setTextTemplates)
   };
 
-  const handleCreateCategory = async () => {
+  const handleCreateCategory = async (input = null) => {
     if (!userID) {
       console.error("User ID is null.");
       return;
     }
-    createCategory(userID, textTemplates, setTextTemplates, setSelectedCategory)
+    createCategory(userID, textTemplates, setTextTemplates, setSelectedCategory, input)
   }
 
 
@@ -262,60 +260,66 @@ const Page: NextPage<PageProps> = () => {
       <PageLayout authenticated={isAuthenticated}>
         <FlexRowContainer className="gap-2 relative h-full">
           {/**Toggle View */}
-          <FlexRowCenteredX className="w-full md:w-[fit-content] h-[fit-content] fixed bottom-0 md:top-[3rem] md:right-0 z-50">
-            <MinimizedManager
-              viewCategories={viewCategories}
-              handleCreateCategory={handleCreateCategory}
-              handleViewCategorySelect={handleViewCategorySelect}
-              handleViewNavigationSelect={handleViewNavigationSelect}
-              textTemplates={textTemplates}
-              selectedCategory={selectedCategory}
-              viewNavigation={viewNavigation}
-              handleCreateTemplate={handleCreateTemplate}
-            />
-          </FlexRowCenteredX>
-          {/**Categories List */}
-          <FlexRowContainer className="absolute bg-gray-50 dark:bg-gray-800 z-[500] xl:static gap-2 h-full">
-            {viewCategories &&
-              <div className="h-full flex">
-                <CategoryManagerColumn
-                  viewCategories={viewCategories}
-                  handleViewCategorySelect={handleViewCategorySelect}
-                  textTemplates={textTemplates}
-                  setTextTemplates={setTextTemplates}
-                  addCategory={handleCreateCategory}
-                  selectedCategory={selectedCategory}
-                  handleSelectCategory={handleSelectCategory}
-                  handleRemoveCategory={handleRemoveCategory}
-                  handleInputCatTitleChange={handleInputCatTitleChange}
-                  userID={userID}
-                  setSelectedCategory={setSelectedCategory}
-                />
-
-              </div>
-            }
-            {/**Template Navigation List */}
-            {viewCategories && <DividerPipe />}
-            {
-              textTemplates && textTemplates.length > 0 &&
-              textTemplates[selectedCategory]?.templates.length > 0 &&
-              viewNavigation &&
-              <TemplateManagerColumn
+          {textTemplates.length > 0 &&
+            <FlexRowCenteredX className="w-full md:w-[fit-content] h-[fit-content] fixed bottom-0 md:top-[3rem] md:right-0 z-50">
+              <MinimizedManager
+                viewCategories={viewCategories}
+                handleCreateCategory={handleCreateCategory}
+                handleViewCategorySelect={handleViewCategorySelect}
                 handleViewNavigationSelect={handleViewNavigationSelect}
                 textTemplates={textTemplates}
-                setTextTemplates={setTextTemplates}
                 selectedCategory={selectedCategory}
+                viewNavigation={viewNavigation}
                 handleCreateTemplate={handleCreateTemplate}
-                templateRefs={templateRefs}
-                userID={userID}
               />
-            }
-            {textTemplates.length > 0 &&
-              textTemplates[selectedCategory]?.templates.length > 0 &&
-              viewNavigation && <DividerPipe />}
-          </FlexRowContainer>
+            </FlexRowCenteredX>
+          }
+
+          {/**Categories List */}
+          {textTemplates.length > 0 &&
+            <FlexRowContainer className="absolute bg-gray-50 dark:bg-gray-800 z-[500] xl:static gap-2 h-full">
+              {viewCategories &&
+                <div className="h-full flex">
+                  <CategoryManagerColumn
+                    viewCategories={viewCategories}
+                    handleViewCategorySelect={handleViewCategorySelect}
+                    textTemplates={textTemplates}
+                    setTextTemplates={setTextTemplates}
+                    addCategory={handleCreateCategory}
+                    selectedCategory={selectedCategory}
+                    handleSelectCategory={handleSelectCategory}
+                    handleRemoveCategory={handleRemoveCategory}
+                    handleInputCatTitleChange={handleInputCatTitleChange}
+                    userID={userID}
+                    setSelectedCategory={setSelectedCategory}
+                  />
+
+                </div>
+              }
+              {/**Template Navigation List */}
+              {viewCategories && <DividerPipe />}
+              {
+                textTemplates && textTemplates.length > 0 &&
+                textTemplates[selectedCategory]?.templates.length > 0 &&
+                viewNavigation &&
+                <TemplateManagerColumn
+                  handleViewNavigationSelect={handleViewNavigationSelect}
+                  textTemplates={textTemplates}
+                  setTextTemplates={setTextTemplates}
+                  selectedCategory={selectedCategory}
+                  handleCreateTemplate={handleCreateTemplate}
+                  templateRefs={templateRefs}
+                  userID={userID}
+                />
+              }
+              {textTemplates.length > 0 &&
+                textTemplates[selectedCategory]?.templates.length > 0 &&
+                viewNavigation && <DividerPipe />}
+            </FlexRowContainer>
+          }
+
           {viewCategories
-            &&
+            && textTemplates.length > 0 &&
             <div
               onClick={handleViewCategorySelect}
               className="lg:hidden overlay-bg cursor-pointer"
@@ -323,7 +327,7 @@ const Page: NextPage<PageProps> = () => {
             ></div>
           }
           {viewNavigation
-            &&
+            && textTemplates.length > 0 &&
             <div
               onClick={handleViewNavigationSelect}
               className="lg:hidden overlay-bg cursor-pointer"
@@ -427,26 +431,17 @@ const Page: NextPage<PageProps> = () => {
                     }
                     {/**If no templates have been created */}
                     {textTemplates[selectedCategory]?.templates.length === 0 &&
-                      <FlexColCentered className="h-full">
-                        <FlexColCentered className="max-w-[400px] p-8 w-full gap-8 justify-center border-[1px] rounded border-gray-200">
-                          <InputBase type="text"
-                            value={textTemplates[selectedCategory]?.category_name}
-                            className="text-center text-lg bg-white dark:bg-gray-800 w-full"
-                            onChange={(e) => handleInputCatTitleChange(e, selectedCategory, textTemplates[selectedCategory].category_id)} />
-                          <FlexRowCenteredY className="gap-4 w-full">
-                            <i className="w-full text-right text-gray-500">Add Template</i>
-                            <PlusButton onClick={() => handleCreateTemplate}>
-                              <BsPlusLg />
-                            </PlusButton>
-                          </FlexRowCenteredY>
-                        </FlexColCentered>
-                      </FlexColCentered>
+                      <CreateFirstTemplateCard
+                        handleCreateTemplate={handleCreateTemplate}
+                      />
                     }
                   </FlexColContainer>
                 </FlexColContainer>
                 :
-                <FlexColContainer className="w-full max-w-[800px]">
-                  <GuidingDescriptionText>Your templates will show up here, but first add a template category.</GuidingDescriptionText>
+                <FlexColContainer className="w-full h-full items-center max-w-[800px]">
+                  <CreateFirstCategoryCard
+                    addCategory={handleCreateCategory}
+                  />
                 </FlexColContainer>
               }
               {textTemplates[selectedCategory] && textTemplates[selectedCategory]?.templates.length > 1 && <div className="min-h-[30rem] w-full"></div>}

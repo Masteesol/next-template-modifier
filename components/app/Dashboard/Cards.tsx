@@ -26,7 +26,7 @@ interface FavouritesProps {
 
 export const FavouritesCard = ({ textTemplates, checkFavouritedLength }: FavouritesProps) => {
     return <CardBaseLight>
-        <FlexColContainer className="gap-4 p-4 rounded shadow">
+        <FlexColContainer className="gap-4 p-4">
             <FlexRowCenteredY className="gap-2 justify-between border-b-2 border-gray-100 pb-2">
                 <h2 className="font-bold">Favourites</h2>
                 {
@@ -74,6 +74,7 @@ export const FavouritesCard = ({ textTemplates, checkFavouritedLength }: Favouri
 
                 </GridSm1Lg2>
             }
+            {checkFavouritedLength() === 0 && <i>No favourited templates yet...</i>}
         </FlexColContainer>
     </CardBaseLight>
 }
@@ -175,7 +176,7 @@ export const QuickLinkCard = ({ item }: QuickLinkCardProps) => {
         icon,
         color
     } = item
-    console.log(color)
+    //console.log(color)
     return <Link href={`${path}`}>
         <LinkCard
             className={`${color}`}>

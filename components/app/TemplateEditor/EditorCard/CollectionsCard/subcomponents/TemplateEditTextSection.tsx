@@ -63,11 +63,14 @@ const TemplateEntry = (props: TemplateEntryProps) => {
             className={`w-full`}
         >
             <FlexRowContainer
-                className="group hover:bg-slate-50 dark:hover:bg-slate-700 gap-4 justify-between border-purple-200 border-l-2 hover:border-l-4 hover:border-purple-400 transition-all ease-in-out duration-150 transition-delay-150 px-4 cursor-pointer hover:rounded"
+                className="group p-1 text-xs md:text-sm hover:bg-slate-50 dark:hover:bg-slate-700 gap-4 justify-between border-purple-200 border-l-2 hover:border-l-4 hover:border-purple-400 transition-all ease-in-out duration-150 transition-delay-150 px-4 cursor-pointer hover:rounded"
                 onClick={handleCopyButton}
             >
-                <p>
+                <p className="hidden md:block">
                     {`${collectionItem.text === "" ? "Empty" : collectionItem.text}`}
+                </p>
+                <p className="md:hidden">
+                    {`${collectionItem.text === "" ? "Empty" : `${collectionItem.text.length >= 60 ? `${collectionItem.text.substring(0, 60)}...` : collectionItem.text}`}`}
                 </p>
                 <div className="relative">
                     <IconContainerSecondary
@@ -93,9 +96,9 @@ const TemplateEntry = (props: TemplateEntryProps) => {
         <FlexRowContainer
             className="gap-2"
         >
-            <FlexRowContainer className="w-full bg-slate-50 rounded">
+            <FlexRowContainer className="w-full bg-slate-50 rounded dark:bg-slate-800">
                 <TextArea
-                    className="bg-transparent w-full bg-slate-50 rounded min-h-[5rem]"
+                    className="bg-transparent w-full bg-slate-50 dark:bg-slate-800 rounded min-h-[5rem] focus:ring-purple-300"
                     placeholder="Template text goes here..."
                     value={`${inputValue}`}
                     onChange={(e) => { handleInputChange(e) }}

@@ -67,7 +67,7 @@ const CollectionsTemplateTextEditToolbar = (props: CollectionsTemplateTextEditTo
                     ?
                     <BsStar className="text-xl" />
                     :
-                    <BsStarFill className="text-xl text-purple-600" />
+                    <BsStarFill className="text-xl text-purple-500" />
                 }
                 <HoverLabel className={!textTemplate.favourited ? "w-[7rem]" : "w-[4rem]"}>{!textTemplate.favourited ? "Add to favourites" : "Remove"}</HoverLabel>
             </IconContainerSecondary>

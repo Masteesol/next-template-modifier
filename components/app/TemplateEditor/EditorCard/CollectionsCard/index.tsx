@@ -333,13 +333,27 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                     <FlexColContainer>
                                         <p className="text-xs text-gray-400">Auto saving changes</p>
                                     </FlexColContainer>
-                                    <PlusButton
-                                        onClick={handleCreateNewLineItem}
-                                        disabled={template.template_collections?.length === templateCollectionItemCountLimit}
-                                        className="p-1 bg-purple-200 text-purple-900"
-                                    >
-                                        <BsPlus className="text-2xl" />
-                                    </PlusButton>
+                                    <FlexRowCenteredY className="gap-4">
+                                        <div className="group relative">
+                                            <PlusButton
+                                                onClick={handleCreateNewLineItem}
+                                                disabled={template.template_collections?.length === templateCollectionItemCountLimit}
+                                                className="p-1 bg-purple-200 text-purple-900 group"
+                                            >
+                                                <BsPlus className="text-2xl" />
+
+                                            </PlusButton>
+                                            <HoverLabel className="w-[6rem]">Add Template</HoverLabel>
+                                        </div>
+
+                                        <div className="group relative">
+                                            <IconContainerSecondary onClick={handleEditInactive} disabled={false}>
+                                                <BsArrowLeft className="text-2xl " />
+                                                <HoverLabel className="w-[4rem]">Go back</HoverLabel>
+                                            </IconContainerSecondary>
+                                        </div>
+                                    </FlexRowCenteredY>
+
                                     {textTemplate?.template_collections?.length === 0 &&
                                         <FlexRowCenteredY className="absolute right-[3rem] top-2 text-sm group-hover:hidden text-green-600 font-bold animate-slide duration-500 ease-in-out">
                                             <span className="w-[6rem] text-center ">Click to add</span>
@@ -348,6 +362,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                     }
                                 </FlexRowContainer>
                             }
+
                         </FlexColContainer>
                         :
                         <FlexColContainer className="w-full">
@@ -364,31 +379,33 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                         </FlexColContainer>
 
                     }
-                    <FlexColContainer className="border-l-[1px] border-gray-200 ps-2">
-                        {
-                            !isEditActive ?
-                                <CollectionsTemplateTextProductionToolbar
-                                    setIsEditActive={setIsEditActive}
-                                    setIsEditListActive={setIsEditListActive}
-                                    setIsEditTextActive={setIsEditTextActive}
-                                    textTemplate={textTemplate}
-                                    setTemplates={setTextTemplates}
-                                    userID={userID}
-                                    categoryIndex={categoryIndex}
-                                />
-                                :
-                                <FlexColContainer>
-                                    <div className="group relative">
-                                        <IconContainerSecondary onClick={handleEditInactive} disabled={false}>
-                                            <BsArrowLeft className="text-2xl " />
-                                            <HoverLabel className="w-[4rem]">Go back</HoverLabel>
-                                        </IconContainerSecondary>
-                                    </div>
-                                </FlexColContainer>
-                        }
 
-                    </FlexColContainer>
+                    {!isEditActive
+                        &&
+                        <FlexColContainer className="border-l-[1px] border-gray-200 ps-2">
+                            <CollectionsTemplateTextProductionToolbar
+                                setIsEditActive={setIsEditActive}
+                                setIsEditListActive={setIsEditListActive}
+                                setIsEditTextActive={setIsEditTextActive}
+                                textTemplate={textTemplate}
+                                setTemplates={setTextTemplates}
+                                userID={userID}
+                                categoryIndex={categoryIndex}
+                            />
+                        </FlexColContainer>
+                    }
+
                 </FlexRowContainer>
+                {isEditListActive &&
+                    <FlexRowContainer className="justify-end">
+                        <div className="group relative">
+                            <IconContainerSecondary onClick={handleEditInactive} disabled={false}>
+                                <BsArrowLeft className="text-2xl " />
+                                <HoverLabel className="w-[4rem]">Go back</HoverLabel>
+                            </IconContainerSecondary>
+                        </div>
+                    </FlexRowContainer>
+                }
                 <DividerHorizontal />
                 <FlexRowCenteredY className="text-gray-500 justify-between text-xs">
                     <p >

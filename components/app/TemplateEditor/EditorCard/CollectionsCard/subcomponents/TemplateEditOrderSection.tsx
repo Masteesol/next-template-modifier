@@ -5,7 +5,7 @@ import { BsFillGrid3X2GapFill } from "react-icons/bs"
 const TemplateEditable = (template: Templates) => {
     return template?.template_collections?.map((collectionItem: CollectionItem) => {
         return <div
-            className={`w-full pe-2`}
+            className={`w-full`}
             id={`editable-${collectionItem.id}`}
             key={`editable-${collectionItem.id}`}
         >

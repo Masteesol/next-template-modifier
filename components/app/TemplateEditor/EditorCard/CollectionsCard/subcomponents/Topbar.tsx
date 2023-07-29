@@ -1,4 +1,4 @@
-import { FlexColContainer, FlexRowCenteredY, FlexRowContainer } from '@/components/shared/styled-global-components'
+import { FlexColContainer, FlexRowCenteredY } from '@/components/shared/styled-global-components'
 import { useState, useContext } from "react"
 import { generalInputCountRestrictions } from '@/utils/generalCountRestrictions';
 import { CategorySelector, DeleteTemplateButton } from '../../shared';
@@ -51,12 +51,12 @@ const Topbar = (props: ComponentProps) => {
             {isEditActive
                 ?
                 <FlexColContainer className="gap-4 w-full">
-                    <FlexRowContainer>
+                    <FlexRowCenteredY>
                         <h3 className="text-xl font-bold">
                             {textTemplate.title.length > 25 ? `${textTemplate.title.substring(0, 25)}...` : `${textTemplate.title}`}
                         </h3>
                         <span className="ms-auto bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">Editing</span>
-                    </FlexRowContainer>
+                    </FlexRowCenteredY>
                     <div className="grid grid-cols-2 md:grid-cols-4 w-full gap-2">
                         <FlexColContainer className="text-xs gap-2">
                             <h4 className="text-gray-500">Title</h4>

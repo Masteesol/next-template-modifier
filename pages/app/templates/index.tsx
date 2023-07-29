@@ -317,7 +317,7 @@ const Page: NextPage<PageProps> = () => {
           {viewCategories
             &&
             <div
-              onClick={() => { setViewCategories(!viewCategories) }}
+              onClick={handleViewCategorySelect}
               className="lg:hidden overlay-bg cursor-pointer"
               style={{ zIndex: 200 }}
             ></div>
@@ -325,7 +325,7 @@ const Page: NextPage<PageProps> = () => {
           {viewNavigation
             &&
             <div
-              onClick={() => { setViewNavigation(!viewNavigation) }}
+              onClick={handleViewNavigationSelect}
               className="lg:hidden overlay-bg cursor-pointer"
               style={{ zIndex: 200 }}
             ></div>

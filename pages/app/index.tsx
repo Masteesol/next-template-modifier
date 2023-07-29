@@ -37,7 +37,7 @@ const quickLinksData = [
     },
     {
         path: "/app/templates/tutorial",
-        text: "Template Tutorial",
+        text: "Tutorial",
         icon: <BsFileEarmarkText />,
         color: "hover:border-indigo-400 hover:text-indigo-400"
     },

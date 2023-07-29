@@ -73,7 +73,7 @@ const Topbar = (props: ComponentProps) => {
                             <InputBase
                                 type="text"
                                 value={stagedTemplate.title}
-                                className="text-base bg-slate-50 dark:bg-slate-800 px-2 py-1"
+                                className="text-xs rounded border-0 bg-slate-50 dark:bg-slate-800 px-4 py-2"
                                 onChange={handleTitleChange}
                                 maxLength={generalInputCountRestrictions.titles}
                                 placeholder="Template Title..."

@@ -334,6 +334,12 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                         <p className="text-xs text-gray-400">Auto saving changes</p>
                                     </FlexColContainer>
                                     <FlexRowCenteredY className="gap-4">
+                                        {textTemplate?.template_collections?.length === 0 &&
+                                            <FlexRowCenteredY className="absolute right-[7rem] top-2 text-sm group-hover:hidden text-green-600 font-bold animate-slide duration-500 ease-in-out">
+                                                <span className="w-[6rem] text-center ">Click to add</span>
+                                                <FaArrowRight />
+                                            </FlexRowCenteredY>
+                                        }
                                         <div className="group relative">
                                             <PlusButton
                                                 onClick={handleCreateNewLineItem}
@@ -354,12 +360,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                         </div>
                                     </FlexRowCenteredY>
 
-                                    {textTemplate?.template_collections?.length === 0 &&
-                                        <FlexRowCenteredY className="absolute right-[3rem] top-2 text-sm group-hover:hidden text-green-600 font-bold animate-slide duration-500 ease-in-out">
-                                            <span className="w-[6rem] text-center ">Click to add</span>
-                                            <FaArrowRight />
-                                        </FlexRowCenteredY>
-                                    }
+
                                 </FlexRowContainer>
                             }
 

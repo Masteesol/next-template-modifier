@@ -63,7 +63,7 @@ const Topbar = (props: ComponentProps) => {
                             <input
                                 type="text"
                                 value={input}
-                                className="text-base lg:text-base rounded border-0 bg-slate-50 dark:bg-slate-800 px-2 py-1 focus:ring-purple-300"
+                                className="text-xs rounded border-0 bg-slate-50 dark:bg-slate-800 px-4 py-2 focus:ring-purple-300"
                                 onChange={(e) => { handleTitleChange(e); setInput(e.target.value) }}
                                 placeholder="Template Title..."
                                 maxLength={generalInputCountRestrictions.titles}

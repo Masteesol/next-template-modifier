@@ -114,7 +114,12 @@ export const TablesTemplateCollection = ({ textTemplates }: TablesProps) => {
                                 {checkerCollection.result[index].template_collections.length}
                             </Table.Cell>
                             <Table.Cell>
-                                {excerpt}
+                                <p className="min-w-[10rem] lg:hidden">
+                                    {`${checkerCollection.result[index].template_collections[0].text.substring(0, 40)}...`}
+                                </p>
+                                <p className="hidden lg:block min-w-[20rem]">
+                                    {excerpt}
+                                </p>
                             </Table.Cell>
                         </Table.Row>
                 })

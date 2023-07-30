@@ -10,7 +10,7 @@ import {
 } from "react-icons/bs";
 import { MdOutlineDashboard, MdDashboard } from "react-icons/md"
 import tw from "tailwind-styled-components";
-import { FlexColCentered, FlexRowCenteredY, FlexColContainer, DividerHorizontal } from "@/components/shared/styled-global-components";
+import { FlexRowCenteredY, FlexColContainer, DividerHorizontal } from "@/components/shared/styled-global-components";
 import Link from "next/link";
 //import { useTranslation } from "next-i18next";
 //import { translateOrDefault } from "@/utils/i18nUtils";
@@ -22,6 +22,7 @@ import { IconType } from "react-icons/lib";
 const Sidebar = tw.aside`
   h-full
   flex
+  flex-col
   bg-white
   text-base
   p-1
@@ -32,7 +33,7 @@ const Sidebar = tw.aside`
   z-[8000]
 `;
 
-const SideBarItemContainer = tw(FlexColCentered)`
+const SideBarItemContainer = tw(FlexColContainer)`
   my-1
   text-black
   dark:text-white
@@ -110,45 +111,91 @@ const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
 
   return (
     <div className="relative h-full">
-      <Sidebar className={isOpen ? "" : "hidden md:block"}>
-        <FlexColContainer className="w-full md:items-center pe-2 md:pe-0 text-2xl">
-          <Link href="/" className="flex flex-col items-center relative p-2">
-            <Image src={logo} alt="logo" height={30} width={30} />
-          </Link>
-          <DividerHorizontal />
-          {SidebarData.map((item, index) => {
-            const {
-              path,
-              IconOutline,
-              IconFill,
-              text } = item
-            return <Link href={path} key={`sidebar-item-${index}`}>
-              <FlexRowCenteredY className="relative group">
-                <SideBarItemContainer >
-                  <div className="flex flex-col items-center relative p-2">
-                    {index === 0 ?
-                      <div>
-                        {router.pathname === path
-                          ? <IconFill />
-                          : <IconOutline />
-                        }
-                      </div>
-                      : <div>
-                        {router.pathname.startsWith(path)
-                          ? <IconFill />
-                          : <IconOutline />
-                        }
-                      </div>
-                    }
-                  </div>
-                </SideBarItemContainer>
-                <HoverLabel className="grou-hover:block left-11 top-3 w-[5rem]">{item.text}</HoverLabel>
-                <span className="md:hidden text-base">{text}</span>
-              </FlexRowCenteredY>
+      {/**DESKTOP */}
+      <div className="hidden md:block">
+        <Sidebar>
+          <FlexColContainer className="w-full items-center text-2xl">
+            <Link href="/" className="flex flex-col items-center relative p-2">
+              <Image src={logo} alt="logo" height={30} width={30} />
             </Link>
-          })}
-        </FlexColContainer>
-      </Sidebar>
+            <DividerHorizontal />
+            {SidebarData.map((item, index) => {
+              const {
+                path,
+                IconOutline,
+                IconFill,
+                text } = item
+              return <Link href={path} key={`sidebar-item-${index}`}>
+                <FlexRowCenteredY className="relative group">
+                  <SideBarItemContainer >
+                    <div className="flex flex-col items-center relative p-2">
+                      {index === 0 ?
+                        <div>
+                          {router.pathname === path
+                            ? <IconFill />
+                            : <IconOutline />
+                          }
+                        </div>
+                        : <div>
+                          {router.pathname.startsWith(path)
+                            ? <IconFill />
+                            : <IconOutline />
+                          }
+                        </div>
+                      }
+                    </div>
+                  </SideBarItemContainer>
+                  <HoverLabel className="group-hover:block left-11 top-3 w-[5rem]">{text}</HoverLabel>
+                </FlexRowCenteredY>
+              </Link>
+            })}
+          </FlexColContainer>
+        </Sidebar>
+      </div>
+      {/**MOBILE DEVICES */}
+      <div className="md:hidden">
+        <Sidebar className={`${isOpen ? "w-[12rem] px-2" : "w-[0rem] overflow-hidden"} transition-all ease-in-out duration-200 text-2xl`}>
+          <FlexColContainer className="w-full h-full">
+            <Link href="/" className="flex flex-col items-center relative p-2">
+              <Image src={logo} alt="logo" height={30} width={30} />
+            </Link>
+            <DividerHorizontal />
+            {SidebarData.map((item, index) => {
+              const {
+                path,
+                IconOutline,
+                IconFill,
+                text } = item
+              return <Link href={path} key={`sidebar-item-${index}`}>
+                <FlexRowCenteredY className="relative group">
+                  <SideBarItemContainer className="w-full">
+                    <div className="flex flex-col relative p-2 w-full">
+                      {index === 0 ?
+                        <FlexRowCenteredY className="gap-2 w-full">
+                          {router.pathname === path
+                            ? <IconFill className="h-6 w-6" />
+                            : <IconOutline className="h-6 w-6" />
+                          }
+                          <span className="text-base overflow-hidden overflow-ellipsis whitespace-nowrap">{text}</span>
+                        </FlexRowCenteredY>
+                        : <FlexRowCenteredY className="gap-2">
+                          {router.pathname.startsWith(path)
+                            ? <IconFill className="h-6 w-6" />
+                            : <IconOutline className="h-6 w-6" />
+                          }
+                          <span className="text-base overflow-hidden overflow-ellipsis whitespace-nowrap">{text}</span>
+                        </FlexRowCenteredY>
+                      }
+                    </div>
+                  </SideBarItemContainer>
+
+                </FlexRowCenteredY>
+              </Link>
+            })}
+          </FlexColContainer>
+        </Sidebar >
+      </div >
+
       {
         isMobile && isOpen && (
           <div

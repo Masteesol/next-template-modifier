@@ -31,8 +31,8 @@ const Tabs: React.FC<TabsProps> = ({ children, setActiveTabIndex, activeTabIndex
               <li className="mr-2">
                 <button
                   className={`inline-block p-4 ${isActive
-                      ? 'text-slate-900 border-b-2 border-slate-500 dark:text-slate-200 dark:border-slate-400 bg-slate-100 dark:bg-slate-700'
-                      : 'border-b-2 border-transparent hover:text-gray-600 hover:border-slate-400 dark:hover:text-gray-300'
+                    ? 'text-slate-900 border-b-2 border-slate-500 dark:text-slate-200 dark:border-slate-400 bg-slate-100 dark:bg-slate-700'
+                    : 'border-b-2 border-transparent hover:text-gray-600 hover:border-slate-400 dark:hover:text-gray-300'
                     }`}
                   onClick={() => setActiveTabIndex(index)}
                 >

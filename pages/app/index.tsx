@@ -121,7 +121,7 @@ const Page = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <PageLayout authenticated={isAuthenticated}>
-                <FlexColCenteredX className="p-2 sm:p-4 md:p-8">
+                <FlexColCenteredX className="p-2 sm:p-4">
                     <FlexColContainer className="w-full max-w-[1580px] gap-4 md:gap-8">
                         <FlexRowCenteredY className="justify-between">
                             <H1>App Dashboard</H1>

@@ -1,5 +1,6 @@
 import {
     CardBaseLight,
+    CardBaseLightHover,
     DividerHorizontal,
     FlexColCentered,
     FlexColContainer,
@@ -20,11 +21,13 @@ import {
     GradientCardPurple,
     LargeCardText,
     LinkCard
-} from "@/components/app/Dashboard/styled-components";
+} from "@/components/app/Dashboard/shared/styled-local-components";
 
-import Tables from "@/components/app/Dashboard/Tables";
+import { TablesSingleTemplate, TablesTemplateCollection } from "@/components/app/Dashboard/Tables";
 import Piechart from "@/components/app/Dashboard/PieChart";
-
+import { TabItem, Tabs } from "@/components/shared/TabsComponent";
+import { useState } from "react"
+import { TemplateChecker } from "./shared/helpers";
 interface FavouritesProps {
     textTemplates: TemplateModified[];
     checkFavouritedLength: any;
@@ -52,7 +55,7 @@ export const FavouritesCard = ({ textTemplates, checkFavouritedLength }: Favouri
                                 key={`favourite-${index}`}
                             >
                                 <div className="hidden lg:block group" style={{ zIndex: 300 }}>
-                                    <CardBaseLight
+                                    <CardBaseLightHover
                                         className="p-4 transition ease-in-out duration-150 border-l-4 border-transparent hover:border-purple-500 hover:text-purple-500">
                                         <FlexColContainer className="gap-2">
                                             <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
@@ -72,9 +75,9 @@ export const FavouritesCard = ({ textTemplates, checkFavouritedLength }: Favouri
                                             </FlexRowCenteredY>
                                         </FlexColContainer>
 
-                                    </CardBaseLight>
+                                    </CardBaseLightHover>
                                 </div>
-                                <FlexColContainer className="gap-2 lg:hidden">
+                                <CardBaseLightHover className="gap-2 lg:hidden">
                                     <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
                                         <BsStarFill className="text-purple-500" />
                                         <h2 className="text-sm md:text-lg truncate">{item.title}</h2>
@@ -90,7 +93,7 @@ export const FavouritesCard = ({ textTemplates, checkFavouritedLength }: Favouri
                                         <p className="py-1 px-2 text-xs rounded bg-violet-200 text-violet-800">Collection</p>
                                     </FlexRowCenteredY>
                                     <DividerHorizontal className="border-gray-100" />
-                                </FlexColContainer>
+                                </CardBaseLightHover>
                             </Link>
                                 : <Link href={`/app/templates?category_id=${item.category_id}`
                                 }
@@ -98,7 +101,7 @@ export const FavouritesCard = ({ textTemplates, checkFavouritedLength }: Favouri
                                     }
                                 >
                                     <div className="hidden lg:block group" style={{ zIndex: 300 }}>
-                                        <CardBaseLight
+                                        <CardBaseLightHover
                                             className="p-4 transition ease-in-out duration-150 border-l-4 border-transparent hover:border-green-500 hover:text-green-500">
                                             <FlexColContainer className="gap-2">
                                                 <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
@@ -117,7 +120,7 @@ export const FavouritesCard = ({ textTemplates, checkFavouritedLength }: Favouri
                                                 </FlexRowCenteredY>
                                             </FlexColContainer>
 
-                                        </CardBaseLight>
+                                        </CardBaseLightHover>
                                     </div>
                                     <FlexColContainer className="gap-2 lg:hidden">
                                         <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
@@ -153,16 +156,8 @@ interface NumbersProps {
 }
 
 export const NumbersCard = ({ textTemplates, textTemplateFull }: NumbersProps) => {
-    const checkSingleTempLength = (is_collection: boolean): number => {
-        if (is_collection) {
-            const result = textTemplates.filter(item => item.is_collection && item)
-            return result.length
-        } else {
-            const result = textTemplates.filter(item => !item.is_collection && item)
-            return result.length
-        }
-
-    }
+    const checkerSingle = new TemplateChecker(textTemplates, false);
+    const checkerCollection = new TemplateChecker(textTemplates, true);
     return <CardBaseLight>
         <FlexColContainer className="p-4 gap-4">
             <FlexRowCenteredY className="gap-2 justify-between border-b-2 border-gray-100 pb-2">
@@ -183,14 +178,14 @@ export const NumbersCard = ({ textTemplates, textTemplateFull }: NumbersProps) =
                 </GradientCardIndigo>
                 <GradientCardGreen>
                     <FlexColCentered>
-                        <LargeCardText>{`${checkSingleTempLength(false)}`}</LargeCardText>
-                        <p>{`Single Template${(checkSingleTempLength(false) > 1) ? "s" : ""}`}</p>
+                        <LargeCardText>{`${checkerSingle.length}`}</LargeCardText>
+                        <p>{`Single Template${(checkerSingle.length > 1) ? "s" : ""}`}</p>
                     </FlexColCentered>
                 </GradientCardGreen>
                 <GradientCardPurple>
                     <FlexColCentered>
-                        <LargeCardText>{`${checkSingleTempLength(true)}`}</LargeCardText>
-                        <p>{`Template Collection${(checkSingleTempLength(true) > 1) ? "s" : ""}`}</p>
+                        <LargeCardText>{`${checkerCollection.length}`}</LargeCardText>
+                        <p>{`Template Collection${(checkerCollection.length > 1) ? "s" : ""}`}</p>
                     </FlexColCentered>
                 </GradientCardPurple>
             </div>
@@ -205,9 +200,10 @@ interface UsageProps {
 }
 
 export const UsageCard = ({ textTemplates, checkTotalTruncatedArray }: UsageProps) => {
+    const [activeIndex, setActiveIndex] = useState(0)
     return <CardBaseLight>
-        <FlexColContainer className="gap-4  rounded p-4 shadow">
-            <FlexRowCenteredY className="gap-2 justify-between border-b-2 border-gray-100 pb-2">
+        <FlexColContainer className="p-4 gap-4">
+            <FlexRowCenteredY className="gap-2 justify-between pb-2">
                 <h2 className="font-bold">Usage</h2>
 
                 {
@@ -215,27 +211,62 @@ export const UsageCard = ({ textTemplates, checkTotalTruncatedArray }: UsageProp
                     <i className="text-sm text-gray-500">Displaying top 5</i>
                 }
             </FlexRowCenteredY>
+            <Tabs setActiveTabIndex={setActiveIndex} activeTabIndex={activeIndex}>
+                <TabItem title="Single Templates" >
+                    <FlexColContainer className="gap-4 p-4">
 
-            {textTemplates && textTemplates.length > 0
-                ?
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                    <FlexColCentered className="gap-4">
-                        <h3>Ratio</h3>
-                        <Piechart textTemplates={textTemplates} />
-                        <i>{textTemplates.length > 5 ? "Top 5 total: " : "Total"}
-                            <span className="font-bold">{`${checkTotalTruncatedArray()}`}</span>
-                        </i>
-                    </FlexColCentered>
+                        {textTemplates && textTemplates.length > 0
+                            ?
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                    <FlexColContainer className="gap-4 overflow-x-auto shadow">
-                        <Tables textTemplates={textTemplates} />
+                                <FlexColCentered className="gap-4">
+                                    <h3>Ratio</h3>
+                                    <Piechart textTemplates={textTemplates} />
+                                    <i>{textTemplates.length > 5 ? "Top 5 total: " : "Total"}
+                                        <span className="font-bold">{`${checkTotalTruncatedArray()}`}</span>
+                                    </i>
+                                </FlexColCentered>
+
+                                <FlexColContainer className="gap-4 overflow-x-auto shadow">
+                                    <TablesSingleTemplate textTemplates={textTemplates} />
+                                </FlexColContainer>
+
+                            </div>
+                            :
+                            <i>{`The app tracks your usage by counting how many times you've copied each template. The results will be displayed here.`}</i>
+                        }
                     </FlexColContainer>
 
-                </div>
-                :
-                <i>{`The app tracks your usage by counting how many times you've copied each template. The results will be displayed here.`}</i>
-            }
+                </TabItem>
+                <TabItem title="Template Collections" >
+                    <FlexColContainer className="gap-4 p-4">
+
+
+                        {textTemplates && textTemplates.length > 0
+                            ?
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+                                <FlexColCentered className="gap-4">
+                                    <h3>Ratio</h3>
+                                    <Piechart textTemplates={textTemplates} />
+                                    <i>{textTemplates.length > 5 ? "Top 5 total: " : "Total"}
+                                        <span className="font-bold">{`${checkTotalTruncatedArray()}`}</span>
+                                    </i>
+                                </FlexColCentered>
+
+                                <FlexColContainer className="gap-4 overflow-x-auto shadow">
+                                    <TablesTemplateCollection textTemplates={textTemplates} />
+                                </FlexColContainer>
+
+                            </div>
+                            :
+                            <i>{`The app tracks your usage by counting how many times you've copied each template. The results will be displayed here.`}</i>
+                        }
+                    </FlexColContainer>
+                </TabItem>
+            </Tabs>
+
         </FlexColContainer>
     </CardBaseLight>
 }

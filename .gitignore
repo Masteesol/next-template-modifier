@@ -36,4 +36,4 @@ yarn-error.log*
 .env.development
 
 # Typescript
-.tsconfig.tsbuildinfo
+*.tsbuildinfo

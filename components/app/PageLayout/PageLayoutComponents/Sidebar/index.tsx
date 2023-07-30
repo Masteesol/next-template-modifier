@@ -16,6 +16,8 @@ import Link from "next/link";
 //import { translateOrDefault } from "@/utils/i18nUtils";
 import Image from "next/image";
 import logo from "@/public/logo.png"
+import { HoverLabel } from "@/components/app/TemplateEditor/EditorCard/styles";
+import { IconType } from "react-icons/lib";
 
 const Sidebar = tw.aside`
   h-full
@@ -43,6 +45,42 @@ interface SideBarProps {
   isOpen: boolean;
   setIsOpen: any;
 }
+
+interface SideBarDataType {
+  path: string;
+  IconOutline: IconType;
+  IconFill: IconType,
+  text: string;
+}
+
+const SidebarData: SideBarDataType[] = [
+  {
+    path: "/app",
+    IconOutline: MdOutlineDashboard,
+    IconFill: MdDashboard,
+    text: "Dashboard"
+  },
+  {
+    path: "/app/templates",
+    IconOutline: BsFileEarmarkText,
+    IconFill: BsFileEarmarkTextFill,
+    text: "Templates"
+  },
+  {
+    path: "/app/settings",
+    IconOutline: BsPerson,
+    IconFill: BsPersonFill,
+    text: "Settings"
+  },
+  {
+    path: "/app/plans",
+    IconOutline: BsCreditCard2Front,
+    IconFill: BsCreditCard2FrontFill,
+    text: "Subscriptions"
+  },
+
+]
+
 
 const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
   //const { t } = useTranslation("common");
@@ -77,59 +115,38 @@ const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
           <Link href="/" className="flex flex-col items-center relative p-2">
             <Image src={logo} alt="logo" height={30} width={30} />
           </Link>
-          <DividerHorizontal></DividerHorizontal>
-          <Link href="/app">
-            <FlexRowCenteredY>
-              <SideBarItemContainer>
-                <div className="flex flex-col items-center relative p-2">
-                  {router.pathname === "/app"
-                    ? <MdDashboard />
-                    : <MdOutlineDashboard />
-                  }
-                </div>
-              </SideBarItemContainer>
-              <span className="md:hidden text-base">Home</span>
-            </FlexRowCenteredY>
-          </Link>
-          <Link href="/app/templates" >
-            <FlexRowCenteredY>
-              <SideBarItemContainer>
-                <div className="flex flex-col items-center relative p-2">
-                  {router.pathname.startsWith("/app/templates")
-                    ? <BsFileEarmarkTextFill />
-                    : <BsFileEarmarkText />
-                  }
-                </div>
-              </SideBarItemContainer>
-              <span className="md:hidden text-base">Templates</span>
-            </FlexRowCenteredY>
-          </Link>
-          <Link href="/app/settings">
-            <FlexRowCenteredY>
-              <SideBarItemContainer>
-                <div className="flex flex-col items-center relative p-2">
-                  {router.pathname.startsWith("/app/settings")
-                    ? <BsPersonFill />
-                    : <BsPerson />
-                  }
-                </div>
-              </SideBarItemContainer>
-              <span className="md:hidden text-base">Settings</span>
-            </FlexRowCenteredY>
-          </Link>
-          <Link href="/app/plans">
-            <FlexRowCenteredY>
-              <SideBarItemContainer>
-                <div className="flex flex-col items-center relative p-2">
-                  {router.pathname === "/app/plans"
-                    ? <BsCreditCard2FrontFill />
-                    : <BsCreditCard2Front />
-                  }
-                </div>
-              </SideBarItemContainer>
-              <span className="md:hidden text-base">Plans</span>
-            </FlexRowCenteredY>
-          </Link>
+          <DividerHorizontal />
+          {SidebarData.map((item, index) => {
+            const {
+              path,
+              IconOutline,
+              IconFill,
+              text } = item
+            return <Link href={path} key={`sidebar-item-${index}`}>
+              <FlexRowCenteredY className="relative group">
+                <SideBarItemContainer >
+                  <div className="flex flex-col items-center relative p-2">
+                    {index === 0 ?
+                      <div>
+                        {router.pathname === path
+                          ? <IconFill />
+                          : <IconOutline />
+                        }
+                      </div>
+                      : <div>
+                        {router.pathname.startsWith(path)
+                          ? <IconFill />
+                          : <IconOutline />
+                        }
+                      </div>
+                    }
+                  </div>
+                </SideBarItemContainer>
+                <HoverLabel className="grou-hover:block left-11 top-3 w-[5rem]">{item.text}</HoverLabel>
+                <span className="md:hidden text-base">{text}</span>
+              </FlexRowCenteredY>
+            </Link>
+          })}
         </FlexColContainer>
       </Sidebar>
       {

@@ -32,6 +32,7 @@ export const TablesSingleTemplate = ({ textTemplates }: TablesProps) => {
             <Table.Body className="divide-y">
                 {textTemplates.map((template: any, index: number) => {
                     //console.log("item", template)
+                    const excerpt = template.text.length > 120 ? `${template.text.substring(0, 120)}...` : template.text
                     return index < 5 &&
                         <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800"
                             key={`table-row-${index}`}
@@ -52,8 +53,11 @@ export const TablesSingleTemplate = ({ textTemplates }: TablesProps) => {
                                 {template.text.length}
                             </Table.Cell>
                             <Table.Cell >
-                                <p className="min-w-[10rem]">
+                                <p className="min-w-[10rem] lg:hidden">
                                     {`${template.text.substring(0, 40)}...`}
+                                </p>
+                                <p className="hidden lg:block min-w-[20rem]">
+                                    {excerpt}
                                 </p>
                             </Table.Cell>
                         </Table.Row>
@@ -82,11 +86,14 @@ export const TablesTemplateCollection = ({ textTemplates }: TablesProps) => {
                 <Table.HeadCell>
                     Templates
                 </Table.HeadCell>
-
+                <Table.HeadCell>
+                    {`Excerpt from collection`}
+                </Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
                 {checkerCollection.result.map((template: TemplateModified, index: number) => {
-                    //console.log("item", template)
+                    const text = checkerCollection.result[index].template_collections[0].text
+                    const excerpt = text.length > 120 ? `${text.substring(0, 120)}...` : text
                     return index < 5 && template.is_collection &&
                         <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800"
                             key={`table-row-${index}`}
@@ -106,7 +113,9 @@ export const TablesTemplateCollection = ({ textTemplates }: TablesProps) => {
                             <Table.Cell>
                                 {checkerCollection.result[index].template_collections.length}
                             </Table.Cell>
-
+                            <Table.Cell>
+                                {excerpt}
+                            </Table.Cell>
                         </Table.Row>
                 })
                 }

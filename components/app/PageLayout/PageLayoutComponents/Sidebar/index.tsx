@@ -18,12 +18,11 @@ import Image from "next/image";
 import logo from "@/public/logo.png"
 
 const Sidebar = tw.aside`
-  md:w-[3.5rem]
   h-full
   flex
   bg-white
   text-base
-  p-2
+  p-1
   bg-white
   dark:bg-slate-900
   absolute
@@ -74,7 +73,7 @@ const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
   return (
     <div className="relative h-full">
       <Sidebar className={isOpen ? "" : "hidden md:block"}>
-        <FlexColContainer className="w-full md:items-center pe-2 md:pe-0">
+        <FlexColContainer className="w-full md:items-center pe-2 md:pe-0 text-2xl">
           <Link href="/" className="flex flex-col items-center relative p-2">
             <Image src={logo} alt="logo" height={30} width={30} />
           </Link>
@@ -84,12 +83,12 @@ const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
               <SideBarItemContainer>
                 <div className="flex flex-col items-center relative p-2">
                   {router.pathname === "/app"
-                    ? <MdDashboard size={28} />
-                    : <MdOutlineDashboard size={28} />
+                    ? <MdDashboard />
+                    : <MdOutlineDashboard />
                   }
                 </div>
               </SideBarItemContainer>
-              <span className="md:hidden">Home</span>
+              <span className="md:hidden text-base">Home</span>
             </FlexRowCenteredY>
           </Link>
           <Link href="/app/templates" >
@@ -97,12 +96,12 @@ const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
               <SideBarItemContainer>
                 <div className="flex flex-col items-center relative p-2">
                   {router.pathname.startsWith("/app/templates")
-                    ? <BsFileEarmarkTextFill size={28} />
-                    : <BsFileEarmarkText size={28} />
+                    ? <BsFileEarmarkTextFill />
+                    : <BsFileEarmarkText />
                   }
                 </div>
               </SideBarItemContainer>
-              <span className="md:hidden">Templates</span>
+              <span className="md:hidden text-base">Templates</span>
             </FlexRowCenteredY>
           </Link>
           <Link href="/app/settings">
@@ -110,12 +109,12 @@ const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
               <SideBarItemContainer>
                 <div className="flex flex-col items-center relative p-2">
                   {router.pathname.startsWith("/app/settings")
-                    ? <BsPersonFill size={25} />
-                    : <BsPerson size={25} />
+                    ? <BsPersonFill />
+                    : <BsPerson />
                   }
                 </div>
               </SideBarItemContainer>
-              <span className="md:hidden">Settings</span>
+              <span className="md:hidden text-base">Settings</span>
             </FlexRowCenteredY>
           </Link>
           <Link href="/app/plans">
@@ -123,12 +122,12 @@ const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
               <SideBarItemContainer>
                 <div className="flex flex-col items-center relative p-2">
                   {router.pathname === "/app/plans"
-                    ? <BsCreditCard2FrontFill size={28} />
-                    : <BsCreditCard2Front size={28} />
+                    ? <BsCreditCard2FrontFill />
+                    : <BsCreditCard2Front />
                   }
                 </div>
               </SideBarItemContainer>
-              <span className="md:hidden">Plans</span>
+              <span className="md:hidden text-base">Plans</span>
             </FlexRowCenteredY>
           </Link>
         </FlexColContainer>

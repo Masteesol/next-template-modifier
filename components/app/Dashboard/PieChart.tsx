@@ -1,24 +1,11 @@
-import dynamic from 'next/dynamic';
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer } from "recharts";
-import { useState, useEffect } from "react"
 import colors from '@/utils/colors';
 
-const PieChartComponent = ({ textTemplates }: any) => {
-    const [isJSenabled, setIsJSenabled] = useState(false);
-
-    useEffect(() => {
-        setIsJSenabled(true);
-    }, []);
-
-    if (!isJSenabled) {
-        return null;
-    }
-
-    // Filter the data you want to use for both the pie slices and cells
+export const PieChartComponentSingle = ({ textTemplates }: any) => {
     const filteredData = textTemplates.filter((item: any, index: number) => index < 5 && item);
 
     return (
-        <ResponsiveContainer width="80%" height={320}>
+        <ResponsiveContainer width="80%" height={window.innerWidth < 900 ? 220 : 370}>
             <PieChart>
                 <Pie
                     data={filteredData}
@@ -26,7 +13,7 @@ const PieChartComponent = ({ textTemplates }: any) => {
                     nameKey="title"
                     cx="50%"
                     cy="50%"
-                    outerRadius={window.innerWidth < 900 ? 110 : 140}
+                    outerRadius={window.innerWidth < 900 ? 110 : 170}
                     cornerRadius={5}
                 >
                     {
@@ -43,6 +30,32 @@ const PieChartComponent = ({ textTemplates }: any) => {
     )
 }
 
-const DynamicPieChartComponent = dynamic(() => Promise.resolve(PieChartComponent), { ssr: false });
+export const PieChartComponentCollection = ({ textTemplates }: any) => {
 
-export default DynamicPieChartComponent;
+    const filteredData = textTemplates.filter((item: any, index: number) => index < 5 && item);
+
+    return (
+        <ResponsiveContainer width="80%" height={window.innerWidth < 900 ? 220 : 370}>
+            <PieChart>
+                <Pie
+                    data={filteredData}
+                    dataKey="copy_count"
+                    nameKey="title"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={window.innerWidth < 900 ? 110 : 170}
+                    cornerRadius={5}
+                >
+                    {
+                        filteredData.map(
+                            (entry: any, index: number) => {
+                                return <Cell key={`cell-${index}`} fill={colors[index + 5]} />
+                            }
+                        )
+                    }
+                </Pie>
+                <Tooltip />
+            </PieChart>
+        </ResponsiveContainer >
+    )
+}

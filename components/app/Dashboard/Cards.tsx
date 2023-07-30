@@ -24,7 +24,7 @@ import {
 } from "@/components/app/Dashboard/shared/styled-local-components";
 
 import { TablesSingleTemplate, TablesTemplateCollection } from "@/components/app/Dashboard/Tables";
-import Piechart from "@/components/app/Dashboard/PieChart";
+import { PieChartComponentSingle, PieChartComponentCollection } from "@/components/app/Dashboard/PieChart";
 import { TabItem, Tabs } from "@/components/shared/TabsComponent";
 import { useState } from "react"
 import { TemplateChecker } from "./shared/helpers";
@@ -77,7 +77,7 @@ export const FavouritesCard = ({ textTemplates, checkFavouritedLength }: Favouri
 
                                     </CardBaseLightHover>
                                 </div>
-                                <CardBaseLightHover className="gap-2 lg:hidden">
+                                <FlexColContainer className="gap-2 lg:hidden">
                                     <FlexRowCenteredY className="h-full gap-2 text-lg text-center">
                                         <BsStarFill className="text-purple-500" />
                                         <h2 className="text-sm md:text-lg truncate">{item.title}</h2>
@@ -93,7 +93,7 @@ export const FavouritesCard = ({ textTemplates, checkFavouritedLength }: Favouri
                                         <p className="py-1 px-2 text-xs rounded bg-violet-200 text-violet-800">Collection</p>
                                     </FlexRowCenteredY>
                                     <DividerHorizontal className="border-gray-100" />
-                                </CardBaseLightHover>
+                                </FlexColContainer>
                             </Link>
                                 : <Link href={`/app/templates?category_id=${item.category_id}`
                                 }
@@ -196,13 +196,53 @@ export const NumbersCard = ({ textTemplates, textTemplateFull }: NumbersProps) =
 
 interface UsageProps {
     textTemplates: TemplateModified[]
-    checkTotalTruncatedArray: any
 }
 
-export const UsageCard = ({ textTemplates, checkTotalTruncatedArray }: UsageProps) => {
+export const UsageCard = ({ textTemplates }: UsageProps) => {
     const [activeIndex, setActiveIndex] = useState(0)
+    const checkerCollection = new TemplateChecker(textTemplates, true);
+    const checkerSimple = new TemplateChecker(textTemplates, false);
+
+    const checkTotalTruncatedArray = (is_collection: boolean) => {
+        if (is_collection) {
+            return checkerCollection.result.slice(0, 5).reduce((acc, current) => acc + current.copy_count, 0);
+        } else {
+            return checkerSimple.result.slice(0, 5).reduce((acc, current) => acc + current.copy_count, 0);
+        }
+
+    }
+    const checkAverage = () => {
+        if (textTemplates.length > 0) {
+            const sum = checkerSimple.result.slice(0, 5).reduce((acc, currentIndex) => {
+                const text = currentIndex.text;
+                const length = text.length;
+                return acc + length;
+            }, 0);
+
+            const average = sum / checkerSimple.result.slice(0, 5).length;
+
+            return typeof average === "number" ? average.toFixed(0) : 0;
+        } else {
+            return 0
+        }
+    }
+    const checkAverageTemplateAmount = () => {
+        if (textTemplates.length > 0) {
+            const sum = checkerCollection.result.slice(0, 5).reduce((acc, currentIndex) => {
+                const templateCollectionArray = currentIndex.template_collections;
+                return acc + templateCollectionArray.length;
+            }, 0);
+
+            const average = sum / checkerCollection.result.slice(0, 5).length;
+
+            return typeof average === "number" ? average.toFixed(0) : 0;
+        } else {
+            return 0
+        }
+    }
+
     return <CardBaseLight>
-        <FlexColContainer className="p-4 gap-4">
+        <FlexColContainer className="p-1 md:p-2 lg:p-4 gap-4">
             <FlexRowCenteredY className="gap-2 justify-between pb-2">
                 <h2 className="font-bold">Usage</h2>
 
@@ -213,23 +253,30 @@ export const UsageCard = ({ textTemplates, checkTotalTruncatedArray }: UsageProp
             </FlexRowCenteredY>
             <Tabs setActiveTabIndex={setActiveIndex} activeTabIndex={activeIndex}>
                 <TabItem title="Single Templates" >
-                    <FlexColContainer className="gap-4 p-4">
+                    <FlexColContainer className="gap-4">
 
 
                         {textTemplates && textTemplates.length > 0
                             ?
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div className="grid grid-cols-1 gap-8">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                                    <FlexColCentered className="gap-2">
+                                        <PieChartComponentSingle
+                                            textTemplates={checkerSimple.result}
+                                        />
+                                    </FlexColCentered>
+                                    <FlexColCentered className="gap-2 text-center md:text-2xl">
+                                        <p>{checkerSimple.result.length > 5 ? "Total times copied: " : "Total"}
+                                            <span className="font-bold text-green-500">{`${checkTotalTruncatedArray(false)}`}</span>
+                                        </p>
+                                        <p> Average template length: <span className="font-bold text-green-500">{`${checkAverage()}`}</span></p>
+                                    </FlexColCentered>
 
-                                <FlexColCentered className="gap-4">
-                                    <h3>Ratio</h3>
-                                    <Piechart textTemplates={textTemplates} />
-                                    <i>{textTemplates.length > 5 ? "Top 5 total: " : "Total"}
-                                        <span className="font-bold">{`${checkTotalTruncatedArray()}`}</span>
-                                    </i>
-                                </FlexColCentered>
+                                </div>
+
 
                                 <FlexColContainer className="gap-4 overflow-x-auto shadow">
-                                    <TablesSingleTemplate textTemplates={textTemplates} />
+                                    <TablesSingleTemplate textTemplates={checkerSimple.result} />
                                 </FlexColContainer>
 
                             </div>
@@ -237,28 +284,27 @@ export const UsageCard = ({ textTemplates, checkTotalTruncatedArray }: UsageProp
                             <i>{`The app tracks your usage by counting how many times you've copied each template. The results will be displayed here.`}</i>
                         }
                     </FlexColContainer>
-
                 </TabItem>
                 <TabItem title="Template Collections" >
-                    <FlexColContainer className="gap-4 p-4">
-
-
+                    <FlexColContainer className="gap-4">
                         {textTemplates && textTemplates.length > 0
                             ?
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div className="grid grid-cols-1 gap-8">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                                    <FlexColCentered className="gap-2">
+                                        <PieChartComponentCollection textTemplates={checkerCollection.result} />
+                                    </FlexColCentered>
 
-                                <FlexColCentered className="gap-4">
-                                    <h3>Ratio</h3>
-                                    <Piechart textTemplates={textTemplates} />
-                                    <i>{textTemplates.length > 5 ? "Top 5 total: " : "Total"}
-                                        <span className="font-bold">{`${checkTotalTruncatedArray()}`}</span>
-                                    </i>
-                                </FlexColCentered>
-
+                                    <FlexColCentered className="gap-2 text-center md:text-2xl">
+                                        <p>{checkerSimple.result.length > 5 ? "Total times copied: " : "Total"}
+                                            <span className="font-bold text-purple-700">{`${checkTotalTruncatedArray(true)}`}</span>
+                                        </p>
+                                        <p> Average templates per collection: <span className="font-bold text-purple-700">{`${checkAverageTemplateAmount()}`}</span></p>
+                                    </FlexColCentered>
+                                </div>
                                 <FlexColContainer className="gap-4 overflow-x-auto shadow">
-                                    <TablesTemplateCollection textTemplates={textTemplates} />
+                                    <TablesTemplateCollection textTemplates={checkerCollection.result} />
                                 </FlexColContainer>
-
                             </div>
                             :
                             <i>{`The app tracks your usage by counting how many times you've copied each template. The results will be displayed here.`}</i>

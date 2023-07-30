@@ -23,7 +23,7 @@ interface TabsProps {
 const Tabs: React.FC<TabsProps> = ({ children, setActiveTabIndex, activeTabIndex = 0 }: any) => {
   return (
     <div>
-      <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-4">
+      <div className="text-xs md:text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700 mb-4">
         <ul className="flex flex-wrap">
           {React.Children.map(children, (child, index) => {
             const isActive = index === activeTabIndex;

@@ -66,7 +66,7 @@ export const TablesSingleTemplate = ({ textTemplates }: TablesProps) => {
 
 export const TablesTemplateCollection = ({ textTemplates }: TablesProps) => {
     const checkerCollection = new TemplateChecker(textTemplates, true);
-
+    //console.log(checkerCollection.result)
     return (
         <Table hoverable>
             <Table.Head>
@@ -80,11 +80,9 @@ export const TablesTemplateCollection = ({ textTemplates }: TablesProps) => {
                     Copied
                 </Table.HeadCell>
                 <Table.HeadCell>
-                    Characters
+                    Templates
                 </Table.HeadCell>
-                <Table.HeadCell>
-                    Excerpt
-                </Table.HeadCell>
+
             </Table.Head>
             <Table.Body className="divide-y">
                 {checkerCollection.result.map((template: TemplateModified, index: number) => {
@@ -95,7 +93,7 @@ export const TablesTemplateCollection = ({ textTemplates }: TablesProps) => {
                         >
                             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                 <FlexRowCenteredY className="gap-2">
-                                    <span className="rounded-full w-3 h-3" style={{ backgroundColor: colors[index] }} />
+                                    <span className="rounded-full w-3 h-3" style={{ backgroundColor: colors[index + 5] }} />
                                     <p>{template.title}</p>
                                 </FlexRowCenteredY>
                             </Table.Cell>
@@ -106,13 +104,9 @@ export const TablesTemplateCollection = ({ textTemplates }: TablesProps) => {
                                 {template.copy_count}
                             </Table.Cell>
                             <Table.Cell>
-                                {template.text.length}
+                                {checkerCollection.result[index].template_collections.length}
                             </Table.Cell>
-                            <Table.Cell >
-                                <p className="min-w-[10rem]">
-                                    {`${template.text.substring(0, 40)}...`}
-                                </p>
-                            </Table.Cell>
+
                         </Table.Row>
                 })
                 }

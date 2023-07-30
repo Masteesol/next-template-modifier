@@ -88,28 +88,8 @@ const Page = () => {
         });
     }, [userID, setIsLoading]);
 
-    // const checkAverage = () => {
-    //     if (textTemplates.length > 0) {
-    //         const sum = textTemplates.reduce((acc, currentIndex) => {
-    //             const text = currentIndex.text;
-    //             const length = text.length;
-    //             return acc + length;
-    //         }, 0);
-
-    //         const average = sum / textTemplates.length;
-
-    //         return typeof average === "number" ? average.toFixed(0) : 0;
-    //     } else {
-    //         return 0
-    //     }
-    // }
-
     const checkFavouritedLength = () => {
         return textTemplates.filter((item) => item.favourited && item).length
-    }
-    const checkTotalTruncatedArray = () => {
-        const total = textTemplates.slice(0, 5).reduce((acc, current) => acc + current.copy_count, 0);
-        return total;
     }
 
     return (
@@ -122,7 +102,7 @@ const Page = () => {
             </Head>
             <PageLayout authenticated={isAuthenticated}>
                 <FlexColCenteredX className="p-2 sm:p-4">
-                    <FlexColContainer className="w-full max-w-[1580px] gap-4 md:gap-8">
+                    <FlexColContainer className="w-full max-w-[1480px] gap-4 md:gap-8">
                         <FlexRowCenteredY className="justify-between">
                             <H1>App Dashboard</H1>
                             <p className="font-bold">{`Basic Plan (Free)`}</p>
@@ -146,7 +126,6 @@ const Page = () => {
                         </GridSm1Lg2>
                         <UsageCard
                             textTemplates={textTemplates}
-                            checkTotalTruncatedArray={checkTotalTruncatedArray}
                         />
                     </FlexColContainer>
                 </FlexColCenteredX >

@@ -5,7 +5,7 @@ import tw from "tailwind-styled-components";
 export const H1 = tw.h1`
     text-2xl
     md:text-3xl
-    xl:text-5xl
+    xl:text-4xl
 `;
 
 export const H2 = tw.h2`

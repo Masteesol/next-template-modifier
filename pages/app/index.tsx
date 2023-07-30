@@ -43,7 +43,7 @@ const quickLinksData = [
     },
     {
         path: "/app/settings",
-        text: "User Information",
+        text: "User Info",
         icon: <BsPerson />,
         color: "hover:border-blue-400 hover:text-blue-400"
     },
@@ -79,6 +79,7 @@ const Page = () => {
                         });
                     });
                 });
+                console.log("templatesModified", templatesModified)
                 setTextTemplates(templatesModified.sort((a, b) => b.copy_count - a.copy_count));
                 setTextTemplatesFull(templatesContainer)
             }
@@ -87,23 +88,21 @@ const Page = () => {
         });
     }, [userID, setIsLoading]);
 
-    const checkAverage = () => {
-        if (textTemplates.length > 0) {
-            const sum = textTemplates.reduce((acc, currentIndex) => {
-                const text = currentIndex.text;
-                const length = text.length;
-                return acc + length;
-            }, 0);
+    // const checkAverage = () => {
+    //     if (textTemplates.length > 0) {
+    //         const sum = textTemplates.reduce((acc, currentIndex) => {
+    //             const text = currentIndex.text;
+    //             const length = text.length;
+    //             return acc + length;
+    //         }, 0);
 
-            const average = sum / textTemplates.length;
+    //         const average = sum / textTemplates.length;
 
-            console.log('Average text length:', average);
-
-            return typeof average === "number" ? average.toFixed(0) : 0;
-        } else {
-            return 0
-        }
-    }
+    //         return typeof average === "number" ? average.toFixed(0) : 0;
+    //     } else {
+    //         return 0
+    //     }
+    // }
 
     const checkFavouritedLength = () => {
         return textTemplates.filter((item) => item.favourited && item).length
@@ -122,7 +121,7 @@ const Page = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <PageLayout authenticated={isAuthenticated}>
-                <FlexColCenteredX className="p-4 md:p-8">
+                <FlexColCenteredX className="p-2 sm:p-4 md:p-8">
                     <FlexColContainer className="w-full max-w-[1580px] gap-4 md:gap-8">
                         <FlexRowCenteredY className="justify-between">
                             <H1>App Dashboard</H1>
@@ -142,7 +141,6 @@ const Page = () => {
                             />
                             <NumbersCard
                                 textTemplates={textTemplates}
-                                checkAverage={checkAverage}
                                 textTemplateFull={textTemplateFull}
                             />
                         </GridSm1Lg2>

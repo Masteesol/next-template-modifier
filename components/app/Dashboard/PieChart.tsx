@@ -26,7 +26,7 @@ const PieChartComponent = ({ textTemplates }: any) => {
                     nameKey="title"
                     cx="50%"
                     cy="50%"
-                    outerRadius={140}
+                    outerRadius={window.innerWidth < 900 ? 110 : 140}
                     cornerRadius={5}
                 >
                     {

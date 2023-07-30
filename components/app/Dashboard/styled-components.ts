@@ -1,41 +1,42 @@
 import tw from "tailwind-styled-components";
 import { CardBaseLightHover, FlexColCentered } from "@/components/shared/styled-global-components";
 
-export const GradientCard = tw(FlexColCentered)`
+const BaseCardStyle = tw(FlexColCentered)`
+    p-2 
+    rounded
+    border-l-4
+    shadow
     bg-gradient-to-tr 
+`
+
+export const GradientCardGreen = tw(BaseCardStyle)`
     from-green-100
     to-green-300
-    p-2 
-    rounded
     text-green-900
-    border-l-4
     border-green-800
-    shadow
 `
 
-export const GradientCardTwo = tw(FlexColCentered)`
-    bg-gradient-to-tr 
+export const GradientCardBlue = tw(BaseCardStyle)`
     from-blue-100 
     to-blue-300 
-    p-2
-    border-l-4
     border-blue-900
-    rounded
     text-blue-800
-    shadow
 `
 
-export const GradientCardThree = tw(FlexColCentered)`
-    bg-gradient-to-tr 
+export const GradientCardIndigo = tw(BaseCardStyle)`
     from-indigo-100
     to-indigo-300
-    p-2 
-    rounded
     text-indigo-900
-    border-l-4
     border-indigo-800
-    shadow
 `
+
+export const GradientCardPurple = tw(BaseCardStyle)`
+    from-purple-100
+    to-purple-300
+    text-purple-900
+    border-purple-800
+`
+
 
 export const LargeCardText = tw.span`
     text-6xl 

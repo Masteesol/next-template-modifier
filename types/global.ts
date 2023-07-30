@@ -26,14 +26,7 @@ export interface TemplatesContainer {
     templates: Templates[];
 }
 
-export interface TemplateModified {
-    title: string;
-    template_id: string;
-    copy_count: number;
+export interface TemplateModified extends Templates {
     category_name: string;
-    char_limit: number | null
-    text: string;
-    word_limit: number;
-    favourited: boolean;
     category_id: string;
 }

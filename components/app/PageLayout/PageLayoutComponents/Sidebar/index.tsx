@@ -25,7 +25,6 @@ const Sidebar = tw.aside`
   flex-col
   bg-white
   text-base
-  p-1
   bg-white
   dark:bg-slate-900
   absolute

@@ -28,6 +28,7 @@ export const TextTemplatesProvider: React.FC<{ children: React.ReactNode }> = ({
 
         if (path === "/app/templates") {
             console.log("got here")
+            setIsLoading(true)
             fetchTemplatesForUser(userID, setIsLoading).then((data) => {
                 if (data) {
                     console.log("Templates", data)
@@ -42,7 +43,7 @@ export const TextTemplatesProvider: React.FC<{ children: React.ReactNode }> = ({
                                     template_collections: template.template_collections.sort((a, b) => a.order - b.order),
                                 })),
                         }));
-
+                    setIsLoading(false)
                     setTextTemplates(templatesContainers);
                 }
             })

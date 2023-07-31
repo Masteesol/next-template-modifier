@@ -42,6 +42,7 @@ import MinimizedManager from "@/components/app/TemplateEditor/ManagerInterface/M
 import { TemplatesContext } from "@/context/TemplatesContext";
 import CreateFirstTemplateCard from "@/components/app/TemplateEditor/CreateFirstTemplateCard";
 import CreateFirstCategoryCard from "@/components/app/TemplateEditor/CreateFirstCategoryCard";
+import { LoadingContext } from "@/context/LoadingContext";
 
 type PageProps = {
   authenticated: boolean,
@@ -94,6 +95,7 @@ const Page: NextPage<PageProps> = () => {
   const { isAuthenticated } = useContext(AuthContext)
   const router = useRouter()
   const [subscriptionLimits, setSubscriptionLimits] = useState<tierLimit>()
+  const { isLoading } = useContext(LoadingContext)
 
   const userID = Cookies.get("user_id")
   /* eslint-disable react-hooks/exhaustive-deps */
@@ -103,29 +105,7 @@ const Page: NextPage<PageProps> = () => {
       if (textTemplates) {
         //needs to come from DB
         setSubscriptionLimits(tierLimits)
-        const findFirstFavourited = () => {
-          return textTemplates.filter(item => item.favourited && item)
-        }
-        if (findFirstFavourited()[0]?.order) {
-          setSelectedCategory(findFirstFavourited()[0].order)
-        }
-        const setSelectedCategoryAndTemplateFromUrl = () => {
-          const categoryID = router.query.category_id;
-          if (categoryID) {
-            //console.log(categoryID)
-            const index = textTemplates.findIndex((container: TemplatesContainer) => container.category_id === categoryID);
-            if (index !== -1) {
-              // Found the category in templatesContainers at the index
-              setSelectedCategory(index)
-              console.log('Category index:', index);
-            } else {
-              // Category was not found in templatesContainers
-              console.log('Category not found');
 
-            }
-          }
-        }
-        setSelectedCategoryAndTemplateFromUrl()
       }
     }
     setData()
@@ -151,9 +131,41 @@ const Page: NextPage<PageProps> = () => {
         setViewNavigation(window.innerWidth > 900);
       }
     }
+
     getViewCategories()
     getViewTemplates()
   }, [])
+
+  useEffect(() => {
+    const setSelectedCategoryFromUrl = async () => {
+      const categoryID = router.query.category_id;
+      if (categoryID) {
+        const index = textTemplates.findIndex((container: TemplatesContainer) => container.category_id === categoryID);
+        console.log("index", index)
+        if (index !== -1) {
+          setSelectedCategory(index);
+          console.log('Category index:', index);
+        } else {
+          console.log('Category not found');
+        }
+      }
+    }
+
+    setSelectedCategoryFromUrl();
+
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading) {
+      const findFirstFavourited = () => {
+        return textTemplates.filter(item => item.favourited && item)
+      }
+      console.log("findFirstFavourited", findFirstFavourited())
+      if (findFirstFavourited()[0]) {
+        setSelectedCategory(findFirstFavourited()[0].order)
+      }
+    }
+  }, [isLoading])
 
   /* eslint-disable react-hooks/exhaustive-deps */
   const handleSelectCategory = (index: number) => {
@@ -211,7 +223,7 @@ const Page: NextPage<PageProps> = () => {
     updateTemplatesState(categoryIndex, templateIndex, newTemplate, setTextTemplates)
   };
 
-  const handleCreateCategory = async (input = null) => {
+  const handleCreateCategory = async (input: string) => {
     if (!userID) {
       console.error("User ID is null.");
       return;

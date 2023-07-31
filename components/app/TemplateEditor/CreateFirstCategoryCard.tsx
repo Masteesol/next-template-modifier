@@ -18,7 +18,7 @@ interface CreateFirstCategoryCardProps {
 }
 
 const CreateFirstCategoryCard = (props: CreateFirstCategoryCardProps) => {
-    const [input, setInput] = useState<string | null>(null)
+    const [input, setInput] = useState<string>("")
 
     const {
         addCategory

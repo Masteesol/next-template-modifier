@@ -162,7 +162,7 @@ const SortingList = (props: CateGoryListTypes) => {
                 {!isEditing &&
                     <FlexRowEnd className="w-full">
                         <PlusButton
-                            onClick={addCategory}
+                            onClick={() => { addCategory("") }}
                         >
                             <BsPlusLg />
                         </PlusButton>

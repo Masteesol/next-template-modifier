@@ -366,17 +366,23 @@ export const createCategory = async (
     textTemplates: TemplatesContainer[],
     setTextTemplates: React.Dispatch<React.SetStateAction<TemplatesContainer[]>>,
     setSelectedCategory: React.Dispatch<React.SetStateAction<number>>,
-    input: string | null
+    input: string
 ) => {
     try {
+        const newID = uuidv4()
         const order = textTemplates.length
+        const body = {
+            category_id: newID,
+            category_name: input === "" ? "New Category" : input,
+            user_id: userID,
+            order: order
+        }
+
         const { data, error } = await supabase
             .from('categories')
-            .insert([{
-                category_name: input ? input : "New Category",
-                user_id: userID,
-                order: order
-            }])
+            .insert([
+                body
+            ])
             .select()
         if (data) {
             const newCategory = data[0]

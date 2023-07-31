@@ -207,21 +207,21 @@ const Page = () => {
         },
         body: JSON.stringify({ userID })
       })
-
+      console.log("Response", response)
       if (response.ok) {
         const data = await response.json()
-        console.log("Response")
-        //   const res = await supabase.auth.signOut();
-        //   Cookies.set("email", "");
-        //   Cookies.set("user_id", "")
-        //   console.log(response)
-        //   if (!res.error) {
-        //     window.location.href = "/"
-        //   }
-        // } else {
-        //   setIsLoading(false)
+        console.log("data", data)
+
+        const res = await supabase.auth.signOut();
+        Cookies.set("email", "");
+        Cookies.set("user_id", "")
+        console.log(response)
+        if (!res.error) {
+          window.location.href = "/"
+        }
+      } else {
+        setIsLoading(false)
         setDeleteTryAgain(true)
-        console.error('Error deleting user:', data)
       }
     }
     try {

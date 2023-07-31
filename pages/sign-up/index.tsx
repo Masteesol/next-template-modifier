@@ -76,18 +76,21 @@ const FormSignUp = ({ setIsLoading }: any) => {
             try {
                 setIsLoading(true)
                 const { data, error } = await supabase.auth.signUp({ email: email, password: newPassword });
-                if (data) {
+
+                if (data && data.user) {
+                    console.log("Sign up data")
                     const { error: userError } = await supabase
                         .from('users')
                         .insert([
                             {
-                                id: data.user?.id,
+                                id: data.user.id,
                                 first_name: firstName,
                                 last_name: lastName,
                             },
                         ]);
                     if (userError) {
                         console.log("error creating user table", userError)
+                        setIsLoading(false)
                     } else {
                         console.log("Created new account")
                         window.location.href = "/sign-up/confirm"
@@ -95,6 +98,7 @@ const FormSignUp = ({ setIsLoading }: any) => {
                 }
                 if (error) {
                     console.log("Error creating user")
+                    setIsLoading(false)
                 }
             } catch (error) {
                 setIsLoading(false)

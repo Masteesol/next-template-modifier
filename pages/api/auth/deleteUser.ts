@@ -15,10 +15,10 @@ export default async function handler(req: any, res: any) {
     if (key) {
         try {
             // // Delete user from 'categories'
-            // await supabase
-            //     .from('categories')
-            //     .delete()
-            //     .eq('user_id', userID)
+            await supabase
+                .from('categories')
+                .delete()
+                .eq('user_id', userID)
 
             // // Delete user from 'templates'
             // await supabase
@@ -35,11 +35,11 @@ export default async function handler(req: any, res: any) {
             const { data, error } = await supabase.auth.admin.deleteUser(userID)
 
             if (data) {
-                console.log("User deleted:", data)
+                console.log("Supabase: User deleted:", data)
                 res.status(200).json({ data: data })
             }
             if (error) {
-                console.log("Error deleting user:", error)
+                console.log("Supabase error: Error deleting user:", error)
                 res.status(500).json({ error: error.message })
             }
         } catch (error) {

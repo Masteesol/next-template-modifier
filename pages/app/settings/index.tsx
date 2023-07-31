@@ -210,22 +210,26 @@ const Page = () => {
 
       if (response.ok) {
         const data = await response.json()
-        console.log('User deleted:', data)
-        const res = await supabase.auth.signOut();
-        Cookies.set("email", "");
-        Cookies.set("user_id", "")
-        console.log(response)
-        if (!res.error) {
-          window.location.href = "/"
-        }
-      } else {
-        setIsLoading(false)
+        console.log("Response")
+        //   const res = await supabase.auth.signOut();
+        //   Cookies.set("email", "");
+        //   Cookies.set("user_id", "")
+        //   console.log(response)
+        //   if (!res.error) {
+        //     window.location.href = "/"
+        //   }
+        // } else {
+        //   setIsLoading(false)
         setDeleteTryAgain(true)
-        const error = await response.json()
-        console.error('Error deleting user:', error)
+        console.error('Error deleting user:', data)
       }
     }
-    deleteUserFrontend()
+    try {
+      deleteUserFrontend()
+    } catch (error) {
+      console.error("Error deleting user. Info: ", error)
+    }
+
   }
   const handleUpdatetNameInfo = async (e: any) => {
     const id = e.target.id

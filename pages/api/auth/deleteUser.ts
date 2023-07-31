@@ -14,23 +14,23 @@ export default async function handler(req: any, res: any) {
     console.log("UserID", userID)
     if (key) {
         try {
-            // Delete user from 'categories'
-            await supabase
-                .from('categories')
-                .delete()
-                .eq('user_id', userID)
+            // // Delete user from 'categories'
+            // await supabase
+            //     .from('categories')
+            //     .delete()
+            //     .eq('user_id', userID)
 
-            // Delete user from 'templates'
-            await supabase
-                .from('templates')
-                .delete()
-                .eq('user_id', userID)
+            // // Delete user from 'templates'
+            // await supabase
+            //     .from('templates')
+            //     .delete()
+            //     .eq('user_id', userID)
 
-            // Delete user from 'users'
-            await supabase
-                .from('users')
-                .delete()
-                .eq('id', userID)
+            // // Delete user from 'users'
+            // await supabase
+            //     .from('users')
+            //     .delete()
+            //     .eq('id', userID)
 
             const { data, error } = await supabase.auth.admin.deleteUser(userID)
 

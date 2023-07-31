@@ -26,7 +26,6 @@ import Cookies from "js-cookie";
 import {
   createCategory,
   createTemplate,
-  deleteCollectionTemplate,
   deletedCategory,
   deletedTemplate,
   updateCategory,
@@ -240,16 +239,12 @@ const Page: NextPage<PageProps> = () => {
     createTemplate(userID, textTemplates, setTextTemplates, selectedCategory, is_collection)
   }
 
-  const handleRemoveTemplate = async (index: number, template_id: string, is_collection = false) => {
+  const handleRemoveTemplate = async (index: number, template_id: string) => {
     if (!userID) {
       console.error("User ID is null.");
       return;
     }
-    if (is_collection) {
-      deleteCollectionTemplate(userID, textTemplates, setTextTemplates, selectedCategory, template_id, index)
-    } else {
-      deletedTemplate(userID, textTemplates, setTextTemplates, selectedCategory, template_id, index)
-    }
+    deletedTemplate(userID, textTemplates, setTextTemplates, selectedCategory, template_id, index)
 
   };
 

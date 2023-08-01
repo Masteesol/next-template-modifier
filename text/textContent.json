@@ -1,13 +1,13 @@
 {
     "landingPage": {
         "header": {
-            "title": "Template Modifier App",
+            "title": "Template Manager App",
             "tagline": "Simplify your workflow"
         },
         "gridContainers": [
             {
                 "title": "Streamline Your Process",
-                "content": "Enhance your productivity with our Template Modifier App. Save time on drafting repetitive texts and focus more on the tasks that matter.",
+                "content": "Enhance your productivity with our Template Manager App. Save time on drafting repetitive texts and focus more on the tasks that matter.",
                 "media": {
                     "type": "image",
                     "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1690881538/template-modifier/v2/use-case_wl4cua.jpg",

@@ -9,13 +9,13 @@ export const H1 = tw.h1`
 `;
 
 export const H2 = tw.h2`
-    text-2xl
-    lg:text-4xl
+    text-xl
+    lg:text-2xl
 `;
 
 export const H3 = tw.h3`
-    text-2xl
-    lg:3xl
+    text-lg
+    lg:text-xl
 `;
 
 //Buttons
@@ -391,6 +391,11 @@ export const GridSm1Lg2 = tw.div`
     grid 
     grid-cols-1 
     lg:grid-cols-2
+`
+export const GridSm1Md2 = tw.div`
+    grid 
+    grid-cols-1 
+    md:grid-cols-2
 `
 
 //Form styling

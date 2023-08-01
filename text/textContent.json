@@ -10,7 +10,7 @@
                 "content": "Enhance your productivity with our Template Modifier App. Save time on drafting repetitive texts and focus more on the tasks that matter.",
                 "media": {
                     "type": "image",
-                    "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1689073283/template-modifier/use-case_mll9qc.jpg",
+                    "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1690881538/template-modifier/v2/use-case_wl4cua.jpg",
                     "alt": "customer using the app"
                 }
             },
@@ -28,7 +28,7 @@
                 "content": "The Template Modifier App is designed for professionals who regularly deal with structured text formats. It's a tool to simplify and optimize your workflow.",
                 "media": {
                     "type": "image",
-                    "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1689073551/template-modifier/use-case2_vvx444.jpg",
+                    "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1690881538/template-modifier/v2/collections_tgqlsi.png",
                     "alt": "customer using the app"
                 }
             },
@@ -55,5 +55,85 @@
             "title": "FAQs",
             "content": "Got questions? We have answers."
         }
-    }
+    },
+    "tutorial" : {
+        "summary": {
+            "title": "Get started",
+            "content": "The template manager app is a lightweight template manager. The two main components you should know of are single templates and template collections. These two elements are similar, but provide different functionality and serve different purposes."
+        },
+        "collections": {
+            "about": {
+
+                    "title": "Template Collections",
+                    "content": "Template collections are meant for smaller amount of text and is ideal for fast paced work situations like customer service chat, where you have basic sentences which are repeated for each customer.",
+                    "comment": "Template collections are different to single templates as they don't have the placeholders.",
+                    "media": {
+                        "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1690882562/template-modifier/tutorial/template-card-collection-tut_r0qbqm.jpg",
+                        "alt": "collection-card-about"
+                    }
+            },
+            "editText": {
+                "title": "How to add and edit text",
+                "content": "When you click the edit icon, you will enter the editing mode. By clicking the plus button, you will add a new collection item.",
+                "comment": "The changes is saved automatically.",
+                "media": {
+                    "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1690881564/template-modifier/tutorial/template-card-collection-edit_qgdma5.jpg",
+                    "alt": "collection-card-edit-text"
+                }
+            },
+            "editOrder": {
+                "title": "How to edit list order",
+                "content": "By clicking the list icon you enter a view where you can change the list order by dragging and dropping the collection items.",
+                "media": {
+                    "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1690881564/template-modifier/tutorial/template-card-collection-edit.order_co1mro.jpg",
+                    "alt": "collection-card-edit-order"
+                }
+            }
+        },
+        "singles": {
+            "about": {
+                    "title": "Single Templates",
+                    "content": "With single templates you can add inline placeholders and are ideal for situations like email and sms templates, where information like names and case number/order number varies, but the rest of the text remains the same.",
+                    "media": {
+                        "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1690881565/template-modifier/tutorial/template-card-single-tut_qqlesw.jpg",
+                        "alt": "single-card-about"
+                    }
+            },
+            "editText": {
+                "title": "Edit mode",
+                "content": "In edit mode you can edit your template text template settings. To indicate where the inline placeholders should be, use the # symbol. When you do this, you will see an input field getting added above the text field, which will be active once you exit edit mode.",
+                "comment": "Changes are not auto saved.",
+                "media": {
+                    "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1690881564/template-modifier/tutorial/template-card-single-edit_jbqtz8.jpg",
+                    "alt": "single-card-edit"
+                }
+            },
+            "editLimiters": {
+                "title": "Set word and character limiters",
+                "content": "The character and word limiters is a nice way to track the length of your template, especially when you are working with in situations which enforce minimum and maximum text character length.",
+                "media": {
+                    "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1690881564/template-modifier/tutorial/single-card-set-limiters_k2jvpr.jpg",
+                    "alt": "single-card-set-limiters"
+                }
+            },
+            "editLimitersActive": {
+               
+                "content": "In the footer of the single template card, you will see the current character count and the character and word limiters you set. If you reach the limit, the text color will first change to yellow and then red if you surpass the limit.",
+                "media": [
+                    {
+                        "title": "Limiters active - empty placeholders",
+                        "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1690881564/template-modifier/tutorial/limiters-active-empty_xfpyyx.jpg",
+                        "alt": "single-card-limiters-active-empty"
+                    },
+                    {
+                        "title": "Limiters active - filled placeholders",
+                        "link": "https://res.cloudinary.com/dedym3sfv/image/upload/v1690881564/template-modifier/tutorial/limiters-active-filled_ogyf16.jpg",
+                        "alt": "single-card-limiters-active-filled"
+                    }
+
+                ] 
+            }
+        }
+       
+    }    
 }

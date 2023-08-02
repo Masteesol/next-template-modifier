@@ -17,7 +17,10 @@ import {
     H3
 } from "@/components/shared/styled-global-components";
 
-const prismatixLogoUrl = "https://res.cloudinary.com/dedym3sfv/image/upload/v1690978132/PRISMATIX/PRISMATIX-LOGO_ih4tm5.png"
+//const prismatixLogoUrl = "https://res.cloudinary.com/dedym3sfv/image/upload/v1690978132/PRISMATIX/PRISMATIX-LOGO_ih4tm5.png"
+const prismatixLogoUrlWhite = "https://res.cloudinary.com/dedym3sfv/image/upload/v1690987771/PRISMATIX/prismatix_logo_white_av3tos.png"
+const skylineUrl = "https://res.cloudinary.com/dedym3sfv/image/upload/v1690988286/PRISMATIX/skyline_azvfmm.jpg"
+
 const Page = () => {
     //const { t } = useTranslation("common");
     return (
@@ -30,15 +33,19 @@ const Page = () => {
             </Head>
             <PageLayout>
                 <FlexColCentered className="w-full">
-                    <FlexColCentered className="w-full min-h-[30rem]">
-                        <Image src={prismatixLogoUrl} alt="prismatix-url" width={500} height={500} />
+                    <FlexColCentered
+                        className="w-full h-[30rem] p-8 relative"
+                        style={{ backgroundImage: `url(${skylineUrl})`, backgroundPosition: "center", backgroundSize: "cover" }}
+                    >
+                        <div
+                            className="z-40 opacity-70 absolute w-full h-full"
+                            style={{ backgroundImage: "radial-gradient(white, #3f1c4f)" }}
+                        ></div>
+                        <Image src={prismatixLogoUrlWhite} className="relative z-50" alt="prismatix-url" width={800} height={500} />
                     </FlexColCentered>
 
                     <FlexColContainer className="max-w-[1000px] w-full gap-8 text-sm md:text-base p-2 md:p-4">
-
-
                         <H1>About Templify and Prismatix</H1>
-
                         <FlexColContainer className="gap-2">
                             <H2>Prismatix</H2>
                             <p>Prismatix is a small development company founded by Marius Solheim in the summer of 2023. Prismatix specializes in delivering web applications which offer immersive user experiences through clean and modern design.

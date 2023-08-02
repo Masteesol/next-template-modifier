@@ -13,7 +13,7 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "@/public/logo.png"
 import { AuthContext } from "@/context/AuthContext";
-import { SideBarDataType, SidebarDataAuth } from "@/components/shared/Layout/constants";
+import { SideBarAbout, SideBarDataType, SidebarDataAuth } from "@/components/shared/Layout/constants";
 
 const Sidebar = tw.aside`
   h-full
@@ -50,8 +50,6 @@ const SidebarData: SideBarDataType[] = [
     text: "Getting Started"
   },
 ]
-
-
 
 const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
   //const { t } = useTranslation("common");
@@ -101,10 +99,24 @@ const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
                       }
                     </div>
                   </SideBarItemContainer>
-
                 </FlexRowCenteredY>
               </Link>
             })}
+            <Link href={SideBarAbout.path} key={`sidebar-item-about`} className="mt-auto mb-8">
+              <FlexRowCenteredY className="relative group">
+                <SideBarItemContainer className="w-full cursor-pointer">
+                  <div className="flex flex- justify-center relative p-2 w-full">
+                    <FlexRowCenteredY className="gap-2">
+                      {router.pathname.startsWith(SideBarAbout.path)
+                        ? <SideBarAbout.IconFill className="h-6 w-6" />
+                        : <SideBarAbout.IconOutline className="h-6 w-6" />
+                      }
+                      <span className="text-base overflow-hidden overflow-ellipsis whitespace-nowrap">{SideBarAbout.text}</span>
+                    </FlexRowCenteredY>
+                  </div>
+                </SideBarItemContainer>
+              </FlexRowCenteredY>
+            </Link>
           </FlexColContainer>
         </Sidebar >
       </div >

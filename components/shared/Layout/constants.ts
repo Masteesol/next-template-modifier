@@ -6,6 +6,8 @@ import {
     BsPersonFill,
     BsCreditCard2FrontFill,
     BsCreditCard2Front,
+    BsTriangleHalf,
+    BsTriangleFill
 } from "react-icons/bs";
 import { MdDashboard, MdOutlineDashboard } from "react-icons/md";
 export interface SideBarDataType {
@@ -42,3 +44,10 @@ export const SidebarDataAuth: SideBarDataType[] = [
         text: "Subscriptions"
     },
 ]
+
+export const SideBarAbout: SideBarDataType = {
+    path: "/landing/about",
+    IconOutline: BsTriangleHalf,
+    IconFill: BsTriangleFill,
+    text: "About Us"
+}

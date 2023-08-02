@@ -19,6 +19,7 @@ import {
     BsFileEarmarkText,
     BsPerson,
     BsCreditCard2Front,
+    BsRocketTakeoff,
 } from "react-icons/bs";
 
 import { fetchTemplatesForUser } from "@/requests/templates";
@@ -37,8 +38,8 @@ const quickLinksData = [
     },
     {
         path: "/app/templates/tutorial",
-        text: "Tutorial",
-        icon: <BsFileEarmarkText />,
+        text: "Getting Started",
+        icon: <BsRocketTakeoff />,
         color: "hover:border-indigo-400 hover:text-indigo-400"
     },
     {

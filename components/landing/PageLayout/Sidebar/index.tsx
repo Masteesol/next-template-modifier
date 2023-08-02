@@ -23,8 +23,7 @@ const Sidebar = tw.aside`
   text-base
   bg-white
   dark:bg-slate-900
-  absolute
-  md:relative
+  relative
   z-[8000]
 `;
 
@@ -70,7 +69,7 @@ const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
       <div className="h-full">
         <Sidebar className={`${isOpen ? "w-[12rem] px-2" : "w-[0rem] overflow-hidden"} transition-all ease-in-out duration-200 text-2xl`}>
           <FlexColContainer className="w-full h-full">
-            <Link href="/" className="flex flex-col items-center relative p-2">
+            <Link href="/" className="flex flex-col items-center p-2">
               <Image src={logo} alt="logo" height={30} width={30} />
             </Link>
             <DividerHorizontal />

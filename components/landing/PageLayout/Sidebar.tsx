@@ -102,21 +102,25 @@ const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
                 </FlexRowCenteredY>
               </Link>
             })}
-            <Link href={SideBarAbout.path} key={`sidebar-item-about`} className="mt-auto mb-8">
-              <FlexRowCenteredY className="relative group">
-                <SideBarItemContainer className="w-full cursor-pointer">
-                  <div className="flex flex- justify-center relative p-2 w-full">
-                    <FlexRowCenteredY className="gap-2">
-                      {router.pathname.startsWith(SideBarAbout.path)
-                        ? <SideBarAbout.IconFill className="h-6 w-6" />
-                        : <SideBarAbout.IconOutline className="h-6 w-6" />
-                      }
-                      <span className="text-base overflow-hidden overflow-ellipsis whitespace-nowrap">{SideBarAbout.text}</span>
-                    </FlexRowCenteredY>
-                  </div>
-                </SideBarItemContainer>
-              </FlexRowCenteredY>
-            </Link>
+            <FlexColContainer className="mt-auto mb-[8rem] gap-4">
+              <DividerHorizontal className="border-gray-200" />
+              <Link href={SideBarAbout.path} key={`sidebar-item-about`}>
+                <FlexRowCenteredY className="relative group">
+                  <SideBarItemContainer className="w-full cursor-pointer">
+                    <div className="flex flex- justify-center relative p-2 w-full">
+                      <FlexRowCenteredY className="gap-2">
+                        {router.pathname.startsWith(SideBarAbout.path)
+                          ? <SideBarAbout.IconFill className="h-6 w-6" />
+                          : <SideBarAbout.IconOutline className="h-6 w-6" />
+                        }
+                        <span className="text-base overflow-hidden overflow-ellipsis whitespace-nowrap">{SideBarAbout.text}</span>
+                      </FlexRowCenteredY>
+                    </div>
+                  </SideBarItemContainer>
+                </FlexRowCenteredY>
+              </Link>
+            </FlexColContainer>
+
           </FlexColContainer>
         </Sidebar >
       </div >

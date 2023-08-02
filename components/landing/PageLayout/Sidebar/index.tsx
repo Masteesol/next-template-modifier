@@ -1,5 +1,9 @@
-import { useEffect, useCallback, useState } from "react";
+import { useContext } from "react";
 import { useRouter } from "next/router"
+import {
+  BsRocketTakeoff,
+  BsRocketTakeoffFill
+} from "react-icons/bs";
 
 import tw from "tailwind-styled-components";
 import { FlexRowCenteredY, FlexColContainer, DividerHorizontal } from "@/components/shared/styled-global-components";
@@ -8,8 +12,8 @@ import Link from "next/link";
 //import { translateOrDefault } from "@/utils/i18nUtils";
 import Image from "next/image";
 import logo from "@/public/logo.png"
-import { HoverLabel } from "@/components/app/TemplateEditor/EditorCard/styles";
-import { SidebarDataAuth } from "@/components/shared/Layout/constants";
+import { AuthContext } from "@/context/AuthContext";
+import { SideBarDataType, SidebarDataAuth } from "@/components/shared/Layout/constants";
 
 const Sidebar = tw.aside`
   h-full
@@ -39,84 +43,38 @@ interface SideBarProps {
 }
 
 
+const SidebarData: SideBarDataType[] = [
+  {
+    path: "/landing/tutorial",
+    IconOutline: BsRocketTakeoff,
+    IconFill: BsRocketTakeoffFill,
+    text: "Getting Started"
+  },
+]
+
+
+
 const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
   //const { t } = useTranslation("common");
   const router = useRouter();
 
-  const [isMobile, setIsMobile] = useState(false);
-
-
   const closeSidebar = () => {
     setIsOpen(false);
   };
-  const handleResize = useCallback(() => {
-    if (window.innerWidth >= 768) {
-      setIsOpen(true);
-      setIsMobile(false);
-    } else {
-      setIsOpen(false);
-      setIsMobile(true);
-    }
-  }, [setIsOpen]);
-
-  useEffect(() => {
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [handleResize]);
-
+  const { isAuthenticated } = useContext(AuthContext)
+  const SidebarDataFull = isAuthenticated ? [...SidebarData, ...SidebarDataAuth] : SidebarData
+  console.log(SidebarDataFull)
   return (
-    <div className="relative h-full">
-      {/**DESKTOP */}
-      <div className="hidden md:block">
-        <Sidebar>
-          <FlexColContainer className="w-full items-center text-2xl">
-            <Link href="/" className="flex flex-col items-center relative p-2">
-              <Image src={logo} alt="logo" height={30} width={30} />
-            </Link>
-            <DividerHorizontal />
-            {SidebarDataAuth.map((item, index) => {
-              const {
-                path,
-                IconOutline,
-                IconFill,
-                text } = item
-              return <Link href={path} key={`sidebar-item-${index}`}>
-                <FlexRowCenteredY className="relative group">
-                  <SideBarItemContainer >
-                    <div className="flex flex-col items-center relative p-2">
-                      {index === 0 ?
-                        <div>
-                          {router.pathname === path
-                            ? <IconFill />
-                            : <IconOutline />
-                          }
-                        </div>
-                        : <div>
-                          {router.pathname.startsWith(path)
-                            ? <IconFill />
-                            : <IconOutline />
-                          }
-                        </div>
-                      }
-                    </div>
-                  </SideBarItemContainer>
-                  <HoverLabel className="group-hover:block left-11 top-3 w-[5rem]">{text}</HoverLabel>
-                </FlexRowCenteredY>
-              </Link>
-            })}
-          </FlexColContainer>
-        </Sidebar>
-      </div>
+    <div className="h-full absolute right-0">
       {/**MOBILE DEVICES */}
-      <div className="md:hidden">
+      <div className="h-full">
         <Sidebar className={`${isOpen ? "w-[12rem] px-2" : "w-[0rem] overflow-hidden"} transition-all ease-in-out duration-200 text-2xl`}>
           <FlexColContainer className="w-full h-full">
             <Link href="/" className="flex flex-col items-center relative p-2">
               <Image src={logo} alt="logo" height={30} width={30} />
             </Link>
             <DividerHorizontal />
-            {SidebarDataAuth.map((item, index) => {
+            {SidebarDataFull.map((item, index) => {
               const {
                 path,
                 IconOutline,
@@ -153,7 +111,7 @@ const SidebarElement = ({ isOpen, setIsOpen }: SideBarProps) => {
       </div >
 
       {
-        isMobile && isOpen && (
+        isOpen && (
           <div
             className="fixed top-0 left-0 w-screen h-screen z-[7000] bg-overlay-dark cursor-pointer"
             onClick={closeSidebar}

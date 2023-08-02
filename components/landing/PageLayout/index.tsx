@@ -6,6 +6,8 @@ import {
 } from "@/components/shared/styled-global-components";
 import TopBar from "./TopBar";
 import { LoadingContext } from '@/context/LoadingContext';
+import { useState } from "react"
+import Sidebar from "@/components/landing/PageLayout/Sidebar"
 
 interface PageLayoutProps {
     children: React.ReactNode;
@@ -13,11 +15,16 @@ interface PageLayoutProps {
 
 const PageLayout = ({ children }: PageLayoutProps) => {
     const { isLoading } = useContext(LoadingContext);
+    const [isOpen, setIsOpen] = useState(false);
     return (
-        <div className="h-[100vh]">
-            <FlexRowContainer className="text-black dark:text-white ">
+        <div className="h-[100vh] relative">
+            <FlexRowContainer className="text-black dark:text-white h-full">
+
                 <FlexColContainer className="w-full ">
-                    <TopBar />
+                    <TopBar
+                        isOpen={isOpen}
+                        setIsOpen={setIsOpen}
+                    />
                     <FlexColContainer
                         id="main"
                         style={{ height: `calc(100vh - 41px)` }}
@@ -34,6 +41,7 @@ const PageLayout = ({ children }: PageLayoutProps) => {
                         }
                     </FlexColContainer>
                 </FlexColContainer>
+                <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
             </FlexRowContainer>
         </div>
     );

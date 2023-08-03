@@ -6,8 +6,6 @@ import PageLayout from "@/components/landing/PageLayout";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { GetServerSideProps } from 'next';
 //import { translateOrDefault } from "@/utils/i18nUtils";
-//import Tutorial from "@/components/app/TemplateEditor/Tutorial/TemplateCardStandAlone";
-
 import {
     FlexColCentered,
     FlexColContainer,
@@ -17,9 +15,7 @@ import {
     H3
 } from "@/components/shared/styled-global-components";
 
-//const prismatixLogoUrl = "https://res.cloudinary.com/dedym3sfv/image/upload/v1690978132/PRISMATIX/PRISMATIX-LOGO_ih4tm5.png"
-const prismatixLogoUrlWhite = "https://res.cloudinary.com/dedym3sfv/image/upload/v1690987771/PRISMATIX/prismatix_logo_white_av3tos.png"
-const skylineUrl = "https://res.cloudinary.com/dedym3sfv/image/upload/v1690988286/PRISMATIX/skyline_azvfmm.jpg"
+const prismatixLogoUrlWhite = "https://res.cloudinary.com/dedym3sfv/image/upload/v1691052564/PRISMATIX/LOGO_PRISMAX_2_b9feik.png"
 
 const Page = () => {
     //const { t } = useTranslation("common");
@@ -34,12 +30,10 @@ const Page = () => {
             <PageLayout>
                 <FlexColCentered className="w-full">
                     <FlexColCentered
-                        className="w-full h-[30rem] p-8 relative"
-                        style={{ backgroundImage: `url(${skylineUrl})`, backgroundPosition: "center", backgroundSize: "cover" }}
+                        className="w-full h-[20rem] p-8 relative bg-white"
                     >
                         <div
                             className="z-40 opacity-70 absolute w-full h-full"
-                            style={{ backgroundImage: "radial-gradient(white, #3f1c4f)" }}
                         ></div>
                         <Image src={prismatixLogoUrlWhite} className="relative z-50" alt="prismatix-url" width={800} height={500} />
                     </FlexColCentered>

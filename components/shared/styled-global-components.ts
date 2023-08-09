@@ -84,6 +84,12 @@ export const PlusButton = tw.button`
     ${({ disabled }) => (disabled && "bg-gray-200 text-gray-500 cursor-not-allowed")}
 `
 
+export const BrightButton = tw(GenericButton)`
+bg-green-50
+text-green-900
+`;
+
+
 export const InputBase = tw.input`
   border-1 
   border-transparent

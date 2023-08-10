@@ -33,7 +33,6 @@ const TutorialComponent = () => {
 }
 
 
-
 interface StepperTypes {
     title: string;
     active: boolean

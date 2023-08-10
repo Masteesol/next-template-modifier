@@ -19,6 +19,7 @@ interface props {
     stagedTemplate: any;
     setStagedTemplate: any;
     textTemplate: any;
+    isTutorial: boolean;
 
 }
 
@@ -30,6 +31,7 @@ const TemplatesSettingsSection = (props: props) => {
         stagedTemplate,
         textTemplate,
         setStagedTemplate,
+        isTutorial
     } = props
 
     const handleWordChange = (e: any) => {
@@ -66,12 +68,12 @@ const TemplatesSettingsSection = (props: props) => {
                             <FlexColContainer className="gap-4">
                                 <FlexRowCenteredY className="justify-between">
                                     <h4 className="text-sm text-gray-500">Word Limit</h4>
-                                    {!textTemplate.word_limit && <Badge color="warning">Not set</Badge>}
+                                    {!textTemplate.word_limit && !isTutorial && <Badge color="warning">Not set</Badge>}
                                 </FlexRowCenteredY>
                                 <FlexRowCenteredY className={`${!stagedTemplate.limiter_active ? "bg-gray-300" : "bg-slate-50"}  rounded dark:bg-slate-800`}>
                                     <CardInput
                                         type="number"
-                                        placeholder="For example 40"
+                                        placeholder={isTutorial ? "40..." : "For example 40"}
                                         className={`${!stagedTemplate.limiter_active && "bg-gray-300"} p-2 w-full`}
                                         value={stagedTemplate?.word_limit ? stagedTemplate?.word_limit : ""}
                                         onChange={handleWordChange}
@@ -106,11 +108,11 @@ const TemplatesSettingsSection = (props: props) => {
                             <FlexColContainer className="gap-4">
                                 <FlexRowCenteredY className="justify-between">
                                     <h4 className="text-sm text-gray-500">Character Limit</h4>
-                                    {!textTemplate.char_limit && <Badge color="warning">Not set</Badge>}
+                                    {!textTemplate.char_limit && !isTutorial && < Badge color="warning">Not set</Badge>}
                                 </FlexRowCenteredY>
                                 <FlexRowCenteredY className={`${!stagedTemplate.limiter_active ? "bg-gray-300" : "bg-slate-50"}  rounded dark:bg-slate-800`}>
                                     <CardInput
-                                        placeholder="For example 200"
+                                        placeholder={isTutorial ? "200..." : "For example 200"}
                                         className={`${!stagedTemplate.limiter_active && "bg-gray-300"} p-2 w-full`}
                                         type="number"
                                         value={stagedTemplate?.char_limit ? stagedTemplate?.char_limit : ""}

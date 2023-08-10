@@ -49,7 +49,9 @@ interface TemplateCardProps {
     handleRemoveTemplate: any;
     userID: string | undefined;
     subscriptionLimits: any;
+    isTutorial: boolean;
 }
+
 
 const TemplateCard = (props: TemplateCardProps, ref: any) => {
     const { setTextTemplates } = useContext(TemplatesContext);
@@ -61,6 +63,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
         handleRemoveTemplate,
         userID,
         subscriptionLimits,
+        isTutorial
     } = props;
 
     const templateIndex = index
@@ -175,12 +178,14 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                 const newCopyCount = copyCount + 1
                 setHasBeenCopied(true);
                 setCopyCount(newCopyCount)
-                delayedUpdateTemplateMetaData(
-                    template.template_id,
-                    userID,
-                    newCopyCount,
-                    setSaveStatus
-                )
+                if (!isTutorial) {
+                    delayedUpdateTemplateMetaData(
+                        template.template_id,
+                        userID,
+                        newCopyCount,
+                        setSaveStatus
+                    )
+                }
                 setTextTemplate({ ...textTemplate, copy_count: newCopyCount })
                 setTimeout(() => setHasBeenCopied(false), 2000);
             })
@@ -292,12 +297,16 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                 stagedTemplate={stagedTemplate}
                                 setStagedTemplate={setStagedTemplate}
                                 textTemplate={textTemplate}
+                                isTutorial={isTutorial}
                             />
                             {/**--AI TEXT GENERATION AREA-- */}
-                            <AITextGenerationSection
-                                expandedAI={expandedAI}
-                                setExpandedAI={setExpandedAI}
-                            />
+                            <div className="hidden">
+                                <AITextGenerationSection
+                                    expandedAI={expandedAI}
+                                    setExpandedAI={setExpandedAI}
+                                />
+                            </div>
+
                         </FlexColContainer>
                         <FlexRowContainer className="w-full h-full gap-2">
                             <TextArea className="p-4 min-h-[15rem] w-full"
@@ -333,6 +342,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                             textTemplate={textTemplate}
                             categoryIndex={categoryIndex}
                             userID={userID}
+                            isTutorial={isTutorial}
                         />
                     </FlexRowContainer>
                 }

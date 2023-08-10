@@ -38,7 +38,7 @@ const EditModeToolbar = (props: ComponentProps) => {
 
     return (
         <FlexColCenteredX>
-            <div className="group relative">
+            <div className="group relative hidden">
                 <IconContainerNormal
                     className={`${expandedAI && "bg-green-200 text-green-900"}`}
                     onClick={() => { setExpandedAI(!expandedAI) }}

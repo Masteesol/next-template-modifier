@@ -17,6 +17,7 @@ import Image from "next/image";
 import logo from "@/public/logo.png"
 import textContent from "@/text/textContent.json"
 import { BsCheckLg } from "react-icons/bs";
+import TemplateCardStandAlone from "../app/TemplateEditor/Tutorial/StandAloneTemplate";
 const LandingPageContent = () => {
     const text = textContent.landingPage
     //const { t } = useTranslation("common");
@@ -64,13 +65,11 @@ const LandingPageContent = () => {
                         </FlexRowCenteredY>
 
                         {/* App demo */}
-                        <FlexColContainer className="items-center relative w-full gap-4 flex-1 text-white justify-center md:justify-end ">
-                            <h2 className="font-bold">Try it for yourself</h2>
-                            <img
-                                className="z-10 max-h-80 w-full"
-                                src="https://camo.githubusercontent.com/345ac87181d4b07096cb3702c68a473210ed0229cbff3c949a70c61ca503e91f/687474703a2f2f692e696d6775722e636f6d2f74514f52624f462e706e67"
-                                alt=""
-                            />
+                        <FlexColContainer className="items-center relative w-full gap-4 flex-1 justify-center md:justify-end text-white">
+                            <h2 className="font-bold text-white">Try it for yourself!</h2>
+                            <div className="text-black">
+                                <TemplateCardStandAlone />
+                            </div>
                             <FlexColRowContainer>
                                 <p>
                                     Need a tour? Click{" "}

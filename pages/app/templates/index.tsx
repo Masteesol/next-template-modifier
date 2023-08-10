@@ -378,6 +378,8 @@ const Page: NextPage<PageProps> = () => {
                                         ref={templateRefs[templateIndex]}
                                         userID={userID}
                                         subscriptionLimits={subscriptionLimits}
+                                        isTutorial={false}
+
                                       />
                                     } else {
                                       return <TemplateCollectionsCard
@@ -415,6 +417,8 @@ const Page: NextPage<PageProps> = () => {
                                     ref={templateRefs[templateIndex]}
                                     userID={userID}
                                     subscriptionLimits={subscriptionLimits}
+                                    isTutorial={false}
+
                                   />
                                 } else {
                                   return <TemplateCollectionsCard

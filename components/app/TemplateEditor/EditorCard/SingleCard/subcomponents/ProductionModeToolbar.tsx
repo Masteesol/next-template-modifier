@@ -69,17 +69,22 @@ const ProductionModeToolbar = (props: ComponentProps) => {
 
     return (
         <FlexColContainer>
-            <div className="group relative">
-                <IconContainerNormal onClick={handleSetFavourited} disabled={false}>
-                    {!textTemplate.favourited
-                        ?
-                        <BsStar className="text-xl" />
-                        :
-                        <BsStarFill className="text-xl text-green-500" />
-                    }
-                    <HoverLabel className={!textTemplate.favourited ? "w-[7rem]" : "w-[4rem]"}>{!textTemplate.favourited ? "Add to favourites" : "Remove"}</HoverLabel>
-                </IconContainerNormal>
-            </div>
+            {!isTutorial
+                &&
+                <div className="group relative">
+                    <IconContainerNormal onClick={handleSetFavourited} disabled={false}>
+                        {!textTemplate.favourited
+                            ?
+                            <BsStar className="text-xl" />
+                            :
+                            <BsStarFill className="text-xl text-green-500" />
+                        }
+                        <HoverLabel className={!textTemplate.favourited ? "w-[7rem]" : "w-[4rem]"}>{!textTemplate.favourited ? "Add to favourites" : "Remove"}</HoverLabel>
+                    </IconContainerNormal>
+                </div>
+
+            }
+
             <FlexColContainer className="mt-auto">
                 <div className="group relative">
                     <IconContainerNormal onClick={handleEditActive} disabled={false}>

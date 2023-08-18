@@ -17,7 +17,8 @@ interface ComponentProps {
     template: any;
     isUnSaved: boolean;
     userID: any;
-    categoryIndex: number
+    categoryIndex: number;
+    isTutorial: boolean
 }
 
 
@@ -35,7 +36,8 @@ const Topbar = (props: ComponentProps) => {
         template,
         isUnSaved,
         userID,
-        categoryIndex
+        categoryIndex,
+        isTutorial
     } = props
 
 
@@ -67,39 +69,47 @@ const Topbar = (props: ComponentProps) => {
                         </FlexRowCenteredY>
 
                     </FlexRowCenteredY>
-                    <div className="grid grid-cols-2 md:grid-cols-4 w-full gap-2">
-                        <FlexColContainer className="text-xs gap-2">
-                            <h4 className="text-gray-500">Title</h4>
-                            <InputBase
-                                type="text"
-                                value={stagedTemplate.title}
-                                className="text-xs rounded border-0 bg-slate-50 dark:bg-slate-800 px-4 py-2"
-                                onChange={handleTitleChange}
-                                maxLength={generalInputCountRestrictions.titles}
-                                placeholder="Template Title..."
+                    {!isTutorial
+                        &&
+                        <div className="grid grid-cols-2 md:grid-cols-4 w-full gap-2">
+                            <FlexColContainer className="text-xs gap-2">
+                                <h4 className="text-gray-500">Title</h4>
+                                <InputBase
+                                    type="text"
+                                    value={stagedTemplate.title}
+                                    className="text-xs rounded border-0 bg-slate-50 dark:bg-slate-800 px-4 py-2"
+                                    onChange={handleTitleChange}
+                                    maxLength={generalInputCountRestrictions.titles}
+                                    placeholder="Template Title..."
+                                />
+                            </FlexColContainer>
+                            <CategorySelector
+                                textTemplates={textTemplates}
+                                changeCategoryForTemplate={changeCategoryForTemplate}
+                                categoryIndex={categoryIndex}
+                                theme="primary"
                             />
-                        </FlexColContainer>
-                        <CategorySelector
-                            textTemplates={textTemplates}
-                            changeCategoryForTemplate={changeCategoryForTemplate}
-                            categoryIndex={categoryIndex}
-                            theme="primary"
-                        />
 
-                    </div>
+                        </div>
+                    }
+
                 </FlexColContainer>
                 :
                 <FlexRowCenteredY className="justify-between gap-4">
                     <h3 className="text-xl font-bold">
                         {textTemplate.title.length > 25 ? `${textTemplate.title.substring(0, 25)}...` : `${textTemplate.title}`}
                     </h3>
-                    <DeleteTemplateButton
-                        clickedOnce={clickedOnce}
-                        setClickedOnce={setClickedOnce}
-                        template={template}
-                        handleRemoveTemplate={handleRemoveTemplate}
-                        index={index}
-                    />
+                    {!isTutorial
+                        &&
+                        <DeleteTemplateButton
+                            clickedOnce={clickedOnce}
+                            setClickedOnce={setClickedOnce}
+                            template={template}
+                            handleRemoveTemplate={handleRemoveTemplate}
+                            index={index}
+                        />
+                    }
+
                 </FlexRowCenteredY>
             }
 

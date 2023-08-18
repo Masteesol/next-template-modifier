@@ -265,6 +265,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                     isUnSaved={isUnSaved}
                     userID={userID}
                     categoryIndex={categoryIndex}
+                    isTutorial={isTutorial}
                 />
                 <DividerHorizontal />
                 {isEditActive &&
@@ -309,7 +310,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
 
                         </FlexColContainer>
                         <FlexRowContainer className="w-full h-full gap-2">
-                            <TextArea className="p-4 min-h-[15rem] w-full"
+                            <TextArea className={`${isTutorial ? "min-h-[10rem]" : "min-h-[15rem]"} p-4  w-full`}
                                 value={stagedTemplate.text}
                                 onChange={handleTextChange}
                             />
@@ -324,6 +325,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                                 charLimitExceeded={charLimitExceeded}
                                 isUnSaved={isUnSaved}
                                 handleRevertChanges={handleRevertChanges}
+                                isTutorial={isTutorial}
                             />
                         </FlexRowContainer>
                     </FlexColContainer>

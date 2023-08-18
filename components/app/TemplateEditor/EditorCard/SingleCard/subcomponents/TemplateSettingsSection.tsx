@@ -73,7 +73,7 @@ const TemplatesSettingsSection = (props: props) => {
                                 <FlexRowCenteredY className={`${!stagedTemplate.limiter_active ? "bg-gray-300" : "bg-slate-50"}  rounded dark:bg-slate-800`}>
                                     <CardInput
                                         type="number"
-                                        placeholder={isTutorial ? "40..." : "For example 40"}
+                                        placeholder={"For example 40"}
                                         className={`${!stagedTemplate.limiter_active && "bg-gray-300"} p-2 w-full`}
                                         value={stagedTemplate?.word_limit ? stagedTemplate?.word_limit : ""}
                                         onChange={handleWordChange}

@@ -20,6 +20,7 @@ interface ComponentProps {
     charLimitExceeded: boolean;
     isUnSaved: boolean;
     handleRevertChanges: any
+    isTutorial: boolean
 }
 
 const EditModeToolbar = (props: ComponentProps) => {
@@ -33,11 +34,13 @@ const EditModeToolbar = (props: ComponentProps) => {
         handleEditActive,
         charLimitExceeded,
         isUnSaved,
-        handleRevertChanges
+        handleRevertChanges,
+        isTutorial
     } = props
 
     return (
         <FlexColCenteredX>
+
             <div className="group relative hidden">
                 <IconContainerNormal
                     className={`${expandedAI && "bg-green-200 text-green-900"}`}
@@ -48,16 +51,21 @@ const EditModeToolbar = (props: ComponentProps) => {
                     <HoverLabel className="w-[6rem] ">Generate Text</HoverLabel>
                 </IconContainerNormal>
             </div>
-            <div className="group relative">
-                <IconContainerNormal
-                    onClick={() => { setExpandedTextSettings(!expandedTextSettings) }}
-                    disabled={expandedAI}
-                    className={`${expandedTextSettings && "bg-green-200 text-green-900"}`}
-                >
-                    <BsSliders className="text-2xl" />
-                    <HoverLabel className="w-[8rem] ">Template Settings</HoverLabel>
-                </IconContainerNormal>
-            </div>
+
+            {!isTutorial
+                &&
+                <div className="group relative">
+                    <IconContainerNormal
+                        onClick={() => { setExpandedTextSettings(!expandedTextSettings) }}
+                        disabled={expandedAI}
+                        className={`${expandedTextSettings && "bg-green-200 text-green-900"}`}
+                    >
+                        <BsSliders className="text-2xl" />
+                        <HoverLabel className="w-[8rem] ">Template Settings</HoverLabel>
+                    </IconContainerNormal>
+                </div>
+            }
+
             <FlexColContainer className="mt-auto">
                 <DividerHorizontal className="border-gray-100" />
                 <div className="group relative">

@@ -204,7 +204,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
             return (
                 <FlexRowCenteredY
                     key={`input-${count}-${templateIndex}-${template.template_id}`}
-                    className={`${isEditActive ? "bg-gray-300 cursor-not-allowed dark:bg-gray-700" : "bg-slate-50 dark:bg-gray-800"} rounded `}
+                    className={`${isEditActive ? "bg-gray-300 cursor-not-allowed dark:bg-gray-700" : "bg-slate-50 dark:bg-gray-800"} rounded`}
                 >
                     <CardInput
                         type="text"
@@ -220,7 +220,7 @@ const TemplateCard = (props: TemplateCardProps, ref: any) => {
                     />
                     <button
                         disabled={isEditActive}
-                        className={`${isEditActive ? "cursor-not-allowed" : "hover:bg-slate-100 dark:hover:bg-gray-900"} p-2 border-1 text-lg text-gray-500  `}
+                        className={`${isEditActive ? "cursor-not-allowed" : "hover:bg-slate-100 dark:hover:bg-gray-900"} p-2 border-1 text-lg text-gray-500 focus-visible:outline-amber-200 `}
                         onClick={() => { handleRemoveInputText(count) }}
                     >
                         <BiEraser />

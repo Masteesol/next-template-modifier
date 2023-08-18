@@ -6,6 +6,7 @@ import { CategorySelector, DeleteTemplateButton } from '../../shared';
 import { moveTemplateToNewCategory } from '@/utils/helpers';
 import { updateTemplateCategoryLink } from '@/requests/templates';
 import { TemplatesContext } from '@/context/TemplatesContext';
+import Link from 'next/link';
 
 interface ComponentProps {
     isEditActive: boolean;
@@ -61,14 +62,16 @@ const Topbar = (props: ComponentProps) => {
                         <h3 className="text-xl font-bold">
                             {textTemplate.title.length > 25 ? `${textTemplate.title.substring(0, 25)}...` : `${textTemplate.title}`}
                         </h3>
-                        <FlexRowCenteredY className="gap-2">
+                        <FlexRowCenteredY className="gap-2 ms-auto">
                             {isUnSaved &&
                                 <span className="text-gray-500">Unsaved Changes</span>
                             }
-                            <span className="ms-auto bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">Editing</span>
+                            <span className=" bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold">Editing</span>
+                            {isTutorial && <span className=" bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">DEMO</span>}
                         </FlexRowCenteredY>
 
                     </FlexRowCenteredY>
+                    {isTutorial && <p>This is a limited demo version. To access all features, <Link href="sign-up" className='underline'>create an account</Link></p>}
                     {!isTutorial
                         &&
                         <div className="grid grid-cols-2 md:grid-cols-4 w-full gap-2">
@@ -109,7 +112,7 @@ const Topbar = (props: ComponentProps) => {
                             index={index}
                         />
                     }
-
+                    {isTutorial && <span className="ms auto bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">DEMO</span>}
                 </FlexRowCenteredY>
             }
 

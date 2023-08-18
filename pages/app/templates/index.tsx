@@ -136,33 +136,32 @@ const Page: NextPage<PageProps> = () => {
   }, [])
 
   useEffect(() => {
-    const setSelectedCategoryFromUrl = async () => {
+    if (!isLoading) {
       const categoryID = router.query.category_id;
-      if (categoryID) {
-        const index = textTemplates.findIndex((container: TemplatesContainer) => container.category_id === categoryID);
-        console.log("index", index)
-        if (index !== -1) {
-          setSelectedCategory(index);
-          console.log('Category index:', index);
-        } else {
-          console.log('Category not found');
+      const setSelectedCategoryFromUrl = async () => {
+        if (categoryID) {
+          const index = textTemplates.findIndex((container: TemplatesContainer) => container.category_id === categoryID);
+          console.log("index", index)
+          if (index !== -1) {
+            setSelectedCategory(index);
+            console.log('Category index:', index);
+          } else {
+            console.log('Category not found');
+          }
         }
       }
-    }
-
-    setSelectedCategoryFromUrl();
-
-  }, []);
-
-  useEffect(() => {
-    if (!isLoading) {
-      const findFirstFavourited = () => {
-        return textTemplates.filter(item => item.favourited && item)
+      if (categoryID) {
+        setSelectedCategoryFromUrl()
+      } else {
+        const findFirstFavourited = () => {
+          return textTemplates.filter(item => item.favourited && item)
+        }
+        console.log("findFirstFavourited", findFirstFavourited())
+        if (findFirstFavourited()[0]) {
+          setSelectedCategory(findFirstFavourited()[0].order)
+        }
       }
-      console.log("findFirstFavourited", findFirstFavourited())
-      if (findFirstFavourited()[0]) {
-        setSelectedCategory(findFirstFavourited()[0].order)
-      }
+
     }
   }, [isLoading])
 

@@ -92,7 +92,9 @@ export const TablesTemplateCollection = ({ textTemplates }: TablesProps) => {
             </Table.Head>
             <Table.Body className="divide-y">
                 {checkerCollection.result.map((template: TemplateModified, index: number) => {
-                    const text = checkerCollection.result[index].template_collections[0].text
+
+                    const collection = checkerCollection.result[index].template_collections[0]
+                    const text = collection ? collection.text : "No Collection Items"
                     const excerpt = text.length > 120 ? `${text.substring(0, 120)}...` : text
                     return index < 5 && template.is_collection &&
                         <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800"
@@ -115,7 +117,7 @@ export const TablesTemplateCollection = ({ textTemplates }: TablesProps) => {
                             </Table.Cell>
                             <Table.Cell>
                                 <p className="min-w-[10rem] lg:hidden">
-                                    {`${checkerCollection.result[index].template_collections[0].text.substring(0, 40)}...`}
+                                    {`${collection && collection.text.substring(0, 40)}...`}
                                 </p>
                                 <p className="hidden lg:block min-w-[20rem]">
                                     {excerpt}
